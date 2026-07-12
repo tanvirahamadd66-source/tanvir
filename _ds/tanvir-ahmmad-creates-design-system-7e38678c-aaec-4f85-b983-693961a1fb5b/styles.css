@@ -1,0 +1,15 @@
+/* ============================================================
+   Tanvir Creates — Design System entry point.
+   Consumers link this single file. Import order matters:
+   primitives first, then semantic theme, then base defaults.
+   ============================================================ */
+
+@import "tokens/fonts.css";
+@import "tokens/colors.css";
+@import "tokens/typography.css";
+@import "tokens/spacing.css";
+@import "tokens/radius.css";
+@import "tokens/elevation.css";
+@import "tokens/theme.css";
+@import "tokens/base.css";
+@import "styles/components.css";
