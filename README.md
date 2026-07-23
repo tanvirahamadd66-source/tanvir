@@ -1,45 +1,38 @@
 # Tanvir Creates — Portfolio Website
 
-A fast, responsive, single-page portfolio for **Tanvir Ahamad** (freelance graphic &
-brand-identity designer). Built with plain HTML + CSS + vanilla JS on the **Tanvir Creates**
-design system. Light/dark mode, smooth-scroll nav, mobile menu, scroll-reveal animation, and a
-no-backend contact form.
+A fast, responsive, static portfolio for **Tanvir Ahamad** — brand identity & logo designer
+(behance.net/itztvr). Plain HTML/CSS/vanilla JS, no framework, no build step.
 
-## Files
-- `index.html` — the whole site (one page). *(Imported from Claude Design's `Tanvir Creates.html`;
-  renamed to `index.html` so it serves at the domain root and on GitHub Pages.)*
-- `assets/profile.jpg` — profile photo, reused in the hero and About sections.
-- `assets/resume.pdf` — **placeholder to add** (Download résumé button links here).
-- `_ds/…` — the design system (tokens + component styles). Keep this folder alongside the HTML.
-- `.nojekyll` — **required for GitHub Pages.** GitHub's Jekyll build ignores folders that start
-  with `_`, which would silently drop the entire `_ds/` stylesheet folder. This empty file turns
-  Jekyll off so the site is served as-is. Don't delete it.
+## Structure
 
-## Swap the placeholders
-1. **Profile photo** — replace `assets/profile.jpg` with your own (keep the filename). It updates
-   the hero and About automatically.
-2. **Résumé** — export your résumé to PDF and save it as `assets/resume.pdf`.
-3. **Project images** — the Work section has a clearly-commented `SWAPPABLE PROJECT GALLERY` block.
-   Drop images into `assets/work/` and follow the comment to replace each placeholder tile.
-4. **Contact form** — the form uses [Web3Forms](https://web3forms.com) (free, no backend):
-   grab an access key and replace `YOUR_WEB3FORMS_ACCESS_KEY` in the HTML. Until you do, the form
-   safely falls back to opening the visitor's email app pre-filled — nothing breaks.
-5. **Social links** — LinkedIn / Instagram slots in the footer point to `#contact` for now. Swap in
-   real URLs when ready (search for `on request` in the HTML).
+```
+index.html          # all page markup/content
+css/style.css       # styling, theme tokens (light/dark), animations
+js/main.js          # interactivity: theme toggle, nav, rendering, contact form
+js/projects-data.js         # featured/additional projects + testimonials
+js/behance-projects-data.js # real Behance project data
+projects/           # generated case-study page per Behance project
+scripts/generate-project-pages.js  # regenerates projects/*.html from behance-projects-data.js
+scripts/dev-server.js              # zero-dependency local preview server
+assets/             # profile photo, project images, resume
+```
 
-## Deploy on GitHub Pages (this repo's target)
-Repo: `git@github.com:tanvirahamadd66-source/tanvir.git`
-1. Push these files to the repo root (see commands below).
-2. On GitHub: **Settings → Pages → Build and deployment → Source: Deploy from a branch**, pick
-   `main` and folder `/ (root)`, then Save.
-3. The site publishes at `https://tanvirahamadd66-source.github.io/tanvir/` within a minute.
-4. **Custom domain:** Settings → Pages → Custom domain → enter your purchased domain, then add the
-   DNS records GitHub shows (a `CNAME` for `www`, or `A`/`ALIAS` records for the apex) at your
-   registrar. Enable "Enforce HTTPS" once DNS resolves.
+## Local preview
 
-> The `.nojekyll` file must stay at the repo root or the `_ds/` styles won't load on GitHub Pages.
+```
+node scripts/dev-server.js 8080
+```
 
-### Netlify / Vercel alternative
-Drag the whole folder onto [app.netlify.com](https://app.netlify.com), or import the repo at
-[vercel.com](https://vercel.com); add your custom domain in the site's domain settings. HTTPS is
-automatic. (`.nojekyll` is harmless there.)
+Then open `http://localhost:8080`.
+
+## Deployment
+
+Served via GitHub Pages from the `main` branch root, with a custom domain
+(`tanvircreates.com`, see `CNAME`). `.nojekyll` disables Jekyll processing so files/folders
+starting with `_` (if any are added later) aren't silently dropped.
+
+## Adding a new Behance project
+
+1. Add an entry to `js/behance-projects-data.js` (title, category, description, tags, image paths).
+2. Drop its images into `assets/img/projects/behance/<slug>/`.
+3. Run `node scripts/generate-project-pages.js` to regenerate the detail page.

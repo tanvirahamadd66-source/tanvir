@@ -1,0 +1,7 @@
+Put project images in this folder, then open js/projects-data.js and set the
+"image" field for that project to the file path, e.g.:
+
+  { name: "PasselTerra", ..., image: "assets/img/projects/passelterra-cover.jpg" }
+
+Recommended: one cover image per project, landscape orientation (4:3),
+at least 1200px wide, exported as .jpg or .webp for fast loading.
