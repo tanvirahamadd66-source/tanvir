@@ -16,24 +16,78 @@ const OUT_DIR = path.join(ROOT, "projects");
 
 if (!fs.existsSync(OUT_DIR)) fs.mkdirSync(OUT_DIR, { recursive: true });
 
+// Escapes text for safe use inside an HTML attribute value (double-quoted).
+function escAttr(str) {
+  return String(str)
+    .replace(/&/g, "&amp;")
+    .replace(/"/g, "&quot;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+}
+
+// Escapes text for safe use inside a JSON string embedded in a <script> tag.
+function escJson(str) {
+  return String(str).replace(/\\/g, "\\\\").replace(/"/g, '\\"');
+}
+
 function page(p) {
-  const tagBadges = p.tags.map((t) => `<span class="badge">${t}</span>`).join("\n            ");
+  const title = escAttr(p.title);
+  const shortDescription = escAttr(p.shortDescription);
+  const category = escAttr(p.category);
+  const description = escAttr(p.description);
+
+  const tagBadges = p.tags.map((t) => `<span class="badge">${escAttr(t)}</span>`).join("\n            ");
   const moreNote =
     p.totalOnBehance > p.gallery.length
       ? `<p class="project-gallery-note">Showing ${p.gallery.length} of ${p.totalOnBehance} images from this project — see the full case study on Behance for the complete gallery.</p>`
       : "";
   const galleryImgs = p.gallery
-    .map((src) => `      <img src="../${src}" alt="${p.title} — project image" loading="lazy" />`)
+    .map((src) => `      <img src="../${src}" alt="${title} — project image" loading="lazy" />`)
     .join("\n");
+
+  const canonicalUrl = `https://tanvircreates.com/projects/${p.slug}.html`;
+  const ogImage = `https://tanvircreates.com/${p.gallery[0]}`;
 
   return `<!doctype html>
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>${p.title} — Tanvir Creates</title>
-<meta name="description" content="${p.shortDescription}" />
+<title>${title} — Tanvir Ahamad | Tanvir Creates</title>
+<meta name="description" content="${shortDescription}" />
+<meta name="robots" content="index, follow" />
+<meta name="author" content="Tanvir Ahamad" />
 <meta name="theme-color" content="#0d0d0d" />
+<link rel="canonical" href="${canonicalUrl}" />
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
+
+<!-- Open Graph -->
+<meta property="og:title" content="${title} — Tanvir Creates" />
+<meta property="og:description" content="${shortDescription}" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="${canonicalUrl}" />
+<meta property="og:site_name" content="Tanvir Creates" />
+<meta property="og:image" content="${ogImage}" />
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="${title} — Tanvir Creates" />
+<meta name="twitter:description" content="${shortDescription}" />
+<meta name="twitter:image" content="${ogImage}" />
+
+<!-- Structured data: Breadcrumbs -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://tanvircreates.com/" },
+    { "@type": "ListItem", "position": 2, "name": "Work", "item": "https://tanvircreates.com/#work" },
+    { "@type": "ListItem", "position": 3, "name": "${escJson(p.title)}", "item": "${canonicalUrl}" }
+  ]
+}
+</script>
+
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Sora:wght@500;600;700;800&display=swap" rel="stylesheet" />
@@ -96,12 +150,12 @@ function page(p) {
     <div class="container">
       <a class="back-link" href="../index.html#work">&larr; Back to all work</a>
       <div class="project-detail-intro">
-        <span class="eyebrow">${p.category}</span>
-        <h1 class="project-detail-title" style="margin-top:0.75rem;">${p.title}</h1>
+        <span class="eyebrow">${category}</span>
+        <h1 class="project-detail-title" style="margin-top:0.75rem;">${title}</h1>
         <div class="project-detail-meta">
               ${tagBadges}
         </div>
-        <p class="project-detail-desc">${p.description}</p>
+        <p class="project-detail-desc">${description}</p>
         <div class="project-detail-cta">
           <a href="${p.behanceUrl}" target="_blank" rel="noopener noreferrer" class="btn btn-outline">View on Behance &rarr;</a>
           <a href="../index.html#contact" class="btn btn-primary">Start a Similar Project</a>
