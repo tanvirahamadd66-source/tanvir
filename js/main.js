@@ -10,9 +10,7 @@
    real form delivery (see README.md). Left empty, the form falls back
    to opening the visitor's email client with the message pre-filled. */
 const CONFIG = {
-  // Get a free access key at https://web3forms.com (enter your email, they send it instantly)
-  // and paste it here — until then, form submissions will fail with an error toast.
-  web3formsAccessKey: "YOUR_WEB3FORMS_ACCESS_KEY",
+  web3formsAccessKey: "3b52acb0-16a5-4035-88eb-4aea2375db9b",
   contactEmail: "tanvirahamadd66@gmail.com"
 };
 
@@ -390,43 +388,31 @@ function initContactForm() {
       return;
     }
 
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      showToast("error", "Invalid email", "Please enter a valid email address so I can reply to you.");
+      return;
+    }
+
     const submitBtn = form.querySelector("button[type=submit]");
     submitBtn.classList.add("is-loading");
     submitBtn.disabled = true;
 
-    // TEMP (review only, remove once the real Web3Forms key is wired in): add
-    // ?mockContact=success or ?mockContact=error to the URL to preview those
-    // states without a real access key or network request.
-    const mockContact = new URLSearchParams(location.search).get("mockContact");
-    if (mockContact === "success" || mockContact === "error") {
-      await new Promise((r) => setTimeout(r, 900));
-      submitBtn.classList.remove("is-loading");
-      submitBtn.disabled = false;
-      if (mockContact === "success") {
-        showToast("success", "Message sent!", "Thanks for reaching out — I'll reply within 24 hours.");
-        form.reset();
-      } else {
-        showToast(
-          "error",
-          "Something went wrong",
-          "Your message couldn't be delivered. Please try again, or reach me directly via WhatsApp or email below."
-        );
-      }
-      return;
-    }
-
     try {
+      // Sent as FormData (not JSON) so the request stays a CORS "simple request" —
+      // a JSON content-type here triggers a preflight that Web3Forms doesn't answer,
+      // which silently fails every submission in the browser.
+      const formData = new FormData();
+      formData.append("access_key", CONFIG.web3formsAccessKey);
+      formData.append("subject", `New project inquiry: ${projectType}`);
+      formData.append("name", name);
+      formData.append("email", email);
+      formData.append("Project Type", projectType);
+      formData.append("message", message);
+
       const res = await fetch("https://api.web3forms.com/submit", {
         method: "POST",
-        headers: { Accept: "application/json", "Content-Type": "application/json" },
-        body: JSON.stringify({
-          access_key: CONFIG.web3formsAccessKey,
-          subject: `New project inquiry: ${projectType}`,
-          name,
-          email,
-          "Project Type": projectType,
-          message
-        })
+        headers: { Accept: "application/json" },
+        body: formData
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok || !data.success) throw new Error(data.message || "Request failed");
