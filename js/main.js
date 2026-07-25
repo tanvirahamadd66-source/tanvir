@@ -10,7 +10,9 @@
    real form delivery (see README.md). Left empty, the form falls back
    to opening the visitor's email client with the message pre-filled. */
 const CONFIG = {
-  formEndpoint: "",
+  // Get a free access key at https://web3forms.com (enter your email, they send it instantly)
+  // and paste it here — until then, form submissions will fail with an error toast.
+  web3formsAccessKey: "YOUR_WEB3FORMS_ACCESS_KEY",
   contactEmail: "tanvirahamadd66@gmail.com"
 };
 
@@ -61,6 +63,17 @@ function initMobileNav() {
 }
 
 /* ---------- Scroll spy ---------- */
+function moveNavIndicator(link) {
+  const indicator = document.querySelector(".nav-indicator");
+  const nav = document.querySelector(".nav-links");
+  if (!indicator || !nav || !link) return;
+  const navRect = nav.getBoundingClientRect();
+  const linkRect = link.getBoundingClientRect();
+  indicator.style.left = linkRect.left - navRect.left + "px";
+  indicator.style.width = linkRect.width + "px";
+  indicator.classList.add("visible");
+}
+
 function initScrollSpy() {
   const links = document.querySelectorAll(".nav-links a");
   const sections = Array.from(links)
@@ -75,6 +88,8 @@ function initScrollSpy() {
         if (entry.isIntersecting) {
           const id = "#" + entry.target.id;
           links.forEach((a) => a.classList.toggle("active", a.getAttribute("href") === id));
+          const activeLink = Array.from(links).find((a) => a.getAttribute("href") === id);
+          if (activeLink) moveNavIndicator(activeLink);
         }
       });
     },
@@ -82,6 +97,11 @@ function initScrollSpy() {
   );
 
   sections.forEach((s) => observer.observe(s));
+
+  window.addEventListener("resize", () => {
+    const active = document.querySelector(".nav-links a.active");
+    if (active) moveNavIndicator(active);
+  });
 }
 
 /* ---------- Reveal on scroll ---------- */
@@ -221,7 +241,7 @@ function renderBehanceProjects() {
 
   grid.innerHTML = BEHANCE_PROJECTS.map((p) => `
     <a class="project-card reveal has-image" href="projects/${p.slug}.html" data-category="${p.category}">
-      <img src="${p.gallery[0]}" alt="${p.title} — cover image" loading="lazy" />
+      <img src="${p.coverImage || p.gallery[0]}" alt="${p.title} — cover image" loading="lazy" />
       <div class="card-overlay">
         <div class="tag">${p.category}</div>
         <div class="wordmark">${p.title}</div>
@@ -262,20 +282,24 @@ function renderFeaturedProjects() {
   grid.innerHTML = FEATURED_PROJECTS.map((p) => {
     const hasImage = Boolean(p.image);
     const linkHtml = p.link
-      ? `<a class="view-link" href="${p.link}" target="_blank" rel="noopener noreferrer">View Case Study <span class="link-arrow">&rarr;</span></a>`
+      ? `<span class="view-link">View Case Study <span class="link-arrow">&rarr;</span></span>`
       : "";
     const tag = p.category || "Brand &amp; Visual Identity";
     const desc = p.description ? `<div class="tag">${p.description}</div>` : `<div class="tag">${tag}</div>`;
+    const tagName = p.link ? "a" : "div";
+    const linkAttrs = p.link ? ` href="${p.link}"` : "";
+    const containClass = p.coverFit === "contain" ? " contain-cover" : "";
+    const bgAttr = p.coverBg ? ` style="background:${p.coverBg}"` : "";
 
     return `
-      <div class="project-card reveal${hasImage ? " has-image" : ""}">
+      <${tagName} class="project-card reveal${hasImage ? " has-image" : ""}${containClass}"${linkAttrs}${bgAttr}>
         ${hasImage ? `<img src="${p.image}" alt="${p.name} project preview" loading="lazy" />` : ""}
         <div class="card-overlay">
           ${desc}
           <div class="wordmark">${p.name}</div>
           ${linkHtml}
         </div>
-      </div>`;
+      </${tagName}>`;
   }).join("");
 }
 
@@ -327,10 +351,31 @@ function initBackToTop() {
 }
 
 /* ---------- Contact form ---------- */
+function showToast(type, title, message) {
+  const toast = document.getElementById("formToast");
+  if (!toast) return;
+  const icon = document.getElementById("toastIcon");
+  const titleEl = document.getElementById("toastTitle");
+  const messageEl = document.getElementById("toastMessage");
+
+  toast.classList.remove("success", "error");
+  toast.classList.add(type);
+  icon.textContent = type === "success" ? "✓" : "!";
+  titleEl.textContent = title;
+  messageEl.textContent = message;
+  toast.classList.add("visible");
+
+  clearTimeout(showToast._timer);
+  showToast._timer = setTimeout(() => toast.classList.remove("visible"), 6000);
+}
+
 function initContactForm() {
   const form = document.getElementById("contactForm");
-  const status = document.getElementById("formStatus");
   if (!form) return;
+
+  const toast = document.getElementById("formToast");
+  const toastClose = document.getElementById("toastClose");
+  if (toastClose) toastClose.addEventListener("click", () => toast.classList.remove("visible"));
 
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -341,37 +386,62 @@ function initContactForm() {
     const message = form.message.value.trim();
 
     if (!name || !email || !message) {
-      status.textContent = "⚠ Please fill in your name, email and project details.";
+      showToast("error", "Missing information", "Please fill in your name, email and project details.");
       return;
     }
 
     const submitBtn = form.querySelector("button[type=submit]");
+    submitBtn.classList.add("is-loading");
     submitBtn.disabled = true;
-    status.textContent = "Sending...";
 
-    if (CONFIG.formEndpoint) {
-      try {
-        const res = await fetch(CONFIG.formEndpoint, {
-          method: "POST",
-          headers: { Accept: "application/json", "Content-Type": "application/json" },
-          body: JSON.stringify({ name, email, projectType, message })
-        });
-        if (!res.ok) throw new Error("Request failed");
-        status.textContent = "✓ Thanks! Your message has been sent — I'll reply within 24 hours.";
+    // TEMP (review only, remove once the real Web3Forms key is wired in): add
+    // ?mockContact=success or ?mockContact=error to the URL to preview those
+    // states without a real access key or network request.
+    const mockContact = new URLSearchParams(location.search).get("mockContact");
+    if (mockContact === "success" || mockContact === "error") {
+      await new Promise((r) => setTimeout(r, 900));
+      submitBtn.classList.remove("is-loading");
+      submitBtn.disabled = false;
+      if (mockContact === "success") {
+        showToast("success", "Message sent!", "Thanks for reaching out — I'll reply within 24 hours.");
         form.reset();
-      } catch (err) {
-        status.textContent = "⚠ Something went wrong. Please email me directly or use WhatsApp below.";
-      } finally {
-        submitBtn.disabled = false;
+      } else {
+        showToast(
+          "error",
+          "Something went wrong",
+          "Your message couldn't be delivered. Please try again, or reach me directly via WhatsApp or email below."
+        );
       }
       return;
     }
 
-    // No form backend configured yet — fall back to opening the visitor's email client.
-    const subject = encodeURIComponent(`New project inquiry: ${projectType}`);
-    const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\nProject Type: ${projectType}\n\n${message}`);
-    window.location.href = `mailto:${CONFIG.contactEmail}?subject=${subject}&body=${body}`;
-    status.textContent = "Opening your email app to send this message...";
-    submitBtn.disabled = false;
+    try {
+      const res = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: { Accept: "application/json", "Content-Type": "application/json" },
+        body: JSON.stringify({
+          access_key: CONFIG.web3formsAccessKey,
+          subject: `New project inquiry: ${projectType}`,
+          name,
+          email,
+          "Project Type": projectType,
+          message
+        })
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || !data.success) throw new Error(data.message || "Request failed");
+
+      showToast("success", "Message sent!", "Thanks for reaching out — I'll reply within 24 hours.");
+      form.reset();
+    } catch (err) {
+      showToast(
+        "error",
+        "Something went wrong",
+        "Your message couldn't be delivered. Please try again, or reach me directly via WhatsApp or email below."
+      );
+    } finally {
+      submitBtn.classList.remove("is-loading");
+      submitBtn.disabled = false;
+    }
   });
 }

@@ -15,12 +15,12 @@
 */
 
 const FEATURED_PROJECTS = [
-  { name: "PasselTerra",  slug: "passelterra",  category: "", image: "", description: "", link: "" },
-  { name: "Prune",        slug: "prune",        category: "", image: "", description: "", link: "" },
+  { name: "PasselTerra",  slug: "passelterra",  category: "Brand Identity", image: "assets/img/projects/behance/passelterra-brand-identity/cover.jpg", description: "Warm, trustworthy brand identity for PasselTerra, a land-for-sale platform.", link: "projects/passelterra-brand-identity.html", coverFit: "contain", coverBg: "#ffffff" },
+  { name: "Prune",        slug: "prune",        category: "Brand Identity", image: "assets/img/projects/behance/prune-brand-identity/cover.jpg", description: "Warm, editorial brand identity built around a hand-drawn plum mark.", link: "projects/prune-brand-identity.html", coverFit: "contain", coverBg: "#ffffff" },
   { name: "Skugistics",   slug: "skugistics",   category: "", image: "", description: "", link: "" },
   { name: "StewardsHQ",   slug: "stewardshq",   category: "", image: "", description: "", link: "" },
   { name: "TicketBliss",  slug: "ticketbliss",  category: "", image: "", description: "", link: "" },
-  { name: "Cliqpiq",      slug: "cliqpiq",      category: "", image: "", description: "", link: "" },
+  { name: "Cliqpiq",      slug: "cliqpiq",      category: "Brand Identity", image: "assets/img/projects/behance/cliqpiq-brand-identity/cover.jpg", description: "Bold, tech-forward brand identity for Cliqpiq, a smart camera app.", link: "projects/cliqpiq-brand-identity.html", coverFit: "contain", coverBg: "#153FB7" },
   { name: "BrightScale",  slug: "brightscale",  category: "", image: "", description: "", link: "" },
   { name: "Hirearchical", slug: "hirearchical", category: "", image: "", description: "", link: "" }
 ];

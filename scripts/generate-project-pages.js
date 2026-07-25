@@ -41,12 +41,39 @@ function page(p) {
     p.totalOnBehance > p.gallery.length
       ? `<p class="project-gallery-note">Showing ${p.gallery.length} of ${p.totalOnBehance} images from this project — see the full case study on Behance for the complete gallery.</p>`
       : "";
-  const galleryImgs = p.gallery
-    .map((src) => `      <img src="../${src}" alt="${title} — project image" loading="lazy" />`)
-    .join("\n");
+  const galleryImgTag = (src) => `      <img src="../${src}" alt="${title} — project image" loading="lazy" />`;
+  let galleryImgs;
+  if (p.galleryGroups) {
+    // Flexible layout: an array of group sizes partitioning the gallery in order.
+    // Size 1 renders as a full-width image; size 2+ renders as a .project-gallery-2col row.
+    const parts = [];
+    let idx = 0;
+    for (const size of p.galleryGroups) {
+      const chunk = p.gallery.slice(idx, idx + size).map(galleryImgTag);
+      if (size >= 2) {
+        parts.push(`      <div class="project-gallery-2col">`, ...chunk, `      </div>`);
+      } else {
+        parts.push(...chunk);
+      }
+      idx += size;
+    }
+    galleryImgs = parts.join("\n");
+  } else if (p.twoColumnFrom) {
+    const startIdx = p.twoColumnFrom - 1;
+    const endIdx = p.twoColumnTo || p.gallery.length;
+    galleryImgs = [
+      ...p.gallery.slice(0, startIdx).map(galleryImgTag),
+      `      <div class="project-gallery-2col">`,
+      ...p.gallery.slice(startIdx, endIdx).map(galleryImgTag),
+      `      </div>`,
+      ...p.gallery.slice(endIdx).map(galleryImgTag),
+    ].join("\n");
+  } else {
+    galleryImgs = p.gallery.map(galleryImgTag).join("\n");
+  }
 
   const canonicalUrl = `https://tanvircreates.com/projects/${p.slug}.html`;
-  const ogImage = `https://tanvircreates.com/${p.gallery[0]}`;
+  const ogImage = `https://tanvircreates.com/${p.coverImage || p.gallery[0]}`;
 
   return `<!doctype html>
 <html lang="en">
@@ -105,13 +132,16 @@ function page(p) {
 
 <header class="nav">
   <div class="container nav-inner">
-    <a href="../index.html#home" class="logo">Tanvir Creates</a>
+    <a href="../index.html#home" class="logo">
+      <span class="logo-text">Tanvir <span class="logo-accent">Creates</span></span>
+    </a>
     <nav class="nav-links" aria-label="Primary">
       <a href="../index.html#about">About</a>
       <a href="../index.html#services">Services</a>
       <a href="../index.html#work">Work</a>
       <a href="../index.html#process">Process</a>
       <a href="../index.html#contact">Contact</a>
+      <span class="nav-indicator" aria-hidden="true"></span>
     </nav>
     <div class="nav-actions">
       <button class="icon-btn theme-toggle" id="themeToggle" type="button" aria-label="Toggle dark mode">
@@ -128,7 +158,9 @@ function page(p) {
 
 <div class="mobile-menu" id="mobileMenu">
   <div class="mobile-menu-top">
-    <span class="logo">Tanvir Creates</span>
+    <span class="logo">
+      <span class="logo-text">Tanvir <span class="logo-accent">Creates</span></span>
+    </span>
     <button class="icon-btn" id="navClose" type="button" aria-label="Close menu">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg>
     </button>
@@ -157,7 +189,11 @@ function page(p) {
         </div>
         <p class="project-detail-desc">${description}</p>
         <div class="project-detail-cta">
-          <a href="${p.behanceUrl}" target="_blank" rel="noopener noreferrer" class="btn btn-outline">View on Behance &rarr;</a>
+          ${
+            p.behanceUrl
+              ? `<a href="${p.behanceUrl}" target="_blank" rel="noopener noreferrer" class="btn btn-outline">View on Behance &rarr;</a>`
+              : `<span class="btn btn-outline" style="pointer-events:none;">Client Project</span>`
+          }
           <a href="../index.html#contact" class="btn btn-primary">Start a Similar Project</a>
         </div>
       </div>
@@ -180,7 +216,9 @@ ${galleryImgs}
 <footer class="footer">
   <div class="container">
     <div class="footer-top">
-      <a href="../index.html#home" class="logo">Tanvir Creates</a>
+      <a href="../index.html#home" class="logo">
+        <span class="logo-text">Tanvir <span class="logo-accent">Creates</span></span>
+      </a>
       <nav class="footer-links" aria-label="Footer">
         <a href="../index.html#about">About</a>
         <a href="../index.html#services">Services</a>
