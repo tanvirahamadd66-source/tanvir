@@ -237,15 +237,19 @@ function renderBehanceProjects() {
   const grid = document.getElementById("behanceGrid");
   if (!grid || typeof BEHANCE_PROJECTS === "undefined") return;
 
-  grid.innerHTML = BEHANCE_PROJECTS.map((p) => `
-    <a class="project-card reveal has-image" href="projects/${p.slug}.html" data-category="${p.category}">
+  grid.innerHTML = BEHANCE_PROJECTS.map((p) => {
+    const containClass = p.coverFit === "contain" ? " contain-cover" : "";
+    const bgAttr = p.coverBg ? ` style="background:${p.coverBg}"` : "";
+    return `
+    <a class="project-card reveal has-image${containClass}" href="projects/${p.slug}.html" data-category="${p.category}"${bgAttr}>
       <img src="${p.coverImage || p.gallery[0]}" alt="${p.title} — cover image" loading="lazy" />
       <div class="card-overlay">
         <div class="tag">${p.category}</div>
         <div class="wordmark">${p.title}</div>
         <span class="view-link">View Project <span class="link-arrow">&rarr;</span></span>
       </div>
-    </a>`).join("");
+    </a>`;
+  }).join("");
 
   initCategoryFilters(grid);
 }

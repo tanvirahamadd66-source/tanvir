@@ -130,6 +130,44 @@ const BEHANCE_PROJECTS = [
     ]
   },
   {
+    slug: "water-supply-logo",
+    title: "Water Supply Logo",
+    category: "Logo Design",
+    shortDescription: "Minimalist logo design for a water supply company.",
+    description: "A minimalist logo design created for a water supply company, focused on clean typography and a simple, memorable mark.",
+    tags: ["Logo Design", "Brand Identity", "Minimalist Logo", "Typography"],
+    behanceUrl: "https://www.behance.net/gallery/211656905/Water-supply-logo",
+    totalOnBehance: 2,
+    gallery: [
+      "assets/img/projects/behance/water-supply-logo/01.webp",
+      "assets/img/projects/behance/water-supply-logo/02.webp"
+    ]
+  },
+  {
+    slug: "creative-nature-logo-design",
+    title: "Creative Nature Logo Design",
+    category: "Logo Design",
+    shortDescription: "Nature-inspired logo design exploring organic shapes and brand identity.",
+    description: "A nature-themed logo design exploring organic forms and a clean logotype, developed as part of a broader brand identity exploration.",
+    tags: ["Logo Design", "Nature Branding", "Brand Identity", "Logotype"],
+    behanceUrl: "https://www.behance.net/gallery/213582633/Creative-Nature-Logo-Design-",
+    totalOnBehance: 11,
+    coverImage: "assets/img/projects/behance/creative-nature-logo-design/cover.jpg",
+    coverFit: "contain",
+    coverBg: "#fcfbfc",
+    gallery: [
+      "assets/img/projects/behance/creative-nature-logo-design/02.webp",
+      "assets/img/projects/behance/creative-nature-logo-design/03.webp",
+      "assets/img/projects/behance/creative-nature-logo-design/04.webp",
+      "assets/img/projects/behance/creative-nature-logo-design/05.webp",
+      "assets/img/projects/behance/creative-nature-logo-design/06.webp",
+      "assets/img/projects/behance/creative-nature-logo-design/07.webp",
+      "assets/img/projects/behance/creative-nature-logo-design/08.webp",
+      "assets/img/projects/behance/creative-nature-logo-design/09.webp",
+      "assets/img/projects/behance/creative-nature-logo-design/10.webp"
+    ]
+  },
+  {
     slug: "sarl-logo-design",
     title: "SARL — Sleek And Revolutionary Look",
     category: "Logo Design",
@@ -176,28 +214,6 @@ const BEHANCE_PROJECTS = [
     ]
   },
   {
-    slug: "creative-nature-logo-design",
-    title: "Creative Nature Logo Design",
-    category: "Logo Design",
-    shortDescription: "Nature-inspired logo design exploring organic shapes and brand identity.",
-    description: "A nature-themed logo design exploring organic forms and a clean logotype, developed as part of a broader brand identity exploration.",
-    tags: ["Logo Design", "Nature Branding", "Brand Identity", "Logotype"],
-    behanceUrl: "https://www.behance.net/gallery/213582633/Creative-Nature-Logo-Design-",
-    totalOnBehance: 11,
-    gallery: [
-      "assets/img/projects/behance/creative-nature-logo-design/01.webp",
-      "assets/img/projects/behance/creative-nature-logo-design/02.webp",
-      "assets/img/projects/behance/creative-nature-logo-design/03.webp",
-      "assets/img/projects/behance/creative-nature-logo-design/04.webp",
-      "assets/img/projects/behance/creative-nature-logo-design/05.webp",
-      "assets/img/projects/behance/creative-nature-logo-design/06.webp",
-      "assets/img/projects/behance/creative-nature-logo-design/07.webp",
-      "assets/img/projects/behance/creative-nature-logo-design/08.webp",
-      "assets/img/projects/behance/creative-nature-logo-design/09.webp",
-      "assets/img/projects/behance/creative-nature-logo-design/10.webp"
-    ]
-  },
-  {
     slug: "creative-solar-logo-design",
     title: "Creative Solar Logo Design",
     category: "Logo Design",
@@ -239,20 +255,6 @@ const BEHANCE_PROJECTS = [
       "assets/img/projects/behance/creative-2-brain-podcast-logo-design/08.webp",
       "assets/img/projects/behance/creative-2-brain-podcast-logo-design/09.webp",
       "assets/img/projects/behance/creative-2-brain-podcast-logo-design/10.webp"
-    ]
-  },
-  {
-    slug: "water-supply-logo",
-    title: "Water Supply Logo",
-    category: "Logo Design",
-    shortDescription: "Minimalist logo design for a water supply company.",
-    description: "A minimalist logo design created for a water supply company, focused on clean typography and a simple, memorable mark.",
-    tags: ["Logo Design", "Brand Identity", "Minimalist Logo", "Typography"],
-    behanceUrl: "https://www.behance.net/gallery/211656905/Water-supply-logo",
-    totalOnBehance: 2,
-    gallery: [
-      "assets/img/projects/behance/water-supply-logo/01.webp",
-      "assets/img/projects/behance/water-supply-logo/02.webp"
     ]
   },
   {
