@@ -18,11 +18,11 @@ const FEATURED_PROJECTS = [
   { name: "PasselTerra",  slug: "passelterra",  category: "Brand Identity", image: "assets/img/projects/behance/passelterra-brand-identity/cover.jpg", description: "Warm, trustworthy brand identity for PasselTerra, a land-for-sale platform.", link: "projects/passelterra-brand-identity.html", coverFit: "contain", coverBg: "#ffffff" },
   { name: "Prune",        slug: "prune",        category: "Brand Identity", image: "assets/img/projects/behance/prune-brand-identity/cover.jpg", description: "Warm, editorial brand identity built around a hand-drawn plum mark.", link: "projects/prune-brand-identity.html", coverFit: "contain", coverBg: "#ffffff" },
   { name: "Skugistics",   slug: "skugistics",   category: "", image: "", description: "", link: "" },
-  { name: "StewardsHQ",   slug: "stewardshq",   category: "", image: "", description: "", link: "" },
-  { name: "TicketBliss",  slug: "ticketbliss",  category: "", image: "", description: "", link: "" },
+  { name: "StewardsHQ",   slug: "stewardshq",   category: "Brand Identity", image: "assets/img/projects/behance/stewardshq-brand-identity/cover.jpg", description: "Smart parcel management brand identity for StewardsHQ, built for residential buildings.", link: "projects/stewardshq-brand-identity.html", coverFit: "contain", coverBg: "#ffffff" },
+  { name: "TicketBliss",  slug: "ticketbliss",  category: "Brand Identity", image: "assets/img/projects/behance/ticketbliss-brand-identity/cover.jpg", description: "Trustworthy, guardian-themed brand identity for TicketBliss, a ticket resale platform.", link: "projects/ticketbliss-brand-identity.html", coverFit: "contain", coverBg: "#ffffff" },
   { name: "Cliqpiq",      slug: "cliqpiq",      category: "Brand Identity", image: "assets/img/projects/behance/cliqpiq-brand-identity/cover.jpg", description: "Bold, tech-forward brand identity for Cliqpiq, a smart camera app.", link: "projects/cliqpiq-brand-identity.html", coverFit: "contain", coverBg: "#153FB7" },
   { name: "BrightScale",  slug: "brightscale",  category: "", image: "", description: "", link: "" },
-  { name: "Hirearchical", slug: "hirearchical", category: "", image: "", description: "", link: "" }
+  { name: "Hirearchical", slug: "hirearchical", category: "Brand Identity", image: "assets/img/projects/behance/hirearchical-brand-identity/cover.jpg", description: "Fairness-first brand identity for Hirearchical, an AI-driven recruiting intelligence platform.", link: "projects/hirearchical-brand-identity.html", coverFit: "contain", coverBg: "#ffffff" }
 ];
 
 const ADDITIONAL_PROJECTS = [

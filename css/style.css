@@ -1284,6 +1284,15 @@ main .section:nth-of-type(even) { background: var(--bg-alt); }
   aspect-ratio: 4 / 3;
   object-fit: cover;
 }
+.project-gallery-3col {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-4);
+}
+.project-gallery-3col img {
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+}
 
 /* ---------- Project page entrance animation ---------- */
 @keyframes enterFromTop { from { opacity: 0; transform: translateY(-18px); } to { opacity: 1; transform: translateY(0); } }
@@ -1334,6 +1343,7 @@ main .section:nth-of-type(even) { background: var(--bg-alt); }
   .testimonial-grid { grid-template-columns: repeat(2, 1fr); }
   .additional-grid { grid-template-columns: repeat(3, 1fr); }
   .behance-grid { grid-template-columns: repeat(2, 1fr); }
+  .project-gallery-3col { grid-template-columns: repeat(2, 1fr); }
 }
 
 @media (max-width: 720px) {
@@ -1350,4 +1360,5 @@ main .section:nth-of-type(even) { background: var(--bg-alt); }
   .pricing-note { flex-direction: column; align-items: flex-start; }
   .section { padding-block: var(--space-5); }
   .project-gallery-2col { grid-template-columns: 1fr; }
+  .project-gallery-3col { grid-template-columns: 1fr; }
 }

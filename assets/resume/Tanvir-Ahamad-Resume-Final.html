@@ -1,0 +1,374 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Tanvir Ahamad — Resume</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --font-display:'Sora','Segoe UI',system-ui,sans-serif;
+    --font-body:'Inter','Segoe UI',system-ui,sans-serif;
+    --font-mono:'IBM Plex Mono',monospace;
+
+    --bg:#0a0707;
+    --bg-alt:#140f0f;
+    --bg-elevated:#171111;
+    --text:#f6f3f2;
+    --text-muted:#9c9291;
+    --border:#262020;
+
+    --accent:#ff3d3d;
+    --accent-deep:#c81e2a;
+    --accent-2:#8f1017;
+    --accent-glow:rgba(255,61,61,0.16);
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{font-family:var(--font-body);color:var(--text);background:#000;-webkit-font-smoothing:antialiased;}
+
+  .page{
+    width:210mm;height:297mm;margin:10mm auto;
+    background:var(--bg);
+    position:relative;overflow:hidden;
+    box-shadow:0 30px 90px -20px rgba(0,0,0,0.7);
+  }
+
+  /* premium background treatment — kept from the approved dark concept */
+  .page::before{
+    content:"";
+    position:absolute;inset:0;z-index:0;pointer-events:none;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px);
+    background-size:9mm 9mm;
+    mask-image:radial-gradient(ellipse 75% 55% at 50% 12%, #000 40%, transparent 85%);
+  }
+  .page::after{
+    content:"";
+    position:absolute;left:-20%;bottom:-25%;width:80%;height:55%;
+    background:radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+    z-index:0;pointer-events:none;
+  }
+
+  .sheet{
+    position:relative;z-index:1;height:100%;
+    padding:10mm 15mm 10mm;
+    display:flex;flex-direction:column;gap:6mm;
+  }
+
+  .top-bar{
+    display:flex;justify-content:space-between;align-items:center;
+    font-family:var(--font-mono);font-size:7.4pt;letter-spacing:0.14em;
+    text-transform:uppercase;color:var(--text-muted);
+  }
+  .top-bar .brand{color:var(--text);font-weight:600;}
+  .top-bar .brand span{color:var(--accent);}
+
+  /* ================= NEW HERO — centered masthead concept ================= */
+  .masthead{
+    text-align:center;
+    padding:2mm 0 6mm;
+    border-bottom:1px solid var(--border);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+  }
+
+  .avatar{
+    position:relative;
+    width:30mm;height:30mm;
+    border-radius:50%;
+    margin-bottom:4mm;
+  }
+  .avatar::before{
+    content:"";
+    position:absolute;inset:-2.2mm;
+    border-radius:50%;
+    background:conic-gradient(from 200deg, var(--accent), var(--accent-2), transparent 60%);
+    opacity:0.9;
+  }
+  .avatar-img{
+    position:absolute;inset:0;
+    border-radius:50%;
+    overflow:hidden;
+    border:2.4pt solid var(--bg);
+    background:var(--bg-elevated);
+  }
+  .avatar-img img{
+    width:100%;height:100%;object-fit:cover;
+    filter:grayscale(38%) contrast(1.05);
+    display:block;
+  }
+  .avatar-dot{
+    position:absolute;
+    bottom:1mm;right:1mm;
+    width:5mm;height:5mm;
+    border-radius:50%;
+    background:var(--accent);
+    border:2pt solid var(--bg);
+    display:flex;align-items:center;justify-content:center;
+  }
+  .avatar-dot::after{
+    content:"";width:1.6mm;height:1.6mm;border-radius:50%;background:var(--bg);
+  }
+
+  .eyebrow-center{
+    font-family:var(--font-mono);
+    font-size:7.6pt;letter-spacing:0.2em;text-transform:uppercase;
+    color:var(--accent-deep);font-weight:700;
+    margin:0 0 2.5mm;
+  }
+  h1.name{
+    font-family:var(--font-display);
+    font-weight:800;
+    font-size:26pt;
+    letter-spacing:-0.02em;
+    margin:0;
+  }
+  .role-line{
+    font-family:var(--font-display);
+    font-weight:600;
+    font-size:11pt;
+    color:var(--accent);
+    margin:2mm 0 0;
+  }
+  .role-sub{
+    font-size:9pt;
+    color:var(--text-muted);
+    max-width:78ch;
+    line-height:1.6;
+    margin:2.6mm 0 0;
+  }
+
+  .ticker{
+    margin-top:5mm;
+    display:flex;
+    align-items:center;
+    gap:3.5mm;
+    font-family:var(--font-mono);
+    font-size:8pt;
+  }
+  .ticker .stat b{color:var(--text);font-weight:700;}
+  .ticker .stat{color:var(--text-muted);}
+  .ticker .sep{color:var(--accent);font-size:6pt;}
+
+  .contact-line{
+    margin-top:4mm;
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    gap:2mm 5mm;
+    font-size:8.2pt;
+    color:var(--text-muted);
+  }
+  .contact-line a{color:var(--text);text-decoration:none;font-weight:500;}
+  .contact-line .item{display:flex;align-items:center;gap:1.6mm;}
+  .contact-line .item::before{content:"";width:1.3mm;height:1.3mm;background:var(--accent);flex:none;}
+
+  /* ================= Body ================= */
+  .body{display:grid;grid-template-columns:1fr 58mm;gap:10mm;flex:1;min-height:0;}
+  .main-col,.side-col{display:flex;flex-direction:column;gap:6mm;}
+
+  .section-label{
+    font-family:var(--font-mono);font-size:7.8pt;font-weight:600;
+    letter-spacing:0.16em;text-transform:uppercase;color:var(--text);
+    display:flex;align-items:center;gap:2.5mm;margin:0 0 3mm;
+  }
+  .section-label::after{content:"";flex:1;height:1px;background:var(--border);}
+  .section-label::before{content:"";width:2.2mm;height:2.2mm;background:var(--accent);flex:none;}
+
+  .profile p{font-size:9.4pt;line-height:1.6;color:var(--text-muted);margin:0;}
+  .profile p + p{margin-top:2.6mm;}
+
+  .exp-head{display:flex;justify-content:space-between;align-items:baseline;gap:4mm;margin-bottom:2.3mm;}
+  .exp-head h3{font-family:var(--font-display);font-size:10.6pt;font-weight:700;margin:0;color:var(--text);}
+  .exp-head .company{color:var(--accent);font-weight:600;font-size:8.6pt;display:block;margin-top:0.6mm;}
+  .exp-date{
+    font-family:var(--font-mono);font-size:7.6pt;color:var(--text-muted);
+    white-space:nowrap;background:var(--bg-alt);border:1px solid var(--border);
+    padding:1mm 2.4mm;border-radius:2mm;flex:none;
+  }
+  .exp-item ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:1.8mm;}
+  .exp-item li{position:relative;padding-left:4mm;font-size:9pt;line-height:1.48;color:var(--text-muted);}
+  .exp-item li::before{content:"";position:absolute;left:0;top:5.5pt;width:4.5pt;height:4.5pt;background:var(--accent);}
+
+  .side-block .label{
+    font-family:var(--font-mono);font-size:7.4pt;font-weight:600;letter-spacing:0.1em;
+    text-transform:uppercase;color:var(--text-muted);margin:0 0 2.6mm;
+  }
+
+  /* Featured capability boxes — kept, this style was approved */
+  .feature-caps{display:flex;gap:2mm;margin-bottom:3mm;}
+  .feature-cap{
+    flex:1;
+    font-family:var(--font-display);font-weight:700;font-size:8.6pt;
+    text-align:center;color:var(--text);
+    padding:2.4mm 1mm;
+    border:1px solid var(--accent-deep);
+    border-radius:1.5mm;
+    background:linear-gradient(160deg, rgba(255,61,61,0.08), transparent);
+  }
+  /* Remaining skills — elegant list instead of uniform chips */
+  .skill-list{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:1.7mm;}
+  .skill-list li{
+    font-size:8.5pt;color:var(--text-muted);
+    padding-left:3.2mm;position:relative;
+  }
+  .skill-list li::before{content:"";position:absolute;left:0;top:4.2pt;width:3.6pt;height:3.6pt;background:var(--accent-deep);}
+
+  .stack-list{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:1.6mm;}
+  .stack-list li{font-size:8.7pt;color:var(--text-muted);padding-left:3.4mm;position:relative;}
+  .stack-list li::before{content:"—";position:absolute;left:0;color:var(--accent);font-weight:700;}
+
+  .lang-row{display:flex;flex-direction:column;gap:2.6mm;}
+  .lang-item{display:flex;flex-direction:column;gap:1mm;}
+  .lang-top{display:flex;justify-content:space-between;align-items:baseline;}
+  .lang-name{font-size:8.7pt;font-weight:600;color:var(--text);}
+  .lang-level{font-family:var(--font-mono);font-size:7.2pt;color:var(--text-muted);}
+  .lang-bar{height:2.4pt;background:var(--border);position:relative;overflow:hidden;border-radius:2pt;}
+  .lang-bar span{position:absolute;top:0;left:0;bottom:0;background:var(--accent);}
+
+  footer{
+    display:flex;justify-content:space-between;align-items:center;
+    border-top:1px solid var(--border);padding-top:3mm;
+    font-family:var(--font-mono);font-size:7.4pt;letter-spacing:0.05em;
+    color:var(--text-muted);text-transform:uppercase;
+  }
+  footer b{color:var(--text);}
+
+  @media print{
+    body{background:none;}
+    .page{margin:0;box-shadow:none;width:210mm;height:297mm;}
+    @page{size:A4;margin:0;}
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+  <div class="sheet">
+
+    <div class="top-bar">
+      <span>Portfolio — behance.net/itztvr</span>
+      <span class="brand">tanvir<span>creates</span>.com</span>
+    </div>
+
+    <div class="masthead">
+      <div class="avatar">
+        <div class="avatar-img"><img src="../img/profile/tanvir-profile.jpg" alt="Portrait of Tanvir Ahamad"></div>
+        <div class="avatar-dot"></div>
+      </div>
+
+      <p class="eyebrow-center">Brand &amp; Graphic Designer</p>
+      <h1 class="name">Tanvir Ahamad</h1>
+      <p class="role-line">Crafting brand identities that businesses trust</p>
+      <p class="role-sub">Visual Branding Specialist helping startups, entrepreneurs and growing businesses build clean, modern, memorable identities that build trust and drive growth.</p>
+
+      <div class="ticker">
+        <span class="stat"><b>500+</b> Projects</span>
+        <span class="sep">◆</span>
+        <span class="stat"><b>30+</b> Clients</span>
+        <span class="sep">◆</span>
+        <span class="stat"><b>3+</b> Years</span>
+        <span class="sep">◆</span>
+        <span class="stat"><b>4.8/5</b> Rating</span>
+      </div>
+
+      <div class="contact-line">
+        <span class="item"><a href="mailto:tanvirahamadd66@gmail.com">tanvirahamadd66@gmail.com</a></span>
+        <span class="item">+880 1641-704786</span>
+        <span class="item">Rajshahi, Bangladesh</span>
+        <span class="item"><a href="https://linkedin.com/in/tanvirahamad">linkedin.com/in/tanvirahamad</a></span>
+      </div>
+    </div>
+
+    <div class="body">
+      <div class="main-col">
+
+        <section class="profile">
+          <p class="section-label">Profile</p>
+          <p>Creative, detail-oriented graphic designer with 3+ years delivering strategic branding and marketing design for startups, entrepreneurs, agencies and growing businesses worldwide.</p>
+          <p>Specialized in logo design and full brand identity systems, company profiles, social and email marketing design, and print collateral — built to strengthen recognition and support measurable business growth.</p>
+        </section>
+
+        <section>
+          <p class="section-label">Experience</p>
+          <div class="exp-item">
+            <div class="exp-head">
+              <h3>Freelance Graphic Designer<span class="company">Independent / Remote</span></h3>
+              <span class="exp-date">2022 — Present</span>
+            </div>
+            <ul>
+              <li>Design unique logos and complete brand identity systems for startups and growing businesses across the USA, Canada, Europe and India.</li>
+              <li>Develop professional company profiles, corporate documents and business presentations that support client sales and funding efforts.</li>
+              <li>Create engaging social media graphics and design email marketing campaigns, promotional creatives and advertising materials.</li>
+              <li>Produce brochures, flyers, banners, business cards, packaging and other print collateral, managing projects end to end.</li>
+              <li>Collaborate directly with clients from concept through final delivery, maintaining brand consistency across every touchpoint.</li>
+            </ul>
+          </div>
+        </section>
+
+      </div>
+
+      <div class="side-col">
+
+        <div class="side-block">
+          <p class="section-label">Expertise</p>
+          <div class="feature-caps">
+            <span class="feature-cap">Brand Identity</span>
+            <span class="feature-cap">Logo Design</span>
+          </div>
+          <ul class="skill-list">
+            <li>Visual Systems &amp; Brand Guidelines</li>
+            <li>Company Profiles &amp; Presentations</li>
+            <li>Social Media &amp; Email Marketing</li>
+            <li>Print Collateral &amp; Packaging</li>
+            <li>Typography &amp; Layout Design</li>
+          </ul>
+        </div>
+
+        <div class="side-block">
+          <p class="label">Tools</p>
+          <ul class="stack-list">
+            <li>Adobe Illustrator</li>
+            <li>Adobe Photoshop</li>
+            <li>Figma</li>
+            <li>Canva</li>
+          </ul>
+        </div>
+
+        <div class="side-block">
+          <p class="label">Languages</p>
+          <div class="lang-row">
+            <div class="lang-item">
+              <div class="lang-top"><span class="lang-name">Bengali</span><span class="lang-level">Native</span></div>
+              <div class="lang-bar"><span style="width:100%"></span></div>
+            </div>
+            <div class="lang-item">
+              <div class="lang-top"><span class="lang-name">English</span><span class="lang-level">Professional</span></div>
+              <div class="lang-bar"><span style="width:80%"></span></div>
+            </div>
+            <div class="lang-item">
+              <div class="lang-top"><span class="lang-name">Hindi</span><span class="lang-level">Conversational</span></div>
+              <div class="lang-bar"><span style="width:55%"></span></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <footer>
+      <span><b>Tanvir Ahamad</b> · Brand &amp; Graphic Design</span>
+      <span>Available for remote engagements</span>
+    </footer>
+
+  </div>
+</div>
+
+</body>
+</html>

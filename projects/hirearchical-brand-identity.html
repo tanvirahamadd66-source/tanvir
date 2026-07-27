@@ -1,109 +1,29 @@
-/*
-  Generates portfolio-site/projects/<slug>.html for every entry in
-  js/behance-projects-data.js, reusing the same nav/footer/theme markup
-  as index.html so the standalone pages stay visually consistent.
-
-  Run whenever behance-projects-data.js changes:
-    node scripts/generate-project-pages.js
-*/
-
-const fs = require("fs");
-const path = require("path");
-
-const ROOT = path.join(__dirname, "..");
-const PROJECTS = require(path.join(ROOT, "js", "behance-projects-data.js"));
-const OUT_DIR = path.join(ROOT, "projects");
-
-if (!fs.existsSync(OUT_DIR)) fs.mkdirSync(OUT_DIR, { recursive: true });
-
-// Escapes text for safe use inside an HTML attribute value (double-quoted).
-function escAttr(str) {
-  return String(str)
-    .replace(/&/g, "&amp;")
-    .replace(/"/g, "&quot;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;");
-}
-
-// Escapes text for safe use inside a JSON string embedded in a <script> tag.
-function escJson(str) {
-  return String(str).replace(/\\/g, "\\\\").replace(/"/g, '\\"');
-}
-
-function page(p) {
-  const title = escAttr(p.title);
-  const shortDescription = escAttr(p.shortDescription);
-  const category = escAttr(p.category);
-  const description = escAttr(p.description);
-
-  const tagBadges = p.tags.map((t) => `<span class="badge">${escAttr(t)}</span>`).join("\n            ");
-  const moreNote =
-    p.totalOnBehance > p.gallery.length
-      ? `<p class="project-gallery-note">Showing ${p.gallery.length} of ${p.totalOnBehance} images from this project — see the full case study on Behance for the complete gallery.</p>`
-      : "";
-  const galleryImgTag = (src) => `      <img src="../${src}" alt="${title} — project image" loading="lazy" />`;
-  let galleryImgs;
-  if (p.galleryGroups) {
-    // Flexible layout: an array of group sizes partitioning the gallery in order.
-    // Size 1 renders full-width; size 3 renders as a .project-gallery-3col row;
-    // any other size 2+ renders as a .project-gallery-2col row.
-    const parts = [];
-    let idx = 0;
-    for (const size of p.galleryGroups) {
-      const chunk = p.gallery.slice(idx, idx + size).map(galleryImgTag);
-      if (size === 3) {
-        parts.push(`      <div class="project-gallery-3col">`, ...chunk, `      </div>`);
-      } else if (size >= 2) {
-        parts.push(`      <div class="project-gallery-2col">`, ...chunk, `      </div>`);
-      } else {
-        parts.push(...chunk);
-      }
-      idx += size;
-    }
-    galleryImgs = parts.join("\n");
-  } else if (p.twoColumnFrom) {
-    const startIdx = p.twoColumnFrom - 1;
-    const endIdx = p.twoColumnTo || p.gallery.length;
-    galleryImgs = [
-      ...p.gallery.slice(0, startIdx).map(galleryImgTag),
-      `      <div class="project-gallery-2col">`,
-      ...p.gallery.slice(startIdx, endIdx).map(galleryImgTag),
-      `      </div>`,
-      ...p.gallery.slice(endIdx).map(galleryImgTag),
-    ].join("\n");
-  } else {
-    galleryImgs = p.gallery.map(galleryImgTag).join("\n");
-  }
-
-  const canonicalUrl = `https://tanvircreates.com/projects/${p.slug}.html`;
-  const ogImage = `https://tanvircreates.com/${p.coverImage || p.gallery[0]}`;
-
-  return `<!doctype html>
+<!doctype html>
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>${title} — Tanvir Ahamad | Tanvir Creates</title>
-<meta name="description" content="${shortDescription}" />
+<title>Hirearchical — Brand Identity — Tanvir Ahamad | Tanvir Creates</title>
+<meta name="description" content="Fairness-first brand identity for Hirearchical, an AI-driven recruiting intelligence platform." />
 <meta name="robots" content="index, follow" />
 <meta name="author" content="Tanvir Ahamad" />
 <meta name="theme-color" content="#0d0d0d" />
-<link rel="canonical" href="${canonicalUrl}" />
+<link rel="canonical" href="https://tanvircreates.com/projects/hirearchical-brand-identity.html" />
 <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg" />
 
 <!-- Open Graph -->
-<meta property="og:title" content="${title} — Tanvir Creates" />
-<meta property="og:description" content="${shortDescription}" />
+<meta property="og:title" content="Hirearchical — Brand Identity — Tanvir Creates" />
+<meta property="og:description" content="Fairness-first brand identity for Hirearchical, an AI-driven recruiting intelligence platform." />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="${canonicalUrl}" />
+<meta property="og:url" content="https://tanvircreates.com/projects/hirearchical-brand-identity.html" />
 <meta property="og:site_name" content="Tanvir Creates" />
-<meta property="og:image" content="${ogImage}" />
+<meta property="og:image" content="https://tanvircreates.com/assets/img/projects/behance/hirearchical-brand-identity/cover.jpg" />
 
 <!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content="${title} — Tanvir Creates" />
-<meta name="twitter:description" content="${shortDescription}" />
-<meta name="twitter:image" content="${ogImage}" />
+<meta name="twitter:title" content="Hirearchical — Brand Identity — Tanvir Creates" />
+<meta name="twitter:description" content="Fairness-first brand identity for Hirearchical, an AI-driven recruiting intelligence platform." />
+<meta name="twitter:image" content="https://tanvircreates.com/assets/img/projects/behance/hirearchical-brand-identity/cover.jpg" />
 
 <!-- Structured data: Breadcrumbs -->
 <script type="application/ld+json">
@@ -113,7 +33,7 @@ function page(p) {
   "itemListElement": [
     { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://tanvircreates.com/" },
     { "@type": "ListItem", "position": 2, "name": "Work", "item": "https://tanvircreates.com/#work" },
-    { "@type": "ListItem", "position": 3, "name": "${escJson(p.title)}", "item": "${canonicalUrl}" }
+    { "@type": "ListItem", "position": 3, "name": "Hirearchical — Brand Identity", "item": "https://tanvircreates.com/projects/hirearchical-brand-identity.html" }
   ]
 }
 </script>
@@ -185,18 +105,16 @@ function page(p) {
     <div class="container">
       <a class="back-link" href="../index.html#work">&larr; Back to all work</a>
       <div class="project-detail-intro">
-        <span class="eyebrow">${category}</span>
-        <h1 class="project-detail-title" style="margin-top:0.75rem;">${title}</h1>
+        <span class="eyebrow">Brand Identity</span>
+        <h1 class="project-detail-title" style="margin-top:0.75rem;">Hirearchical — Brand Identity</h1>
         <div class="project-detail-meta">
-              ${tagBadges}
+              <span class="badge">Brand Identity</span>
+            <span class="badge">Logo Design</span>
+            <span class="badge">Visual Identity</span>
         </div>
-        <p class="project-detail-desc">${description}</p>
+        <p class="project-detail-desc">Hirearchical is an AI-driven, fairness-first recruiting intelligence platform that bridges human judgment and machine precision. The identity centers on three human figures in a gradient blue — the central figure signifying leadership and professionalism, the two side figures representing team unity and collaboration. The system spans a primary (vertical) and secondary (horizontal) lockup, dedicated dark-mode variants for both, and a full multi-tone favicon set, backed by a complete brand style guide covering usage, spacing, color and typography.</p>
         <div class="project-detail-cta">
-          ${
-            p.behanceUrl
-              ? `<a href="${p.behanceUrl}" target="_blank" rel="noopener noreferrer" class="btn btn-outline">View on Behance &rarr;</a>`
-              : `<span class="btn btn-outline" style="pointer-events:none;">Client Project</span>`
-          }
+          <span class="btn btn-outline" style="pointer-events:none;">Client Project</span>
           <a href="../index.html#contact" class="btn btn-primary">Start a Similar Project</a>
         </div>
       </div>
@@ -209,9 +127,34 @@ function page(p) {
         <span class="eyebrow">Project Gallery</span>
       </div>
       <div class="project-gallery">
-${galleryImgs}
+      <img src="../assets/img/projects/behance/hirearchical-brand-identity/01-primary-light.jpg" alt="Hirearchical — Brand Identity — project image" loading="lazy" />
+      <img src="../assets/img/projects/behance/hirearchical-brand-identity/02-primary-dark.jpg" alt="Hirearchical — Brand Identity — project image" loading="lazy" />
+      <img src="../assets/img/projects/behance/hirearchical-brand-identity/03-secondary-light.jpg" alt="Hirearchical — Brand Identity — project image" loading="lazy" />
+      <img src="../assets/img/projects/behance/hirearchical-brand-identity/04-secondary-dark.jpg" alt="Hirearchical — Brand Identity — project image" loading="lazy" />
+      <div class="project-gallery-2col">
+      <img src="../assets/img/projects/behance/hirearchical-brand-identity/05-favicon-blue-gradient.png" alt="Hirearchical — Brand Identity — project image" loading="lazy" />
+      <img src="../assets/img/projects/behance/hirearchical-brand-identity/06-favicon-blue.png" alt="Hirearchical — Brand Identity — project image" loading="lazy" />
+      <img src="../assets/img/projects/behance/hirearchical-brand-identity/07-favicon-sky-blue.png" alt="Hirearchical — Brand Identity — project image" loading="lazy" />
+      <img src="../assets/img/projects/behance/hirearchical-brand-identity/08-favicon-black.png" alt="Hirearchical — Brand Identity — project image" loading="lazy" />
       </div>
-      ${moreNote}
+      <img src="../assets/img/projects/behance/hirearchical-brand-identity/09-guide-01.jpg" alt="Hirearchical — Brand Identity — project image" loading="lazy" />
+      <img src="../assets/img/projects/behance/hirearchical-brand-identity/10-guide-02.jpg" alt="Hirearchical — Brand Identity — project image" loading="lazy" />
+      <img src="../assets/img/projects/behance/hirearchical-brand-identity/11-guide-03.jpg" alt="Hirearchical — Brand Identity — project image" loading="lazy" />
+      <img src="../assets/img/projects/behance/hirearchical-brand-identity/12-guide-04.jpg" alt="Hirearchical — Brand Identity — project image" loading="lazy" />
+      <img src="../assets/img/projects/behance/hirearchical-brand-identity/13-guide-05.jpg" alt="Hirearchical — Brand Identity — project image" loading="lazy" />
+      <img src="../assets/img/projects/behance/hirearchical-brand-identity/14-guide-06.jpg" alt="Hirearchical — Brand Identity — project image" loading="lazy" />
+      <img src="../assets/img/projects/behance/hirearchical-brand-identity/15-guide-07.jpg" alt="Hirearchical — Brand Identity — project image" loading="lazy" />
+      <img src="../assets/img/projects/behance/hirearchical-brand-identity/16-guide-08.jpg" alt="Hirearchical — Brand Identity — project image" loading="lazy" />
+      <img src="../assets/img/projects/behance/hirearchical-brand-identity/17-guide-09.jpg" alt="Hirearchical — Brand Identity — project image" loading="lazy" />
+      <img src="../assets/img/projects/behance/hirearchical-brand-identity/18-guide-10.jpg" alt="Hirearchical — Brand Identity — project image" loading="lazy" />
+      <img src="../assets/img/projects/behance/hirearchical-brand-identity/19-guide-11.jpg" alt="Hirearchical — Brand Identity — project image" loading="lazy" />
+      <img src="../assets/img/projects/behance/hirearchical-brand-identity/20-guide-12.jpg" alt="Hirearchical — Brand Identity — project image" loading="lazy" />
+      <img src="../assets/img/projects/behance/hirearchical-brand-identity/21-guide-13.jpg" alt="Hirearchical — Brand Identity — project image" loading="lazy" />
+      <img src="../assets/img/projects/behance/hirearchical-brand-identity/22-guide-14.jpg" alt="Hirearchical — Brand Identity — project image" loading="lazy" />
+      <img src="../assets/img/projects/behance/hirearchical-brand-identity/23-guide-15.jpg" alt="Hirearchical — Brand Identity — project image" loading="lazy" />
+      <img src="../assets/img/projects/behance/hirearchical-brand-identity/24-guide-16.jpg" alt="Hirearchical — Brand Identity — project image" loading="lazy" />
+      </div>
+      
     </div>
   </section>
 </main>
@@ -264,14 +207,3 @@ ${galleryImgs}
 </script>
 </body>
 </html>
-`;
-}
-
-let count = 0;
-for (const p of PROJECTS) {
-  const outPath = path.join(OUT_DIR, `${p.slug}.html`);
-  fs.writeFileSync(outPath, page(p), "utf8");
-  count++;
-}
-
-console.log(`Generated ${count} project pages in ${OUT_DIR}`);
