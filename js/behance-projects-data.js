@@ -472,6 +472,54 @@ const CLIENT_CASE_STUDIES = [
       "assets/img/projects/behance/stewardshq-brand-identity/23-guide-16.jpg",
       "assets/img/projects/behance/stewardshq-brand-identity/24-guide-17.jpg"
     ]
+  },
+  {
+    slug: "skugistics-brand-identity",
+    title: "Skugistics — Brand Identity",
+    category: "Brand Identity",
+    shortDescription: "Enterprise logistics brand identity for Skugistics, a smart logistics platform.",
+    description: "Skugistics represents precision, intelligent movement, and operational flow for a modern logistics and supply-chain platform. The icon is built around a geometric \"S\" chamfered at 45°, paired with a confident blue-and-white palette that reads as trustworthy and enterprise-ready. The system spans a primary and secondary lockup with dedicated dark-mode variants, a full multi-color favicon and app-icon set, mobile app UI, and a complete range of real-world brand applications — from uniforms and vehicles to signage and web.",
+    tags: ["Brand Identity", "Logo Design", "App Branding", "Visual Identity"],
+    coverImage: "assets/img/projects/behance/skugistics-brand-identity/cover.jpg",
+    galleryGroups: [1, 1, 1, 1, 1, 4, 1, 2, 1, 1, 1, 1, 1],
+    gallery: [
+      "assets/img/projects/behance/skugistics-brand-identity/01-primary-light.jpg",
+      "assets/img/projects/behance/skugistics-brand-identity/02-primary-dark.jpg",
+      "assets/img/projects/behance/skugistics-brand-identity/03-secondary-light.jpg",
+      "assets/img/projects/behance/skugistics-brand-identity/04-secondary-dark.jpg",
+      "assets/img/projects/behance/skugistics-brand-identity/05-icons-all.jpg",
+      "assets/img/projects/behance/skugistics-brand-identity/06-favicon-blue.jpg",
+      "assets/img/projects/behance/skugistics-brand-identity/07-favicon-navy-white.jpg",
+      "assets/img/projects/behance/skugistics-brand-identity/08-favicon-lightblue.jpg",
+      "assets/img/projects/behance/skugistics-brand-identity/09-favicon-white.jpg",
+      "assets/img/projects/behance/skugistics-brand-identity/10-mobile-ui.jpg",
+      "assets/img/projects/behance/skugistics-brand-identity/11-mockup-worker1.jpg",
+      "assets/img/projects/behance/skugistics-brand-identity/12-mockup-worker2.jpg",
+      "assets/img/projects/behance/skugistics-brand-identity/13-mockup-tshirt.jpg",
+      "assets/img/projects/behance/skugistics-brand-identity/14-mockup-website.jpg",
+      "assets/img/projects/behance/skugistics-brand-identity/15-mockup-truck.jpg",
+      "assets/img/projects/behance/skugistics-brand-identity/16-mockup-store.jpg",
+      "assets/img/projects/behance/skugistics-brand-identity/17-mockup-container.jpg"
+    ]
+  },
+  {
+    slug: "ame-brand-identity",
+    title: "AMÉ — Brand Identity",
+    category: "Brand Identity",
+    shortDescription: "Ornate, regal brand identity for AMÉ, a luxury fashion house.",
+    description: "AMÉ is a luxury fashion house identity built around an ornate, hand-crafted monogram — twin crowned flourishes rendered as mirrored calligraphic curls, paired with a bold, geometric wordmark for contrast. The regal crown-and-star detailing signals heritage and exclusivity, while the confident sans-serif logotype keeps the mark modern and versatile. The system spans primary and dark-mode lockups alongside a dedicated icon/favicon set.",
+    tags: ["Brand Identity", "Logo Design", "Luxury Branding", "Visual Identity"],
+    coverImage: "assets/img/projects/behance/ame-brand-identity/cover.jpg",
+    coverFit: "contain",
+    coverBg: "#f6f3ee",
+    galleryGroups: [1, 1, 1, 2],
+    gallery: [
+      "assets/img/projects/behance/ame-brand-identity/01-thumbnail.jpg",
+      "assets/img/projects/behance/ame-brand-identity/02-primary-logo.jpg",
+      "assets/img/projects/behance/ame-brand-identity/03-dark-logo.jpg",
+      "assets/img/projects/behance/ame-brand-identity/04-favicon-black.png",
+      "assets/img/projects/behance/ame-brand-identity/05-favicon-red.png"
+    ]
   }
 ];
 
