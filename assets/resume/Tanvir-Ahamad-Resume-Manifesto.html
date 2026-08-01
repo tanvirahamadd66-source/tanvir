@@ -1,0 +1,378 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Tanvir Ahamad — Resume</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --font-display:'Sora','Segoe UI',system-ui,sans-serif;
+    --font-body:'Inter','Segoe UI',system-ui,sans-serif;
+    --font-mono:'IBM Plex Mono',monospace;
+
+    --bg:#0a0707;
+    --bg-alt:#130e0e;
+    --bg-side:#000000;
+    --bg-elevated:#171212;
+    --text:#f6f3f2;
+    --text-muted:#9c9291;
+    --text-dim:#6b6362;
+    --border:#242020;
+    --border-soft:rgba(246,243,242,0.09);
+
+    --accent:#ff3d3d;
+    --accent-deep:#c81e2a;
+    --accent-2:#8f1017;
+    --accent-glow:rgba(255,61,61,0.16);
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family:var(--font-body);
+    color:var(--text);
+    background:#000;
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+  }
+
+  .page{
+    width:210mm;min-height:297mm;margin:10mm auto;
+    background:var(--bg);
+    position:relative;overflow:hidden;
+    box-shadow:0 30px 90px -20px rgba(0,0,0,0.75);
+    display:grid;
+    grid-template-columns:68mm 1fr;
+  }
+
+  /* ---------- sidebar ---------- */
+  .side{
+    position:relative;
+    background:var(--bg-side);
+    padding:9mm 8mm 6mm;
+    display:flex;flex-direction:column;
+    border-right:1px solid var(--border-soft);
+    z-index:2;
+  }
+  .side::before{
+    content:"";position:absolute;inset:0;z-index:0;pointer-events:none;
+    background-image:linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px),
+                      linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px);
+    background-size:6mm 6mm;
+    mask-image:radial-gradient(ellipse 90% 60% at 30% 0%, #000 40%, transparent 90%);
+  }
+  .side::after{
+    content:"";position:absolute;left:-40%;top:60%;width:120%;height:60%;
+    background:radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+    z-index:0;pointer-events:none;
+  }
+  .side > *{position:relative;z-index:1;}
+
+  .photo-ring{
+    width:34mm;height:34mm;border-radius:50%;
+    padding:1.5mm;
+    background:conic-gradient(from 210deg, var(--accent), var(--accent-2) 40%, transparent 65%, var(--accent) 100%);
+    box-shadow:0 10px 26px -10px var(--accent-glow);
+    margin-bottom:4mm;
+  }
+  .photo-ring .photo-inner{
+    width:100%;height:100%;border-radius:50%;overflow:hidden;
+    background:#000;border:2px solid var(--bg-side);
+  }
+  .photo-ring img{
+    width:100%;height:100%;object-fit:cover;object-position:50% 18%;
+    display:block;filter:grayscale(1) contrast(1.08) brightness(1.02);
+  }
+
+  .side-name{
+    font-family:var(--font-display);font-weight:800;
+    font-size:7.8mm;line-height:0.98;letter-spacing:-0.01em;
+    color:var(--text);
+  }
+  .side-name span{display:block;}
+  .side-name .accent{color:var(--accent);}
+
+  .side-role{
+    margin-top:2mm;font-size:2.7mm;letter-spacing:0.03em;color:var(--text-muted);
+    line-height:1.4;
+  }
+
+  .side-divider{height:1px;background:var(--border-soft);margin:3mm 0;}
+
+  .side-block + .side-block{margin-top:3mm;}
+  .side-label{
+    font-family:var(--font-mono);font-size:2.2mm;letter-spacing:0.13em;text-transform:uppercase;
+    color:var(--accent);margin-bottom:1.8mm;
+  }
+
+  .side-contact{display:flex;flex-direction:column;gap:1.3mm;font-size:2.6mm;color:var(--text-muted);}
+  .side-contact li{display:flex;flex-direction:column;gap:0.2mm;list-style:none;line-height:1.3;}
+  .side-contact b{font-family:var(--font-mono);font-size:1.9mm;letter-spacing:0.08em;text-transform:uppercase;color:var(--accent);font-weight:600;}
+
+  .tag-row{display:flex;flex-wrap:wrap;gap:1.1mm;}
+  .tag{
+    font-size:2.35mm;padding:1mm 2.1mm;border:1px solid var(--border-soft);
+    border-radius:20px;color:var(--text-muted);white-space:nowrap;
+  }
+
+  .stack-list{display:flex;flex-direction:column;gap:1.1mm;font-size:2.7mm;color:var(--text-muted);}
+  .stack-list li{list-style:none;position:relative;padding-left:3.6mm;line-height:1.3;}
+  .stack-list li::before{content:"";position:absolute;left:0;top:1.3mm;width:1.4mm;height:1.4mm;border-radius:50%;background:var(--accent);}
+
+  .lang-row{display:flex;justify-content:space-between;font-size:2.6mm;margin-bottom:1mm;}
+  .lang-row b{color:var(--text);font-weight:600;}
+  .lang-row span{color:var(--text-dim);}
+
+  .side-foot{
+    margin-top:auto;padding-top:3.5mm;font-size:2.3mm;color:var(--text-dim);
+    line-height:1.5;border-top:1px solid var(--border-soft);
+  }
+
+  /* ---------- main ---------- */
+  .main{
+    position:relative;padding:9mm 11mm 6mm;
+    background:
+      radial-gradient(ellipse 70% 40% at 85% 0%, var(--accent-glow) 0%, transparent 70%),
+      var(--bg);
+  }
+
+  .main-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4mm;}
+  .eyebrow{
+    font-family:var(--font-mono);font-size:2.5mm;letter-spacing:0.16em;text-transform:uppercase;
+    color:var(--text-dim);
+  }
+  .main-title{
+    font-family:var(--font-display);font-weight:700;font-size:5mm;margin-top:1.6mm;color:var(--text);
+  }
+  .avail{
+    display:flex;align-items:center;gap:1.8mm;font-size:2.7mm;color:var(--text-muted);
+    border:1px solid var(--border-soft);border-radius:20px;padding:1.6mm 3mm;white-space:nowrap;
+  }
+  .avail .dot{width:1.8mm;height:1.8mm;border-radius:50%;background:#3ddc84;box-shadow:0 0 6px #3ddc84;}
+
+  .summary{font-size:3.15mm;line-height:1.68;color:var(--text-muted);max-width:100%;}
+  .summary b{color:var(--text);font-weight:600;}
+
+  .stat-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:3mm;margin:4mm 0;}
+  .stat{
+    background:var(--bg-elevated);border:1px solid var(--border-soft);border-radius:2.4mm;
+    padding:2.4mm 3mm;text-align:center;
+  }
+  .stat .n{font-family:var(--font-display);font-weight:800;font-size:5.6mm;color:var(--accent);line-height:1;}
+  .stat .l{font-size:2.4mm;color:var(--text-dim);letter-spacing:0.04em;margin-top:1.4mm;text-transform:uppercase;}
+
+  .section{margin-top:4.5mm;}
+  .section-head{display:flex;align-items:baseline;gap:2.6mm;margin-bottom:2.6mm;}
+  .section-head .num{font-family:var(--font-mono);font-size:2.8mm;color:var(--accent);}
+  .section-head h2{
+    font-family:var(--font-display);font-weight:700;font-size:3.7mm;letter-spacing:0.02em;
+    text-transform:uppercase;color:var(--text);
+  }
+  .section-head .rule{flex:1;height:1px;background:var(--border-soft);}
+
+  .timeline{position:relative;padding-left:5mm;}
+  .timeline::before{content:"";position:absolute;left:1.1mm;top:1.5mm;bottom:1.5mm;width:1px;background:var(--border-soft);}
+  .t-item{position:relative;padding-bottom:0;}
+  .t-item::before{
+    content:"";position:absolute;left:-5mm;top:1.4mm;width:2.6mm;height:2.6mm;border-radius:50%;
+    background:var(--bg);border:1.4px solid var(--accent);
+  }
+  .t-head{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:2mm;}
+  .t-role{font-family:var(--font-display);font-weight:700;font-size:3.5mm;color:var(--text);}
+  .t-org{font-size:2.9mm;color:var(--accent);margin-top:0.8mm;}
+  .t-date{font-family:var(--font-mono);font-size:2.6mm;color:var(--text-dim);}
+
+  .resp-grid{margin-top:2mm;display:grid;grid-template-columns:1fr 1fr;gap:1.2mm 4mm;}
+  .resp{font-size:2.85mm;line-height:1.55;color:var(--text-muted);position:relative;padding-left:3.6mm;}
+  .resp::before{content:"—";position:absolute;left:0;color:var(--accent);}
+
+  .achieve-grid{display:grid;grid-template-columns:1fr 1fr;gap:2.6mm 5mm;}
+  .achieve{
+    display:flex;gap:2.6mm;align-items:flex-start;font-size:2.9mm;color:var(--text-muted);line-height:1.5;
+  }
+  .achieve .chk{
+    flex:none;width:3.6mm;height:3.6mm;border-radius:50%;background:var(--accent-glow);
+    border:1px solid var(--accent);color:var(--accent);font-size:2.2mm;font-weight:700;
+    display:flex;align-items:center;justify-content:center;margin-top:0.3mm;
+  }
+  .achieve b{color:var(--text);font-weight:600;}
+
+  .process-strip{display:flex;flex-wrap:wrap;gap:0;font-size:2.7mm;color:var(--text-muted);align-items:center;}
+  .p-step{display:flex;align-items:center;gap:1.6mm;padding:1.6mm 2.6mm;border:1px solid var(--border-soft);border-radius:20px;margin:0.8mm;}
+  .p-step .n{color:var(--accent);font-family:var(--font-mono);font-size:2.3mm;}
+
+  .closing{
+    margin-top:4.5mm;padding:3.6mm 6mm;border-left:2px solid var(--accent);
+    background:var(--bg-elevated);border-radius:0 2.4mm 2.4mm 0;
+  }
+  .closing p{font-size:3mm;line-height:1.65;color:var(--text-muted);font-style:italic;}
+  .closing footer{margin-top:3mm;font-family:var(--font-mono);font-size:2.5mm;color:var(--text-dim);font-style:normal;}
+
+  @media print{
+    body{background:#fff;}
+    .page{margin:0;box-shadow:none;}
+    @page{size:A4;margin:0;}
+  }
+  @media screen and (max-width:900px){
+    .page{width:100%;min-height:auto;grid-template-columns:1fr;}
+    .side{border-right:none;border-bottom:1px solid var(--border-soft);}
+    .stat-strip,.resp-grid,.achieve-grid{grid-template-columns:1fr;}
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <aside class="side">
+    <div class="photo-ring">
+      <div class="photo-inner">
+        <img src="../img/profile/tanvir-profile.jpg" alt="Tanvir Ahamad">
+      </div>
+    </div>
+
+    <h1 class="side-name">
+      <span>Tanvir</span>
+      <span class="accent">Ahamad</span>
+    </h1>
+    <p class="side-role">Graphic Designer · Brand Identity &amp; Logo Designer · Marketing Design Specialist</p>
+
+    <div class="side-divider"></div>
+
+    <div class="side-block">
+      <p class="side-label">Contact</p>
+      <ul class="side-contact">
+        <li><b>Email</b> tanvirahamad66@gmail.com</li>
+        <li><b>Phone</b> +880 1641-704786</li>
+        <li><b>Base</b> Rajshahi, Bangladesh</li>
+        <li><b>Behance</b> behance.net/itztvr</li>
+        <li><b>LinkedIn</b> linkedin.com/in/tanvirahamad</li>
+      </ul>
+    </div>
+
+    <div class="side-block">
+      <p class="side-label">Core Expertise</p>
+      <div class="tag-row">
+        <span class="tag">Brand Identity</span>
+        <span class="tag">Logo Design</span>
+        <span class="tag">Visual Systems</span>
+        <span class="tag">Brand Guidelines</span>
+        <span class="tag">Company Profiles</span>
+        <span class="tag">Social Media</span>
+        <span class="tag">Email Marketing</span>
+        <span class="tag">Print Design</span>
+        <span class="tag">Presentations</span>
+        <span class="tag">Advertising</span>
+        <span class="tag">Typography</span>
+      </div>
+    </div>
+
+    <div class="side-block">
+      <p class="side-label">Technical Skills</p>
+      <ul class="stack-list">
+        <li>Adobe Illustrator</li>
+        <li>Adobe Photoshop</li>
+        <li>Figma (Basic)</li>
+        <li>Canva</li>
+      </ul>
+    </div>
+
+    <div class="side-block">
+      <p class="side-label">Languages</p>
+      <div class="lang-row"><b>Bengali</b><span>Native</span></div>
+      <div class="lang-row"><b>English</b><span>Professional</span></div>
+      <div class="lang-row"><b>Hindi</b><span>Conversational</span></div>
+    </div>
+
+    <div class="side-block">
+      <p class="side-label">Education</p>
+      <ul class="stack-list">
+        <li>Higher Secondary Certificate — currently studying, Rajshahi, Bangladesh</li>
+      </ul>
+    </div>
+
+    <p class="side-foot">Great design solves problems before it looks good — every project starts with strategy, not the canvas.</p>
+  </aside>
+
+  <main class="main">
+
+    <div class="main-head">
+      <div>
+        <p class="eyebrow">Resume · 2026</p>
+        <h2 class="main-title">Branding &amp; Marketing Design, End to End</h2>
+      </div>
+      <div class="avail"><span class="dot"></span>Open to new projects</div>
+    </div>
+
+    <p class="summary">Creative and detail-oriented graphic designer with <b>over 3 years</b> of experience delivering strategic branding and marketing design solutions for startups, entrepreneurs, agencies, and growing businesses worldwide — specialized in logo design, brand identity, company profile design, social media design, and email marketing design across a wide range of digital and print materials.</p>
+
+    <div class="stat-strip">
+      <div class="stat"><div class="n">3+</div><div class="l">Years Experience</div></div>
+      <div class="stat"><div class="n">500+</div><div class="l">Projects Delivered</div></div>
+      <div class="stat"><div class="n">30+</div><div class="l">Global Clients</div></div>
+      <div class="stat"><div class="n">4.8/5</div><div class="l">Avg. Satisfaction</div></div>
+    </div>
+
+    <section class="section">
+      <div class="section-head"><span class="num">01</span><h2>Experience</h2><span class="rule"></span></div>
+      <div class="timeline">
+        <div class="t-item">
+          <div class="t-head">
+            <div>
+              <div class="t-role">Freelance Graphic Designer</div>
+              <div class="t-org">Self-Employed · Remote, Worldwide</div>
+            </div>
+            <div class="t-date">2022 — Present</div>
+          </div>
+          <div class="resp-grid">
+            <div class="resp">Design unique logos and complete brand identity systems.</div>
+            <div class="resp">Develop professional company profiles and corporate documents.</div>
+            <div class="resp">Create social media graphics for Facebook, Instagram &amp; LinkedIn.</div>
+            <div class="resp">Design email marketing campaigns and promotional creatives.</div>
+            <div class="resp">Produce brochures, flyers, banners, business cards &amp; packaging.</div>
+            <div class="resp">Collaborate directly with international clients on business goals.</div>
+            <div class="resp">Manage projects from concept through final delivery on deadline.</div>
+            <div class="resp">Build long-term client relationships through reliable service.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><span class="num">02</span><h2>Key Achievements</h2><span class="rule"></span></div>
+      <div class="achieve-grid">
+        <div class="achieve"><span class="chk">✓</span><span><b>500+ projects</b> completed for 30+ clients worldwide.</span></div>
+        <div class="achieve"><span class="chk">✓</span><span><b>4.8/5</b> average client satisfaction rating.</span></div>
+        <div class="achieve"><span class="chk">✓</span><span>Clients across <b>USA, Canada, Europe &amp; India.</b></span></div>
+        <div class="achieve"><span class="chk">✓</span><span>Branding delivered for <b>startups to growing businesses.</b></span></div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><span class="num">03</span><h2>Design Process</h2><span class="rule"></span></div>
+      <div class="process-strip">
+        <span class="p-step"><span class="n">01</span>Research</span>
+        <span class="p-step"><span class="n">02</span>Strategy</span>
+        <span class="p-step"><span class="n">03</span>Concept</span>
+        <span class="p-step"><span class="n">04</span>Design Execution</span>
+        <span class="p-step"><span class="n">05</span>Client Feedback</span>
+        <span class="p-step"><span class="n">06</span>Revision</span>
+        <span class="p-step"><span class="n">07</span>Final Delivery</span>
+        <span class="p-step"><span class="n">08</span>Brand Consistency</span>
+      </div>
+    </section>
+
+    <div class="closing">
+      <p>"Great design is more than aesthetics — it's about solving problems, communicating ideas clearly, and creating memorable brand experiences that help businesses stand out, build trust, and grow."</p>
+      <footer>Tanvir Ahamad — Why Work With Me</footer>
+    </div>
+
+  </main>
+
+</div>
+
+</body>
+</html>
