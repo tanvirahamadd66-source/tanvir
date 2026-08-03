@@ -633,11 +633,7 @@ main .section:nth-of-type(even) { background: var(--bg-alt); }
   box-shadow: 0 25px 60px -32px rgba(0, 0, 0, 0.6);
   transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition);
 }
-.service-lux-card:hover {
-  transform: translateY(-8px);
-  border-color: rgba(255, 61, 61, 0.45);
-  box-shadow: 0 34px 70px -28px rgba(255, 61, 61, 0.3), 0 25px 55px -30px rgba(0, 0, 0, 0.6);
-}
+.service-lux-card:hover { transform: translateY(-4px); box-shadow: var(--shadow); border-color: var(--accent); }
 .service-lux-card h4 {
   position: relative;
   font-family: var(--font-display);
@@ -657,9 +653,7 @@ main .section:nth-of-type(even) { background: var(--bg-alt); }
   height: 2px;
   border-radius: 2px;
   background: var(--accent);
-  transition: width var(--transition);
 }
-.service-lux-card:hover h4::after { width: 52px; }
 .service-lux-card ul { display: flex; flex-direction: column; gap: 0.85rem; flex: 1; }
 .service-lux-card li {
   display: flex;
