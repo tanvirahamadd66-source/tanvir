@@ -1,0 +1,20 @@
+/* Self-hosted Inter + Sora (variable fonts) — replaces the Google Fonts
+   CDN so the site (and its offline export) never depends on a third-party
+   host to render text. Weight ranges cover every weight actually used
+   across the site (400–800 Inter, 500–800 Sora). */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400 800;
+  font-display: swap;
+  src: url('Inter-Variable.woff2') format('woff2-variations'),
+       url('Inter-Variable.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Sora';
+  font-style: normal;
+  font-weight: 500 800;
+  font-display: swap;
+  src: url('Sora-Variable.woff2') format('woff2-variations'),
+       url('Sora-Variable.woff2') format('woff2');
+}
