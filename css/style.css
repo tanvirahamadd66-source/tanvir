@@ -595,93 +595,56 @@ main .section:nth-of-type(even) { background: var(--bg-alt); }
 .service-card p { margin-top: 0.5rem; color: var(--text-muted); font-size: 0.95rem; }
 
 .services-cards {
-  position: relative;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   align-items: stretch;
   gap: var(--space-3);
   margin-top: var(--space-2);
 }
-/* ambient red glow blobs behind the glass cards — gives backdrop-filter
-   something to actually diffuse, otherwise the glass reads as flat */
-.services-cards::before,
-.services-cards::after {
-  content: "";
-  position: absolute;
-  width: 380px;
-  height: 380px;
-  border-radius: 50%;
-  background: radial-gradient(circle, var(--accent-glow) 0%, transparent 72%);
-  filter: blur(70px);
-  z-index: 0;
-  pointer-events: none;
-}
-.services-cards::before { top: -140px; left: -60px; }
-.services-cards::after { bottom: -140px; right: -60px; }
 
 .service-lux-card {
-  position: relative;
-  z-index: 1;
   display: flex;
   flex-direction: column;
-  padding: var(--space-4) var(--space-3) var(--space-3);
+  padding: var(--space-3);
   border-radius: var(--radius-lg);
-  background: linear-gradient(165deg, rgba(28, 19, 19, 0.68), rgba(9, 6, 6, 0.66));
-  -webkit-backdrop-filter: blur(24px) saturate(150%);
-  backdrop-filter: blur(24px) saturate(150%);
-  border: 1px solid rgba(255, 255, 255, 0.09);
-  box-shadow: 0 25px 60px -32px rgba(0, 0, 0, 0.6);
+  background: var(--card-bg);
+  border: 1px solid var(--border);
   transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition);
 }
 .service-lux-card:hover { transform: translateY(-4px); box-shadow: var(--shadow); border-color: var(--accent); }
 .service-lux-card h4 {
-  position: relative;
-  font-family: var(--font-display);
-  font-size: 1.05rem;
-  font-weight: 700;
-  letter-spacing: -0.01em;
-  color: #ffffff;
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.13em;
+  color: var(--text);
   margin-bottom: var(--space-3);
-  padding-bottom: var(--space-2);
+  padding-bottom: 0.9rem;
+  border-bottom: 2px solid var(--border-strong);
 }
-.service-lux-card h4::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  width: 32px;
-  height: 2px;
-  border-radius: 2px;
-  background: var(--accent);
-}
-.service-lux-card ul { display: flex; flex-direction: column; gap: 0.85rem; flex: 1; }
+.service-lux-card ul { display: flex; flex-direction: column; flex: 1; }
 .service-lux-card li {
   display: flex;
-  align-items: center;
-  gap: 0.7rem;
-  font-size: 0.94rem;
-  line-height: 1.4;
-  color: rgba(255, 255, 255, 0.82);
-  transition: color var(--transition), transform var(--transition);
+  align-items: baseline;
+  gap: 0.8rem;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: var(--text-muted);
+  padding-block: 0.7rem;
+  transition: color var(--transition), padding-left var(--transition);
 }
+.service-lux-card li:not(:last-child) { border-bottom: 1px solid var(--border); }
 .service-lux-card li::before {
   content: "";
-  width: 15px;
-  height: 15px;
+  width: 4px;
+  height: 4px;
+  min-width: 4px;
+  border-radius: 50%;
+  background: var(--text-muted);
   flex-shrink: 0;
-  background: var(--accent);
-  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.75' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 13l4 4L19 7'/%3E%3C/svg%3E");
-  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.75' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 13l4 4L19 7'/%3E%3C/svg%3E");
-  -webkit-mask-repeat: no-repeat;
-  mask-repeat: no-repeat;
-  -webkit-mask-position: center;
-  mask-position: center;
-  -webkit-mask-size: contain;
-  mask-size: contain;
-  transition: transform var(--transition);
+  transition: background var(--transition), transform var(--transition);
 }
-.service-lux-card li:hover { color: #ffffff; transform: translateX(3px); }
-.service-lux-card li:hover::before { transform: scale(1.15); }
+.service-lux-card li:hover { color: var(--text); padding-left: 0.3rem; }
+.service-lux-card li:hover::before { background: var(--accent); transform: scale(1.75); }
 
 .pricing-note {
   margin-top: var(--space-5);
@@ -762,6 +725,15 @@ main .section:nth-of-type(even) { background: var(--bg-alt); }
 .project-card img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform 600ms ease; }
 .project-card.has-image:hover img { transform: scale(1.045); }
 .project-card.contain-cover img { object-fit: contain; }
+.project-card .card-live-preview {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform-origin: top left;
+  border: 0;
+  pointer-events: none;
+  background: var(--bg-alt);
+}
 
 .project-card .card-overlay {
   position: relative;
@@ -1364,6 +1336,90 @@ main .section:nth-of-type(even) { background: var(--bg-alt); }
   object-fit: cover;
 }
 
+/* ---------- Live website embed (UI/UX project showcase) ----------
+   Contained rounded card like the rest of the site, but the iframe is
+   resized via JS to match the embedded page's real content height, so
+   there's no internal scrollbar — the outer page scrolls through the
+   whole site naturally, then continues into the portfolio's own footer. */
+.project-live-embed {
+  position: relative;
+  width: 100%;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  background: var(--surface);
+}
+.project-live-embed iframe {
+  width: 100%;
+  height: 88vh;
+  min-height: 640px;
+  border: 0;
+  display: block;
+}
+.project-live-embed-fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: var(--text-muted);
+  text-align: center;
+  padding: var(--space-4);
+}
+
+/* ---------- Post-preview action row (Appreciate / Save / Get in Touch) ----------
+   The appreciate count is a personal tally for this visitor (like Medium's
+   claps), never a fabricated global count — there's no backend, so showing
+   a number as if it reflects everyone's engagement would be dishonest. */
+.action-row {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  padding: var(--space-6, 4rem) 0;
+}
+.action-card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+  text-decoration: none;
+  color: var(--text);
+  cursor: pointer;
+  transition: border-color 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+}
+.action-card:hover { transform: translateY(-3px); border-color: var(--accent); box-shadow: var(--shadow); }
+.action-card.pop { animation: actionPop 0.26s ease; }
+@keyframes actionPop {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.08); }
+  100% { transform: scale(1); }
+}
+.action-icon {
+  width: 22px;
+  height: 22px;
+  fill: var(--text-muted);
+  stroke: none;
+  transition: fill 0.25s ease, stroke 0.25s ease, transform 0.25s ease;
+}
+.action-icon.save-icon, .action-icon.contact-icon { fill: none; stroke: var(--text-muted); stroke-width: 1.8; }
+.action-card:hover .action-icon:not(.save-icon):not(.contact-icon) { fill: var(--accent); }
+.action-card:hover .action-icon.save-icon, .action-card:hover .action-icon.contact-icon { stroke: var(--accent); }
+/* Appreciate: the heart lifts up slightly on like — a clear, satisfying
+   "liked" state via the same border highlight the other two cards use. */
+#clapBtn {
+  transition: border-color 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+}
+#clapBtn.clapped { border-color: var(--accent); }
+#clapBtn.clapped .action-icon.heart-icon { fill: var(--accent); transform: translateY(-3px) scale(1.15); }
+#clapBtn.pop .action-icon.heart-icon { transform: translateY(-4px) scale(1.25); }
+#saveBtn.saved { border-color: var(--accent); }
+#saveBtn.saved .action-icon.save-icon { fill: var(--accent); stroke: var(--accent); }
 /* ---------- Project page entrance animation ---------- */
 @keyframes enterFromTop { from { opacity: 0; transform: translateY(-18px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes enterFromLeft { from { opacity: 0; transform: translateX(-28px); } to { opacity: 1; transform: translateX(0); } }

@@ -41,7 +41,11 @@ function page(p) {
     p.totalOnBehance > p.gallery.length
       ? `<p class="project-gallery-note">Showing ${p.gallery.length} of ${p.totalOnBehance} images from this project — see the full case study on Behance for the complete gallery.</p>`
       : "";
-  const galleryImgTag = (src) => `      <img src="../${src}" alt="${title} — project image" loading="lazy" />`;
+  // galleryAspect: optional override (e.g. "1 / 1") for projects whose
+  // grouped (2/3-col) images aren't the default 4:3 the shared CSS assumes —
+  // without this, square or other-ratio images get cropped by object-fit:cover.
+  const galleryImgTag = (src, aspect) =>
+    `      <img src="../${src}" alt="${title} — project image" loading="lazy"${aspect ? ` style="aspect-ratio:${aspect};"` : ""} />`;
   let galleryImgs;
   if (p.galleryGroups) {
     // Flexible layout: an array of group sizes partitioning the gallery in order.
@@ -50,7 +54,7 @@ function page(p) {
     const parts = [];
     let idx = 0;
     for (const size of p.galleryGroups) {
-      const chunk = p.gallery.slice(idx, idx + size).map(galleryImgTag);
+      const chunk = p.gallery.slice(idx, idx + size).map((src) => galleryImgTag(src, size >= 2 ? p.galleryAspect : null));
       if (size === 3) {
         parts.push(`      <div class="project-gallery-3col">`, ...chunk, `      </div>`);
       } else if (size >= 2) {
@@ -65,14 +69,14 @@ function page(p) {
     const startIdx = p.twoColumnFrom - 1;
     const endIdx = p.twoColumnTo || p.gallery.length;
     galleryImgs = [
-      ...p.gallery.slice(0, startIdx).map(galleryImgTag),
+      ...p.gallery.slice(0, startIdx).map((src) => galleryImgTag(src, null)),
       `      <div class="project-gallery-2col">`,
-      ...p.gallery.slice(startIdx, endIdx).map(galleryImgTag),
+      ...p.gallery.slice(startIdx, endIdx).map((src) => galleryImgTag(src, p.galleryAspect)),
       `      </div>`,
-      ...p.gallery.slice(endIdx).map(galleryImgTag),
+      ...p.gallery.slice(endIdx).map((src) => galleryImgTag(src, null)),
     ].join("\n");
   } else {
-    galleryImgs = p.gallery.map(galleryImgTag).join("\n");
+    galleryImgs = p.gallery.map((src) => galleryImgTag(src, null)).join("\n");
   }
 
   const canonicalUrl = `https://tanvircreates.com/projects/${p.slug}.html`;
@@ -118,9 +122,7 @@ function page(p) {
 }
 </script>
 
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Sora:wght@500;600;700;800&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="../assets/fonts/fonts.css" />
 <link rel="stylesheet" href="../css/style.css" />
 <script>
   (function () {
@@ -212,6 +214,18 @@ function page(p) {
 ${galleryImgs}
       </div>
       ${moreNote}
+
+      <div class="action-row" data-slug="${p.slug}">
+        <button type="button" class="action-card" id="clapBtn" aria-label="Appreciate this project" aria-pressed="false">
+          <svg class="action-icon heart-icon" viewBox="0 0 24 24"><path d="M12 21s-7.5-4.35-10-9.28C.5 8.5 2 5 5.6 5 8 5 9.5 6.5 12 9c2.5-2.5 4-4 6.4-4C22 5 23.5 8.5 22 11.72 19.5 16.65 12 21 12 21z"/></svg>
+        </button>
+        <button type="button" class="action-card" id="saveBtn" aria-label="Save this project" aria-pressed="false">
+          <svg class="action-icon save-icon" viewBox="0 0 24 24"><path d="M6 3.5h12a.5.5 0 0 1 .5.5v16.2a.5.5 0 0 1-.77.42L12 16.9l-5.73 3.72a.5.5 0 0 1-.77-.42V4a.5.5 0 0 1 .5-.5z"/></svg>
+        </button>
+        <a class="action-card" href="../index.html#contact" aria-label="Get in touch">
+          <svg class="action-icon contact-icon" viewBox="0 0 24 24"><path d="M4 4h16v16H4z"/><path d="m4 4 8 8 8-8"/></svg>
+        </a>
+      </div>
     </div>
   </section>
 </main>
@@ -262,6 +276,7 @@ ${galleryImgs}
     backToTop.addEventListener("click", () => window.scrollTo({ top: 0, behavior: "smooth" }));
   });
 </script>
+<script src="../js/project-actions.js"></script>
 </body>
 </html>
 `;

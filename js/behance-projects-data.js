@@ -27,6 +27,7 @@ const BEHANCE_PROJECTS = [
     totalOnBehance: 12,
     coverImage: "assets/img/projects/behance/orange-drink-social-media-post-design/05.jpg",
     twoColumnFrom: 7,
+    galleryAspect: "1 / 1",
     gallery: [
       "assets/img/projects/behance/orange-drink-social-media-post-design/01.jpg",
       "assets/img/projects/behance/orange-drink-social-media-post-design/02.jpg",

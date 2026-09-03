@@ -24,6 +24,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initAboutTabs();
   initWorkTabs();
   renderBehanceProjects();
+  renderUiuxProjects();
   renderFeaturedProjects();
   renderAdditionalProjects();
   renderTestimonials();
@@ -228,8 +229,42 @@ function initWorkTabs() {
       tab.classList.add("active");
       const target = tab.dataset.worktab;
       panels.forEach((p) => p.classList.toggle("active", p.dataset.workpanel === target));
+
+      // Live-preview iframes (see renderUiuxProjects) only start loading once
+      // their panel is actually visible — while hidden (display:none) the
+      // browser pauses requestAnimationFrame, which would stall the embedded
+      // page's auto-scroll animation before it ever gets going.
+      const activePanel = document.querySelector('.work-panel[data-workpanel="' + target + '"]');
+      if (activePanel) {
+        activePanel.querySelectorAll("iframe[data-src]").forEach((frame) => {
+          frame.src = frame.dataset.src;
+          frame.removeAttribute("data-src");
+          initLivePreviewScale(frame);
+        });
+      }
     });
   });
+}
+
+/* Renders the embedded site at a real desktop width (so it lays out exactly
+   like the full "Live Website Preview" embed — no mobile-breakpoint reflow),
+   then scales the whole iframe down with a CSS transform to fit the small
+   card. Rescales on card resize since the grid is responsive. */
+function initLivePreviewScale(frame) {
+  const DESIGN_W = 1280, DESIGN_H = 960;
+  frame.style.width = DESIGN_W + "px";
+  frame.style.height = DESIGN_H + "px";
+  const card = frame.closest(".project-card");
+  if (!card) return;
+  function applyScale() {
+    if (card.clientWidth > 0) frame.style.transform = `scale(${card.clientWidth / DESIGN_W})`;
+  }
+  applyScale();
+  if ("ResizeObserver" in window) {
+    new ResizeObserver(applyScale).observe(card);
+  } else {
+    window.addEventListener("resize", applyScale);
+  }
 }
 
 /* ---------- Behance project rendering (real published work) ---------- */
@@ -274,6 +309,27 @@ function initCategoryFilters(grid) {
       });
     });
   });
+}
+
+/* ---------- UI/UX client projects (full live-website case studies) ---------- */
+function renderUiuxProjects() {
+  const grid = document.getElementById("uiuxGrid");
+  if (!grid || typeof UIUX_PROJECTS === "undefined") return;
+
+  grid.innerHTML = UIUX_PROJECTS.map((p) => {
+    const thumb = p.livePreview
+      ? `<iframe class="card-live-preview" data-src="${p.livePreview}" tabindex="-1" aria-hidden="true"></iframe>`
+      : `<img src="${p.image}" alt="${p.name} project preview" loading="lazy" />`;
+    return `
+      <a class="project-card reveal has-image" href="${p.link}">
+        ${thumb}
+        <div class="card-overlay">
+          <div class="tag">${p.category}</div>
+          <div class="wordmark">${p.name}</div>
+          <span class="view-link">View Project <span class="link-arrow">&rarr;</span></span>
+        </div>
+      </a>`;
+  }).join("");
 }
 
 /* ---------- Project rendering ---------- */
