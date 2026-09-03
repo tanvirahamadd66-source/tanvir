@@ -595,56 +595,93 @@ main .section:nth-of-type(even) { background: var(--bg-alt); }
 .service-card p { margin-top: 0.5rem; color: var(--text-muted); font-size: 0.95rem; }
 
 .services-cards {
+  position: relative;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   align-items: stretch;
   gap: var(--space-3);
   margin-top: var(--space-2);
 }
+/* ambient red glow blobs behind the glass cards — gives backdrop-filter
+   something to actually diffuse, otherwise the glass reads as flat */
+.services-cards::before,
+.services-cards::after {
+  content: "";
+  position: absolute;
+  width: 380px;
+  height: 380px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--accent-glow) 0%, transparent 72%);
+  filter: blur(70px);
+  z-index: 0;
+  pointer-events: none;
+}
+.services-cards::before { top: -140px; left: -60px; }
+.services-cards::after { bottom: -140px; right: -60px; }
 
 .service-lux-card {
+  position: relative;
+  z-index: 1;
   display: flex;
   flex-direction: column;
-  padding: var(--space-3);
+  padding: var(--space-4) var(--space-3) var(--space-3);
   border-radius: var(--radius-lg);
-  background: var(--card-bg);
-  border: 1px solid var(--border);
+  background: linear-gradient(165deg, rgba(28, 19, 19, 0.68), rgba(9, 6, 6, 0.66));
+  -webkit-backdrop-filter: blur(24px) saturate(150%);
+  backdrop-filter: blur(24px) saturate(150%);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  box-shadow: 0 25px 60px -32px rgba(0, 0, 0, 0.6);
   transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition);
 }
 .service-lux-card:hover { transform: translateY(-4px); box-shadow: var(--shadow); border-color: var(--accent); }
 .service-lux-card h4 {
-  font-size: 0.82rem;
-  text-transform: uppercase;
-  letter-spacing: 0.13em;
-  color: var(--text);
+  position: relative;
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: #ffffff;
   margin-bottom: var(--space-3);
-  padding-bottom: 0.9rem;
-  border-bottom: 2px solid var(--border-strong);
+  padding-bottom: var(--space-2);
 }
-.service-lux-card ul { display: flex; flex-direction: column; flex: 1; }
+.service-lux-card h4::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 32px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--accent);
+}
+.service-lux-card ul { display: flex; flex-direction: column; gap: 0.85rem; flex: 1; }
 .service-lux-card li {
   display: flex;
-  align-items: baseline;
-  gap: 0.8rem;
-  font-size: 0.95rem;
-  line-height: 1.5;
-  color: var(--text-muted);
-  padding-block: 0.7rem;
-  transition: color var(--transition), padding-left var(--transition);
+  align-items: center;
+  gap: 0.7rem;
+  font-size: 0.94rem;
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.82);
+  transition: color var(--transition), transform var(--transition);
 }
-.service-lux-card li:not(:last-child) { border-bottom: 1px solid var(--border); }
 .service-lux-card li::before {
   content: "";
-  width: 4px;
-  height: 4px;
-  min-width: 4px;
-  border-radius: 50%;
-  background: var(--text-muted);
+  width: 15px;
+  height: 15px;
   flex-shrink: 0;
-  transition: background var(--transition), transform var(--transition);
+  background: var(--accent);
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.75' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 13l4 4L19 7'/%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.75' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 13l4 4L19 7'/%3E%3C/svg%3E");
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  transition: transform var(--transition);
 }
-.service-lux-card li:hover { color: var(--text); padding-left: 0.3rem; }
-.service-lux-card li:hover::before { background: var(--accent); transform: scale(1.75); }
+.service-lux-card li:hover { color: #ffffff; transform: translateX(3px); }
+.service-lux-card li:hover::before { transform: scale(1.15); }
 
 .pricing-note {
   margin-top: var(--space-5);
