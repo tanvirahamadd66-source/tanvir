@@ -1538,4 +1538,46 @@ main .section:nth-of-type(even) { background: var(--bg-alt); }
   .section { padding-block: var(--space-5); }
   .project-gallery-2col { grid-template-columns: 1fr; }
   .project-gallery-3col { grid-template-columns: 1fr; }
+
+  /* Mobile Safari/Chrome can badly mishandle backdrop-filter blur combined
+     with a transform-animated ancestor + overflow:hidden (the project card's
+     scroll-in entrance animation) — it sometimes fails to clip the card's
+     content correctly, letting the live-preview thumbnail's real content
+     bleed out past the card edge. Dropping the blur on mobile (a plain
+     tinted background instead) sidesteps the bug and is lighter to render
+     on phones anyway. */
+  .project-card.has-image .card-overlay {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background: rgba(9, 7, 7, 0.72);
+  }
+  .project-card.has-image:hover .card-overlay {
+    background: rgba(9, 7, 7, 0.8);
+  }
+
+  /* Two solid-red active pills (work tab + category filter) stacked close
+     together on a narrow screen read as heavy/unbalanced — the site's own
+     rule is that red appears once as a strong accent, not twice back to
+     back. Keep the work tab solid; give the category filter a lighter tint
+     instead of a second full-red block. */
+  .category-filter-btn.active {
+    background: rgba(200, 30, 42, 0.12);
+    color: var(--accent-contrast);
+    border-color: var(--accent-contrast);
+  }
+
+  /* Extra safety net for the same clipping bug: a live-preview card's own
+     scaled iframe plus the card's entrance translate/scale is exactly the
+     "transform on a transform, inside overflow:hidden" combination mobile
+     WebKit trips on. Fading in with no transform sidesteps it entirely for
+     these cards specifically. */
+  .behance-grid .project-card.has-live-preview.reveal {
+    transform: none;
+  }
+  .behance-grid .project-card.has-live-preview.reveal.in-view {
+    animation-name: fadeInOnly;
+  }
+  @keyframes fadeInOnly {
+    to { opacity: 1; }
+  }
 }
