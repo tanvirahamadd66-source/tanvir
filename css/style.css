@@ -751,6 +751,13 @@ main .section:nth-of-type(even) { background: var(--bg-alt); }
   border: 1px solid var(--border);
   aspect-ratio: 4 / 3;
   overflow: hidden;
+  /* CSS containment forces the browser to actually respect this clip for
+     every descendant, even a live-preview iframe carrying its own
+     transform — without it, some mobile browsers paint a transformed
+     child's content past overflow:hidden after an animation/compositing
+     hand-off (the DOM/CSSOM numbers look correct; only the raster output is
+     wrong), which is what made card content bleed past its edges. */
+  contain: paint;
   background: var(--bg-alt);
   display: flex;
   flex-direction: column;
