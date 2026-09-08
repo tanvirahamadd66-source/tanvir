@@ -38,6 +38,20 @@
 }
 </script>
 
+<!-- Structured data: CreativeWork -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "CreativeWork",
+  "name": "Dogford — Premium Dog Food Email Design",
+  "description": "Email newsletter design for Dogford, a premium dog food brand.",
+  "image": "https://tanvircreates.com/assets/img/projects/behance/dogford-email-design/cover.jpg",
+  "url": "https://tanvircreates.com/projects/dogford-email-design.html",
+  "keywords": "Email Design, Newsletter Design, Pet Branding, Brand Identity",
+  "creator": { "@type": "Person", "name": "Tanvir Ahamad", "url": "https://tanvircreates.com/" }
+}
+</script>
+
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Sora:wght@500;600;700;800&display=swap" rel="stylesheet" />
@@ -125,12 +139,13 @@
   <section class="section" style="border-bottom:none;">
     <div class="container">
       <div class="project-gallery-head">
-        <span class="eyebrow">Project Gallery</span>
+        <span class="eyebrow">Live Email Preview</span>
       </div>
-      <div class="project-gallery">
-      <img src="../assets/img/projects/behance/dogford-email-design/02.jpg" alt="Dogford — Premium Dog Food Email Design — project image" loading="lazy" />
+      <div class="project-live-embed">
+        <iframe id="siteEmbedFrame" src="dogford-email-site/index.html" title="Dogford — Premium Dog Food Email Design — live preview">
+          <div class="project-live-embed-fallback">Your browser can't display this embedded preview — <a href="dogford-email-site/index.html">open the live design directly</a> instead.</div>
+        </iframe>
       </div>
-      
 
       <div class="action-row" data-slug="dogford-email-design">
         <button type="button" class="action-card" id="clapBtn" aria-label="Appreciate this project" aria-pressed="false">
@@ -191,6 +206,21 @@
     const backToTop = document.getElementById("backToTop");
     window.addEventListener("scroll", () => backToTop.classList.toggle("visible", window.scrollY > 600));
     backToTop.addEventListener("click", () => window.scrollTo({ top: 0, behavior: "smooth" }));
+
+    // Give the embedded design a visible, styled scrollbar instead of hiding
+    // it, so visitors can see there's more below as they scroll (same
+    // treatment as the Startup.Ready live-website embed).
+    function styleFrameScrollbar(frame) {
+      try {
+        const doc = frame.contentWindow.document;
+        if (doc.getElementById("__scrollbarStyle")) return;
+        const style = doc.createElement("style");
+        style.id = "__scrollbarStyle";
+        style.textContent = "html{scrollbar-width:thin; scrollbar-color:rgba(255,255,255,0.35) transparent;} html::-webkit-scrollbar{width:9px;} html::-webkit-scrollbar-track{background:transparent;} html::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.35); border-radius:8px;} html::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,0.55);}";
+        doc.head.appendChild(style);
+      } catch (e) {}
+    }
+    document.getElementById("siteEmbedFrame").addEventListener("load", () => styleFrameScrollbar(document.getElementById("siteEmbedFrame")));
   });
 </script>
 <script src="../js/project-actions.js"></script>

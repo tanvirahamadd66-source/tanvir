@@ -128,7 +128,7 @@ function initReveal() {
 function initRotator() {
   const el = document.getElementById("rotator");
   if (!el) return;
-  const words = ["Brand Identities", "Logo Designs", "Visual Systems", "Digital Graphics"];
+  const words = ["Brand Identities", "Logo Designs", "Visual Systems", "Digital Graphics", "Website Designs"];
   let i = 0;
   setInterval(() => {
     i = (i + 1) % words.length;
@@ -147,7 +147,8 @@ function initMarquee() {
   if (!track) return;
   const items = [
     "Logo Design", "Brand Identity", "Social Media Design", "Company Profiles",
-    "Packaging Design", "Presentation Design", "Print Design", "Email Design"
+    "Packaging Design", "Presentation Design", "Print Design", "Email Design",
+    "Website Design", "UI/UX Design"
   ];
   const html = items.map((i) => `<span>${i}</span>`).join("");
   track.innerHTML = html + html; // duplicated for seamless loop
@@ -250,20 +251,45 @@ function initWorkTabs() {
    like the full "Live Website Preview" embed — no mobile-breakpoint reflow),
    then scales the whole iframe down with a CSS transform to fit the small
    card. Rescales on card resize since the grid is responsive. */
-function initLivePreviewScale(frame) {
-  const DESIGN_W = 1280, DESIGN_H = 960;
+function initLivePreviewScale(frame, designW, designH) {
+  const DESIGN_W = designW || 1280, DESIGN_H = designH || 960;
   frame.style.width = DESIGN_W + "px";
   frame.style.height = DESIGN_H + "px";
   const card = frame.closest(".project-card");
   if (!card) return;
+
+  // On mobile, the browser chrome (address bar) showing/hiding as the page
+  // scrolls fires ResizeObserver repeatedly with sub-pixel width changes —
+  // reapplying the transform every time made the thumbnail visibly judder.
+  // Coalesce bursts with rAF and ignore noise below 1px so the scale only
+  // actually updates for a real size change (rotation, breakpoint, etc).
+  let lastWidth = 0;
+  let lastHeight = 0;
+  let rafId = null;
   function applyScale() {
-    if (card.clientWidth > 0) frame.style.transform = `scale(${card.clientWidth / DESIGN_W})`;
+    rafId = null;
+    const w = card.clientWidth, h = card.clientHeight;
+    if (w <= 0 || h <= 0 || (Math.abs(w - lastWidth) < 1 && Math.abs(h - lastHeight) < 1)) return;
+    lastWidth = w;
+    lastHeight = h;
+    // Scale by whichever axis needs more zoom so the frame always fully
+    // covers the card, edge to edge — same as the object-fit: cover crop
+    // every other card's plain cover image already gets from the browser
+    // (the card's aspect ratio, e.g. 4/3.4, and the design's, e.g. 4/3,
+    // rarely match exactly). Keeps card sizes uniform across the grid.
+    frame.style.transform = `scale(${Math.max(w / DESIGN_W, h / DESIGN_H)})`;
+    frame.style.top = "0";
   }
+  function scheduleScale() {
+    if (rafId !== null) return;
+    rafId = requestAnimationFrame(applyScale);
+  }
+
   applyScale();
   if ("ResizeObserver" in window) {
-    new ResizeObserver(applyScale).observe(card);
+    new ResizeObserver(scheduleScale).observe(card);
   } else {
-    window.addEventListener("resize", applyScale);
+    window.addEventListener("resize", scheduleScale);
   }
 }
 
@@ -274,10 +300,15 @@ function renderBehanceProjects() {
 
   grid.innerHTML = BEHANCE_PROJECTS.map((p) => {
     const containClass = p.coverFit === "contain" ? " contain-cover" : "";
+    // A live-preview card's aspect ratio is set to match its design's own
+    // (see .has-live-preview in style.css) so the width-fit scale in
+    // initLivePreviewScale covers it exactly — no crop, no letterboxing.
+    const livePreviewClass = p.livePreview ? " has-live-preview" : "";
     const bgAttr = p.coverBg ? ` style="background:${p.coverBg}"` : "";
+    const thumb = renderCardThumb(p);
     return `
-    <a class="project-card reveal has-image${containClass}" href="projects/${p.slug}.html" data-category="${p.category}"${bgAttr}>
-      <img src="${p.coverImage || p.gallery[0]}" alt="${p.title} — cover image" loading="lazy" />
+    <a class="project-card reveal has-image${containClass}${livePreviewClass}" href="projects/${p.slug}.html" data-category="${p.category}"${bgAttr}>
+      ${thumb}
       <div class="card-overlay">
         <div class="tag">${p.category}</div>
         <div class="wordmark">${p.title}</div>
@@ -286,7 +317,81 @@ function renderBehanceProjects() {
     </a>`;
   }).join("");
 
+  // Behance's "Projects" panel is visible by default (unlike the UI/UX tab,
+  // which starts hidden), so its live-preview iframes can start loading and
+  // scaling immediately — no need to defer via data-src + tab click. Each
+  // frame carries its own design width/height (a full website like
+  // Startup.Ready needs its real desktop width; a narrow email design fits
+  // a much smaller frame) via data-design-w/h, set in renderCardThumb.
+  grid.querySelectorAll(".card-live-preview").forEach((frame) => {
+    const w = Number(frame.dataset.designW) || 640;
+    const h = Number(frame.dataset.designH) || 480;
+    initLivePreviewScale(frame, w, h);
+  });
+
+  // Multi-image projects (Dog Jacks, Orange Drink, NeuraHire, Water Supply
+  // Logo, etc.) cycle their first few gallery shots as a crossfading
+  // thumbnail slideshow instead of sitting on one static cover image. A slide
+  // marked "scroll" (see cardSlides in the data) is a tall image that pans
+  // top-to-bottom while active instead of just crossfading in.
+  grid.querySelectorAll(".project-card").forEach((card) => {
+    const slides = card.querySelectorAll(".card-slide");
+    if (slides.length > 1) initCardSlideshow(slides);
+  });
+
   initCategoryFilters(grid);
+}
+
+// Builds a card's thumbnail markup: a live-preview iframe when the project
+// has one; an explicit hand-picked `cardSlides` sequence when set (each entry
+// `{ src, scroll? }` — `scroll: true` pans the (tall) image top-to-bottom
+// instead of just crossfading in); otherwise a single static cover image.
+// Cycling is opt-in via `cardSlides` only (not automatic for every
+// multi-image gallery) so it can be scoped to specific cards.
+function renderCardThumb(p) {
+  if (p.livePreview) {
+    return `<iframe class="card-live-preview" src="${p.livePreview}" data-design-w="${p.livePreviewW || 640}" data-design-h="${p.livePreviewH || 480}" tabindex="-1" aria-hidden="true"></iframe>`;
+  }
+  if (p.cardSlides && p.cardSlides.length > 1) {
+    const slideTag = (src, i, scroll) =>
+      scroll
+        ? `<div class="card-slide card-slide-scroll${i === 0 ? " active" : ""}"><img class="scroll-img" src="${src}" alt="${p.title} — portfolio project by Tanvir Ahamad, screen ${i + 1}" loading="lazy" /></div>`
+        : `<img class="card-slide${i === 0 ? " active" : ""}" src="${src}" alt="${p.title} — portfolio project by Tanvir Ahamad, screen ${i + 1}" loading="lazy" />`;
+    return p.cardSlides.map((s, i) => slideTag(s.src, i, s.scroll)).join("");
+  }
+  return `<img src="${p.coverImage || p.gallery[0]}" alt="${p.title} — portfolio project by Tanvir Ahamad" loading="lazy" />`;
+}
+
+// Cycles through a card's `.card-slide` elements on a timer, looping forever.
+// Plain slides crossfade in for a short dwell; a `.card-slide-scroll` slide
+// dwells longer and restarts its pan animation each time it becomes active.
+// Respects reduced-motion by leaving the first slide showing statically.
+function initCardSlideshow(slides) {
+  if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const DWELL_PLAIN = 2200;
+  const DWELL_SCROLL = 6000;
+  let idx = 0;
+
+  function dwellFor(slide) {
+    return slide.classList.contains("card-slide-scroll") ? DWELL_SCROLL : DWELL_PLAIN;
+  }
+  function restartScrollAnim(slide) {
+    const img = slide.querySelector(".scroll-img");
+    if (!img) return;
+    img.style.animation = "none";
+    void img.offsetWidth; // force reflow so the animation restarts from 0%
+    img.style.animation = "";
+  }
+
+  function step() {
+    slides[idx].classList.remove("active");
+    idx = (idx + 1) % slides.length;
+    const next = slides[idx];
+    next.classList.add("active");
+    if (next.classList.contains("card-slide-scroll")) restartScrollAnim(next);
+    setTimeout(step, dwellFor(next));
+  }
+  setTimeout(step, dwellFor(slides[0]));
 }
 
 function initCategoryFilters(grid) {
@@ -319,7 +424,7 @@ function renderUiuxProjects() {
   grid.innerHTML = UIUX_PROJECTS.map((p) => {
     const thumb = p.livePreview
       ? `<iframe class="card-live-preview" data-src="${p.livePreview}" tabindex="-1" aria-hidden="true"></iframe>`
-      : `<img src="${p.image}" alt="${p.name} project preview" loading="lazy" />`;
+      : `<img src="${p.image}" alt="${p.name} — ${p.category} by Tanvir Ahamad" loading="lazy" />`;
     return `
       <a class="project-card reveal has-image" href="${p.link}">
         ${thumb}
@@ -351,7 +456,7 @@ function renderFeaturedProjects() {
 
     return `
       <${tagName} class="project-card reveal${hasImage ? " has-image" : ""}${containClass}"${linkAttrs}${bgAttr}>
-        ${hasImage ? `<img src="${p.image}" alt="${p.name} project preview" loading="lazy" />` : ""}
+        ${hasImage ? `<img src="${p.image}" alt="${p.name} — ${tag} by Tanvir Ahamad" loading="lazy" />` : ""}
         <div class="card-overlay">
           ${desc}
           <div class="wordmark">${p.name}</div>

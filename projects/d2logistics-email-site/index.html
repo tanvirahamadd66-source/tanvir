@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>D2 Logistics — Email Design</title>
+<style>
+  *{ margin:0; padding:0; box-sizing:border-box; }
+  html{ scrollbar-width:thin; scrollbar-color:rgba(255,255,255,0.35) transparent; }
+  html::-webkit-scrollbar{ width:9px; }
+  html::-webkit-scrollbar-track{ background:transparent; }
+  html::-webkit-scrollbar-thumb{ background:rgba(255,255,255,0.35); border-radius:8px; }
+  html::-webkit-scrollbar-thumb:hover{ background:rgba(255,255,255,0.55); }
+  html,body{ background:#151f42; min-height:100%; }
+  body{
+    display:flex;
+    justify-content:center;
+    padding:56px 24px 96px;
+  }
+  .frame{
+    width:100%;
+    max-width:760px;
+    border-radius:24px;
+    overflow:hidden;
+    box-shadow:0 50px 100px -35px rgba(0,0,0,0.75), 0 0 0 1px rgba(255,255,255,0.06);
+  }
+  img{ display:block; width:100%; height:auto; }
+</style>
+</head>
+<body>
+<div class="frame">
+  <img src="../../assets/img/projects/behance/d2logistics-email-design/full-design.jpg" alt="D2 Logistics — Email Design" />
+</div>
+
+<script>
+(function(){
+  // Auto-play mode for the portfolio thumbnail/preview card: activated only
+  // via ?showcase=1 on the URL (never affects a normal visit to this file).
+  // Loops a slow scroll down through the design and back so the embedded
+  // preview looks like it's genuinely being read.
+  var params = new URLSearchParams(location.search);
+  if(params.get('showcase') !== '1') return;
+  document.documentElement.style.scrollbarWidth = 'none';
+
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(reduce) return;
+
+  function smoothScrollTo(y, duration){
+    return new Promise(function(resolve){
+      var startY = window.scrollY, distance = y - startY, startTime = null;
+      function step(ts){
+        if(!startTime) startTime = ts;
+        var t = Math.min(1, (ts - startTime) / duration);
+        var eased = t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t + 2, 3) / 2;
+        window.scrollTo(0, startY + distance * eased);
+        if(t < 1) requestAnimationFrame(step); else resolve();
+      }
+      requestAnimationFrame(step);
+    });
+  }
+  function wait(ms){ return new Promise(function(r){ setTimeout(r, ms); }); }
+
+  function loop(){
+    var maxY = document.documentElement.scrollHeight - window.innerHeight;
+    wait(500)
+      .then(function(){ return smoothScrollTo(maxY, 6000); })
+      .then(function(){ return wait(1000); })
+      .then(function(){ return smoothScrollTo(0, 3000); })
+      .then(function(){ return wait(700); })
+      .then(loop);
+  }
+  window.addEventListener('load', function(){ setTimeout(loop, 300); });
+})();
+</script>
+</body>
+</html>

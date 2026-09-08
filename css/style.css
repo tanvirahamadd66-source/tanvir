@@ -762,6 +762,19 @@ main .section:nth-of-type(even) { background: var(--bg-alt); }
 .project-card img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform 600ms ease; }
 .project-card.has-image:hover img { transform: scale(1.045); }
 .project-card.contain-cover img { object-fit: contain; }
+.project-card img.card-slide { opacity: 0; transition: opacity 900ms ease, transform 600ms ease; }
+.project-card img.card-slide.active { opacity: 1; }
+.project-card .card-slide-scroll { position: absolute; inset: 0; overflow: hidden; opacity: 0; transition: opacity 900ms ease; }
+.project-card .card-slide-scroll.active { opacity: 1; }
+.project-card .card-slide-scroll .scroll-img {
+  position: absolute; top: 0; left: 0; width: 100%; height: auto;
+  transform: translateY(0);
+}
+.project-card .card-slide-scroll.active .scroll-img { animation: cardSlideScroll 6s ease-in-out; }
+@keyframes cardSlideScroll {
+  0%, 15% { transform: translateY(0); }
+  85%, 100% { transform: translateY(-45%); }
+}
 .project-card .card-live-preview {
   position: absolute;
   top: 0;

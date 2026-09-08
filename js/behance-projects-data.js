@@ -17,6 +17,92 @@
 
 const BEHANCE_PROJECTS = [
   {
+    // Cross-listed from UIUX_PROJECTS (js/uiux-projects-data.js) so it also
+    // appears here in "Projects" — links to that hand-authored live-embed
+    // showcase page, which generate-project-pages.js must never overwrite.
+    noGeneratedPage: true,
+    slug: "startup-ready-website-design",
+    title: "Startup.Ready — Website Design (UI/UX)",
+    category: "Website Design (UI/UX)",
+    shortDescription: "Full website design and build for Startup.Ready, a startup-readiness assessment platform.",
+    description: "Full website design and build for Startup.Ready — a startup-readiness assessment platform. Complete multi-section site with custom illustrations, animated scoring rings, and interaction design.",
+    tags: ["UI/UX Design", "Website Design", "Interaction Design", "Custom Illustration"],
+    coverImage: "assets/img/projects/startup-ready-cover.jpg",
+    livePreview: "projects/startup-ready-site/index.html?showcase=1",
+    // Full desktop-width site, not a narrow email — needs its real layout
+    // width so it doesn't reflow to the mobile breakpoint (see main.js).
+    // Height matches the card's own 4/3.4 ratio (1280 * 3.4/4 = 1088) so the
+    // thumbnail fills the card exactly — no crop, no gap.
+    livePreviewW: 1280,
+    livePreviewH: 1088,
+    gallery: ["assets/img/projects/startup-ready-cover.jpg"]
+  },
+  {
+    slug: "d2logistics-email-design",
+    title: "D2 Logistics — Email Design",
+    category: "Email Design",
+    shortDescription: "Welcome email design for D2 Logistics, a freight and fleet logistics brand.",
+    description: "A welcome/onboarding email design created for D2 Logistics, built to introduce new clients to the brand with a bold blue hero, key trust stats (on-time rate, fleet size, years in operation), a \"why choose us\" feature grid, transportation service highlights and a strong call-to-action — all designed to build confidence with shippers who can't afford delays.",
+    tags: ["Email Design", "Newsletter Design", "Logistics Branding", "Brand Identity"],
+    totalOnBehance: 2,
+    // Own concept project, not client work — the detail page's badge should
+    // say "Project", not the default "Client Project".
+    projectBadge: "Project",
+    coverImage: "assets/img/projects/behance/d2logistics-email-design/cover.jpg",
+    // When present, the homepage card's thumbnail is a live, auto-scrolling
+    // iframe of the real design instead of a static image (the ?showcase=1
+    // flag runs the design's own short scroll-loop script — see
+    // projects/d2logistics-email-site/index.html), matching the treatment
+    // used for the Startup.Ready UI/UX card.
+    livePreview: "projects/d2logistics-email-site/index.html?showcase=1",
+    // Matches the card's own 4/3.4 ratio (640 * 3.4/4 = 544) so the
+    // thumbnail fills the card exactly — no crop, no gap.
+    livePreviewW: 640,
+    livePreviewH: 544,
+    // The project detail page embeds this same file live (scrollable) instead
+    // of static gallery screenshots — see generate-project-pages.js.
+    liveEmbedSite: "d2logistics-email-site/index.html",
+    gallery: [
+      { src: "assets/img/projects/behance/d2logistics-email-design/03.jpg", maxWidth: 460 },
+      { src: "assets/img/projects/behance/d2logistics-email-design/02.jpg", maxWidth: 460 }
+    ]
+  },
+  {
+    // Cross-listed from CLIENT_CASE_STUDIES below (Featured Client Projects)
+    // so it also appears here — same slug/detail page, kept in both lists.
+    slug: "cliqpiq-brand-identity",
+    title: "Cliqpiq — Brand Identity",
+    category: "Brand Identity",
+    shortDescription: "Bold, tech-forward brand identity for Cliqpiq, a smart camera app.",
+    description: "Cliqpiq is a smart camera app brand built around a distinctive lens-eye icon formed from the letters \"C\" and \"Q\", symbolizing the journey from click to capture. The identity uses a confident blue-and-white palette across primary and secondary lockups, a dedicated dark-mode variant, and app-icon/favicon treatments, backed by a full brand style guide covering usage, spacing, color and typography.",
+    tags: ["Brand Identity", "Logo Design", "App Branding", "Visual Identity"],
+    coverImage: "assets/img/projects/behance/cliqpiq-brand-identity/cover.jpg",
+    galleryGroups: [1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+    gallery: [
+      "assets/img/projects/behance/cliqpiq-brand-identity/01-secondary-light.jpg",
+      "assets/img/projects/behance/cliqpiq-brand-identity/02-primary-light.jpg",
+      "assets/img/projects/behance/cliqpiq-brand-identity/03-primary-dark.jpg",
+      "assets/img/projects/behance/cliqpiq-brand-identity/04-favicon-gradient.png",
+      "assets/img/projects/behance/cliqpiq-brand-identity/05-favicon-blue.png",
+      "assets/img/projects/behance/cliqpiq-brand-identity/06-guide-01.jpg",
+      "assets/img/projects/behance/cliqpiq-brand-identity/07-guide-02.jpg",
+      "assets/img/projects/behance/cliqpiq-brand-identity/08-guide-03.jpg",
+      "assets/img/projects/behance/cliqpiq-brand-identity/09-guide-04.jpg",
+      "assets/img/projects/behance/cliqpiq-brand-identity/10-guide-05.jpg",
+      "assets/img/projects/behance/cliqpiq-brand-identity/11-guide-06.jpg",
+      "assets/img/projects/behance/cliqpiq-brand-identity/12-guide-07.jpg",
+      "assets/img/projects/behance/cliqpiq-brand-identity/13-guide-08.jpg",
+      "assets/img/projects/behance/cliqpiq-brand-identity/14-guide-09.jpg",
+      "assets/img/projects/behance/cliqpiq-brand-identity/15-guide-10.jpg",
+      "assets/img/projects/behance/cliqpiq-brand-identity/16-guide-11.jpg",
+      "assets/img/projects/behance/cliqpiq-brand-identity/17-guide-12.jpg",
+      "assets/img/projects/behance/cliqpiq-brand-identity/18-guide-13.jpg",
+      "assets/img/projects/behance/cliqpiq-brand-identity/19-guide-14.jpg",
+      "assets/img/projects/behance/cliqpiq-brand-identity/20-guide-15.jpg",
+      "assets/img/projects/behance/cliqpiq-brand-identity/21-guide-16.jpg"
+    ]
+  },
+  {
     slug: "orange-drink-social-media-post-design",
     title: "Orange Drink Social Media Post Design",
     category: "Social Media Design",
@@ -26,6 +112,12 @@ const BEHANCE_PROJECTS = [
     behanceUrl: "https://www.behance.net/gallery/225594033/Orange-Drink-Social-Media-Post-Design",
     totalOnBehance: 12,
     coverImage: "assets/img/projects/behance/orange-drink-social-media-post-design/05.jpg",
+    cardSlides: [
+      { src: "assets/img/projects/behance/orange-drink-social-media-post-design/01.jpg" },
+      { src: "assets/img/projects/behance/orange-drink-social-media-post-design/02.jpg" },
+      { src: "assets/img/projects/behance/orange-drink-social-media-post-design/03.jpg" },
+      { src: "assets/img/projects/behance/orange-drink-social-media-post-design/04.jpg" }
+    ],
     twoColumnFrom: 7,
     galleryAspect: "1 / 1",
     gallery: [
@@ -52,6 +144,12 @@ const BEHANCE_PROJECTS = [
     tags: ["Brand Identity", "Brand Style Guide", "Logo Design", "Pet Branding", "Visual Identity"],
     behanceUrl: "https://www.behance.net/gallery/243866957/Dog-Jacks-Brand-And-Brand-Style-Guide-Full-Branding",
     totalOnBehance: 21,
+    cardSlides: [
+      { src: "assets/img/projects/behance/dog-jacks-brand-identity/11.jpg" },
+      { src: "assets/img/projects/behance/dog-jacks-brand-identity/08.jpg" },
+      { src: "assets/img/projects/behance/dog-jacks-brand-identity/03.jpg" },
+      { src: "assets/img/projects/behance/dog-jacks-brand-identity/04.jpg" }
+    ],
     galleryGroups: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 2, 1, 2, 1, 1],
     gallery: [
       "assets/img/projects/behance/dog-jacks-brand-identity/11.jpg",
@@ -86,6 +184,7 @@ const BEHANCE_PROJECTS = [
     tags: ["AI Branding", "Logo Design", "Brand Identity", "Visual Identity", "Brand Guidelines"],
     behanceUrl: "https://www.behance.net/gallery/237796361/NeuraHire-Logo-Design",
     totalOnBehance: 27,
+    coverImage: "assets/img/projects/behance/neurahire-logo-design/29.jpg",
     gallery: [
       "assets/img/projects/behance/neurahire-logo-design/29.jpg",
       "assets/img/projects/behance/neurahire-logo-design/26.jpg",
@@ -117,6 +216,37 @@ const BEHANCE_PROJECTS = [
     ]
   },
   {
+    // Cross-listed from CLIENT_CASE_STUDIES below (Featured Client Projects)
+    // so it also appears here — same slug/detail page, kept in both lists.
+    slug: "skugistics-brand-identity",
+    title: "Skugistics — Brand Identity",
+    category: "Brand Identity",
+    shortDescription: "Enterprise logistics brand identity for Skugistics, a smart logistics platform.",
+    description: "Skugistics represents precision, intelligent movement, and operational flow for a modern logistics and supply-chain platform. The icon is built around a geometric \"S\" chamfered at 45°, paired with a confident blue-and-white palette that reads as trustworthy and enterprise-ready. The system spans a primary and secondary lockup with dedicated dark-mode variants, a full multi-color favicon and app-icon set, mobile app UI, and a complete range of real-world brand applications — from uniforms and vehicles to signage and web.",
+    tags: ["Brand Identity", "Logo Design", "App Branding", "Visual Identity"],
+    coverImage: "assets/img/projects/behance/skugistics-brand-identity/cover.jpg",
+    galleryGroups: [1, 1, 1, 1, 1, 4, 1, 2, 1, 1, 1, 1, 1],
+    gallery: [
+      "assets/img/projects/behance/skugistics-brand-identity/01-primary-light.jpg",
+      "assets/img/projects/behance/skugistics-brand-identity/02-primary-dark.jpg",
+      "assets/img/projects/behance/skugistics-brand-identity/03-secondary-light.jpg",
+      "assets/img/projects/behance/skugistics-brand-identity/04-secondary-dark.jpg",
+      "assets/img/projects/behance/skugistics-brand-identity/05-icons-all.jpg",
+      "assets/img/projects/behance/skugistics-brand-identity/06-favicon-blue.jpg",
+      "assets/img/projects/behance/skugistics-brand-identity/07-favicon-navy-white.jpg",
+      "assets/img/projects/behance/skugistics-brand-identity/08-favicon-lightblue.jpg",
+      "assets/img/projects/behance/skugistics-brand-identity/09-favicon-white.jpg",
+      "assets/img/projects/behance/skugistics-brand-identity/10-mobile-ui.jpg",
+      "assets/img/projects/behance/skugistics-brand-identity/11-mockup-worker1.jpg",
+      "assets/img/projects/behance/skugistics-brand-identity/12-mockup-worker2.jpg",
+      "assets/img/projects/behance/skugistics-brand-identity/13-mockup-tshirt.jpg",
+      "assets/img/projects/behance/skugistics-brand-identity/14-mockup-website.jpg",
+      "assets/img/projects/behance/skugistics-brand-identity/15-mockup-truck.jpg",
+      "assets/img/projects/behance/skugistics-brand-identity/16-mockup-store.jpg",
+      "assets/img/projects/behance/skugistics-brand-identity/17-mockup-container.jpg"
+    ]
+  },
+  {
     slug: "dogford-email-design",
     title: "Dogford — Premium Dog Food Email Design",
     category: "Email Design",
@@ -126,6 +256,14 @@ const BEHANCE_PROJECTS = [
     behanceUrl: "https://www.behance.net/gallery/237265839/EmailDesign-Dogford-Premium-Dog-Food",
     totalOnBehance: 1,
     coverImage: "assets/img/projects/behance/dogford-email-design/cover.jpg",
+    // Same live-embed treatment as the D2 Logistics email design — see that
+    // entry's comment for details.
+    livePreview: "projects/dogford-email-site/index.html?showcase=1",
+    // Matches the card's own 4/3.4 ratio (640 * 3.4/4 = 544) so the
+    // thumbnail fills the card exactly — no crop, no gap.
+    livePreviewW: 640,
+    livePreviewH: 544,
+    liveEmbedSite: "dogford-email-site/index.html",
     gallery: [
       "assets/img/projects/behance/dogford-email-design/02.jpg"
     ]
@@ -139,6 +277,7 @@ const BEHANCE_PROJECTS = [
     tags: ["Logo Design", "Brand Identity", "Minimalist Logo", "Typography"],
     behanceUrl: "https://www.behance.net/gallery/211656905/Water-supply-logo",
     totalOnBehance: 2,
+    coverImage: "assets/img/projects/behance/water-supply-logo/01.webp",
     gallery: [
       "assets/img/projects/behance/water-supply-logo/01.webp",
       "assets/img/projects/behance/water-supply-logo/02.webp"
@@ -156,6 +295,10 @@ const BEHANCE_PROJECTS = [
     coverImage: "assets/img/projects/behance/creative-nature-logo-design/cover.jpg",
     coverFit: "contain",
     coverBg: "#fcfbfc",
+    cardSlides: [
+      { src: "assets/img/projects/behance/creative-nature-logo-design/02.webp" },
+      { src: "assets/img/projects/behance/creative-nature-logo-design/03.webp" }
+    ],
     gallery: [
       "assets/img/projects/behance/creative-nature-logo-design/02.webp",
       "assets/img/projects/behance/creative-nature-logo-design/03.webp",
@@ -169,52 +312,6 @@ const BEHANCE_PROJECTS = [
     ]
   },
   {
-    slug: "sarl-logo-design",
-    title: "SARL — Sleek And Revolutionary Look",
-    category: "Logo Design",
-    shortDescription: "Geometric monogram logo design for the SARL brand identity.",
-    description: "SARL — Sleek And Revolutionary Look. The concept merges the letters S, A, R and L into a unified monogram through geometric construction, with a gradient transitioning from red to pink symbolizing energy, creativity and the courage to evolve. Bold sans-serif typography carries the wordmark and tagline, built around a design philosophy of clarity, innovation and movement.",
-    tags: ["Logo Design", "Branding", "Visual Identity", "Modern Abstract Logo"],
-    behanceUrl: "https://www.behance.net/gallery/229002781/Geometric-Gradient-Logo-for-Branding-Excellence",
-    totalOnBehance: 7,
-    gallery: [
-      "assets/img/projects/behance/sarl-logo-design/01.webp",
-      "assets/img/projects/behance/sarl-logo-design/02.webp",
-      "assets/img/projects/behance/sarl-logo-design/03.webp",
-      "assets/img/projects/behance/sarl-logo-design/04.webp",
-      "assets/img/projects/behance/sarl-logo-design/05.webp",
-      "assets/img/projects/behance/sarl-logo-design/06.webp",
-      "assets/img/projects/behance/sarl-logo-design/07.webp"
-    ]
-  },
-  {
-    slug: "headphone-social-media-post-design",
-    title: "Headphone Social Media Post Design",
-    category: "Social Media Design",
-    shortDescription: "Social media post design promoting premium headphones.",
-    description: "A modern social media post design concept created for promoting premium headphones, focused on minimal aesthetics, a clean layout and professional product presentation that highlights the product's features while keeping the brand identity strong.",
-    tags: ["Social Media Design", "Product Design", "Ads Design", "Brand Identity"],
-    behanceUrl: "https://www.behance.net/gallery/233947253/headphone-social-media-post-design",
-    totalOnBehance: 2,
-    gallery: [
-      "assets/img/projects/behance/headphone-social-media-post-design/01.webp",
-      "assets/img/projects/behance/headphone-social-media-post-design/02.webp"
-    ]
-  },
-  {
-    slug: "body-lotion-social-media-post-design",
-    title: "Body Lotion Social Media Post Design",
-    category: "Social Media Design",
-    shortDescription: "Social media marketing post design for a body lotion brand.",
-    description: "A marketing-focused social media post design created for a body lotion brand, aimed at clean product presentation and consistent brand visuals.",
-    tags: ["Social Media Design", "Marketing Design", "Brand Identity"],
-    behanceUrl: "https://www.behance.net/gallery/220750475/body-lotion-marketing-social-media-post-design",
-    totalOnBehance: 1,
-    gallery: [
-      "assets/img/projects/behance/body-lotion-social-media-post-design/01.webp"
-    ]
-  },
-  {
     slug: "creative-solar-logo-design",
     title: "Creative Solar Logo Design",
     category: "Logo Design",
@@ -223,6 +320,10 @@ const BEHANCE_PROJECTS = [
     tags: ["Logo Design", "Company Branding", "Brand Design", "Minimalist Logo"],
     behanceUrl: "https://www.behance.net/gallery/212158533/Creative-solar-logo-design",
     totalOnBehance: 23,
+    cardSlides: [
+      { src: "assets/img/projects/behance/creative-solar-logo-design/01.webp" },
+      { src: "assets/img/projects/behance/creative-solar-logo-design/03.webp" }
+    ],
     gallery: [
       "assets/img/projects/behance/creative-solar-logo-design/01.webp",
       "assets/img/projects/behance/creative-solar-logo-design/02.webp",
@@ -234,42 +335,6 @@ const BEHANCE_PROJECTS = [
       "assets/img/projects/behance/creative-solar-logo-design/08.webp",
       "assets/img/projects/behance/creative-solar-logo-design/09.webp",
       "assets/img/projects/behance/creative-solar-logo-design/10.webp"
-    ]
-  },
-  {
-    slug: "creative-2-brain-podcast-logo-design",
-    title: "Creative 2 Brain Podcast Logo Design",
-    category: "Logo Design",
-    shortDescription: "Logo design for the \"2 Brain\" podcast brand.",
-    description: "A creative logo design for the \"2 Brain\" podcast, developed as a company/brand mark with a modern, minimalist approach.",
-    tags: ["Logo Design", "Podcast Branding", "Company Branding", "Minimalist Logo"],
-    behanceUrl: "https://www.behance.net/gallery/212336855/Creative-2-Brain-podcast-logo-design",
-    totalOnBehance: 16,
-    gallery: [
-      "assets/img/projects/behance/creative-2-brain-podcast-logo-design/01.webp",
-      "assets/img/projects/behance/creative-2-brain-podcast-logo-design/02.webp",
-      "assets/img/projects/behance/creative-2-brain-podcast-logo-design/03.webp",
-      "assets/img/projects/behance/creative-2-brain-podcast-logo-design/04.webp",
-      "assets/img/projects/behance/creative-2-brain-podcast-logo-design/05.webp",
-      "assets/img/projects/behance/creative-2-brain-podcast-logo-design/06.webp",
-      "assets/img/projects/behance/creative-2-brain-podcast-logo-design/07.webp",
-      "assets/img/projects/behance/creative-2-brain-podcast-logo-design/08.webp",
-      "assets/img/projects/behance/creative-2-brain-podcast-logo-design/09.webp",
-      "assets/img/projects/behance/creative-2-brain-podcast-logo-design/10.webp"
-    ]
-  },
-  {
-    slug: "nutrition-logo-design",
-    title: "Nutrition Logo Design",
-    category: "Logo Design",
-    shortDescription: "Minimalist logo design for a nutrition and healthy food brand.",
-    description: "A minimalist, modern logo design created for a nutrition and healthy food brand, focused on a clean logotype and simple iconography.",
-    tags: ["Logo Design", "Healthy Food Branding", "Brand Identity", "Logotype"],
-    behanceUrl: "https://www.behance.net/gallery/211869289/Nutrition-Logo-Design",
-    totalOnBehance: 2,
-    gallery: [
-      "assets/img/projects/behance/nutrition-logo-design/01.jpg",
-      "assets/img/projects/behance/nutrition-logo-design/02.jpg"
     ]
   }
 ];

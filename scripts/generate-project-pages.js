@@ -44,8 +44,21 @@ function page(p) {
   // galleryAspect: optional override (e.g. "1 / 1") for projects whose
   // grouped (2/3-col) images aren't the default 4:3 the shared CSS assumes —
   // without this, square or other-ratio images get cropped by object-fit:cover.
-  const galleryImgTag = (src, aspect) =>
-    `      <img src="../${src}" alt="${title} — project image" loading="lazy"${aspect ? ` style="aspect-ratio:${aspect};"` : ""} />`;
+  // Gallery entries are normally a plain src string; pass {src, maxWidth} instead
+  // to constrain/center an item that would otherwise look oversized at full
+  // container width (e.g. a narrow email/portrait screenshot next to wide shots).
+  let galleryImgIndex = 0;
+  const galleryImgTag = (item, aspect) => {
+    galleryImgIndex += 1;
+    const src = typeof item === "string" ? item : item.src;
+    const maxWidth = typeof item === "object" && item.maxWidth ? item.maxWidth : null;
+    const styleParts = [];
+    if (aspect) styleParts.push(`aspect-ratio:${aspect}`);
+    if (maxWidth) styleParts.push(`max-width:${maxWidth}px`, `width:100%`, `margin-inline:auto`);
+    const style = styleParts.length ? ` style="${styleParts.join(";")};"` : "";
+    const alt = `${title} — portfolio project by Tanvir Ahamad, screen ${galleryImgIndex}`;
+    return `      <img src="../${src}" alt="${alt}" loading="lazy"${style} />`;
+  };
   let galleryImgs;
   if (p.galleryGroups) {
     // Flexible layout: an array of group sizes partitioning the gallery in order.
@@ -119,6 +132,20 @@ function page(p) {
     { "@type": "ListItem", "position": 2, "name": "Work", "item": "https://tanvircreates.com/#work" },
     { "@type": "ListItem", "position": 3, "name": "${escJson(p.title)}", "item": "${canonicalUrl}" }
   ]
+}
+</script>
+
+<!-- Structured data: CreativeWork -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "CreativeWork",
+  "name": "${escJson(p.title)}",
+  "description": "${escJson(p.shortDescription)}",
+  "image": "${ogImage}",
+  "url": "${canonicalUrl}",
+  "keywords": "${escJson(p.tags.join(", "))}",
+  "creator": { "@type": "Person", "name": "Tanvir Ahamad", "url": "https://tanvircreates.com/" }
 }
 </script>
 
@@ -199,7 +226,7 @@ function page(p) {
           ${
             p.behanceUrl
               ? `<a href="${p.behanceUrl}" target="_blank" rel="noopener noreferrer" class="btn btn-outline">View on Behance &rarr;</a>`
-              : `<span class="btn btn-outline" style="pointer-events:none;">Client Project</span>`
+              : `<span class="btn btn-outline" style="pointer-events:none;">${p.projectBadge || "Client Project"}</span>`
           }
           <a href="../index.html#contact" class="btn btn-primary">Start a Similar Project</a>
         </div>
@@ -207,15 +234,23 @@ function page(p) {
     </div>
   </section>
 
-  <section class="section" style="border-bottom:none;">
+  <section class="section" style="border-bottom:none;${p.gallerySectionBg ? ` background:${p.gallerySectionBg};` : ""}">
     <div class="container">
       <div class="project-gallery-head">
-        <span class="eyebrow">Project Gallery</span>
+        <span class="eyebrow">${p.liveEmbedSite ? "Live Email Preview" : "Project Gallery"}</span>
       </div>
-      <div class="project-gallery">
+      ${
+        p.liveEmbedSite
+          ? `<div class="project-live-embed">
+        <iframe id="siteEmbedFrame" src="${p.liveEmbedSite}" title="${title} — live preview">
+          <div class="project-live-embed-fallback">Your browser can't display this embedded preview — <a href="${p.liveEmbedSite}">open the live design directly</a> instead.</div>
+        </iframe>
+      </div>`
+          : `<div class="project-gallery">
 ${galleryImgs}
       </div>
-      ${moreNote}
+      ${moreNote}`
+      }
 
       <div class="action-row" data-slug="${p.slug}">
         <button type="button" class="action-card" id="clapBtn" aria-label="Appreciate this project" aria-pressed="false">
@@ -276,7 +311,26 @@ ${galleryImgs}
     const backToTop = document.getElementById("backToTop");
     window.addEventListener("scroll", () => backToTop.classList.toggle("visible", window.scrollY > 600));
     backToTop.addEventListener("click", () => window.scrollTo({ top: 0, behavior: "smooth" }));
-  });
+${
+  p.liveEmbedSite
+    ? `
+    // Give the embedded design a visible, styled scrollbar instead of hiding
+    // it, so visitors can see there's more below as they scroll (same
+    // treatment as the Startup.Ready live-website embed).
+    function styleFrameScrollbar(frame) {
+      try {
+        const doc = frame.contentWindow.document;
+        if (doc.getElementById("__scrollbarStyle")) return;
+        const style = doc.createElement("style");
+        style.id = "__scrollbarStyle";
+        style.textContent = "html{scrollbar-width:thin; scrollbar-color:rgba(255,255,255,0.35) transparent;} html::-webkit-scrollbar{width:9px;} html::-webkit-scrollbar-track{background:transparent;} html::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.35); border-radius:8px;} html::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,0.55);}";
+        doc.head.appendChild(style);
+      } catch (e) {}
+    }
+    document.getElementById("siteEmbedFrame").addEventListener("load", () => styleFrameScrollbar(document.getElementById("siteEmbedFrame")));
+`
+    : ""
+}  });
 </script>
 <script src="../js/project-actions.js"></script>
 </body>
@@ -286,6 +340,11 @@ ${galleryImgs}
 
 let count = 0;
 for (const p of PROJECTS) {
+  // Some entries (e.g. Startup.Ready, cross-listed here from
+  // UIUX_PROJECTS purely so it also shows up in the "Projects" grid) link to
+  // a hand-authored showcase page instead of one generated from this
+  // template — never overwrite it.
+  if (p.noGeneratedPage) continue;
   const outPath = path.join(OUT_DIR, `${p.slug}.html`);
   fs.writeFileSync(outPath, page(p), "utf8");
   count++;
