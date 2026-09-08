@@ -210,6 +210,47 @@
       } catch (e) {}
     }
     document.getElementById("siteEmbedFrame").addEventListener("load", () => styleFrameScrollbar(document.getElementById("siteEmbedFrame")));
+
+    // Always embed the real desktop layout, even on a phone. Startup.Ready
+    // is a fully responsive site, so at width:100% a narrow phone screen
+    // made the iframe itself narrow and the embedded site reflowed to its
+    // own mobile breakpoint — showing a "different" (mobile) version of the
+    // page instead of the same desktop design everyone else sees. Below the
+    // desktop breakpoint, force the iframe to a real desktop width and
+    // scale the whole thing down to fit, the same way the homepage card
+    // thumbnail already does.
+    (function () {
+      const DESKTOP_BP = 1024;
+      const DESIGN_W = 1280;
+      const frame = document.getElementById("siteEmbedFrame");
+      const wrap = frame.closest(".project-live-embed");
+      let naturalHeight = null;
+
+      function applyEmbedSize() {
+        if (window.innerWidth >= DESKTOP_BP) {
+          frame.style.width = "100%";
+          frame.style.height = "";
+          frame.style.transform = "none";
+          wrap.style.height = "";
+          return;
+        }
+        if (naturalHeight === null) {
+          // 88vh/min-height:640px is the site's normal embed height — read
+          // it once (in CSS px) before overriding, so the desktop-forced
+          // version keeps the same amount of the page visible.
+          naturalHeight = frame.getBoundingClientRect().height || 640;
+        }
+        const scale = wrap.clientWidth / DESIGN_W;
+        frame.style.width = DESIGN_W + "px";
+        frame.style.height = (naturalHeight / scale) + "px";
+        frame.style.transformOrigin = "top left";
+        frame.style.transform = `scale(${scale})`;
+        wrap.style.height = naturalHeight + "px";
+      }
+
+      applyEmbedSize();
+      window.addEventListener("resize", applyEmbedSize);
+    })();
   });
 </script>
 <script src="../js/project-actions.js"></script>
