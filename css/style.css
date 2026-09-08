@@ -1587,4 +1587,23 @@ main .section:nth-of-type(even) { background: var(--bg-alt); }
   @keyframes fadeInOnly {
     to { opacity: 1; }
   }
+
+  /* A live-preview card's real content (a whole website/email screen at
+     thumbnail scale — nav bar, hero, stats, buttons) is busy enough that
+     the small corner title chip fights with it for attention and gets hard
+     to read. On mobile, where there's no hover state to reveal the title on
+     demand, turn the chip into a full-bleed scrim instead so the title is
+     always clearly legible over a settled, uncluttered background. */
+  .project-card.has-image .card-overlay {
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: auto;
+    max-width: none;
+    width: 100%;
+    border-radius: 0;
+    border-width: 1px 0 0 0;
+    background: linear-gradient(180deg, rgba(9,7,7,0) 0%, rgba(9,7,7,0.55) 35%, rgba(9,7,7,0.92) 100%);
+    padding: 2.2rem 1.05rem 0.95rem;
+  }
 }

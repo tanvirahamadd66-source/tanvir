@@ -277,7 +277,8 @@ function initLivePreviewScale(frame, designW, designH) {
     // every other card's plain cover image already gets from the browser
     // (the card's aspect ratio, e.g. 4/3.4, and the design's, e.g. 4/3,
     // rarely match exactly). Keeps card sizes uniform across the grid.
-    frame.style.transform = `scale(${Math.max(w / DESIGN_W, h / DESIGN_H)})`;
+    const scale = Math.max(w / DESIGN_W, h / DESIGN_H);
+    frame.style.transform = `scale(${scale})`;
     frame.style.top = "0";
   }
   function scheduleScale() {
