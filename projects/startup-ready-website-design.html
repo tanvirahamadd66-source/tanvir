@@ -42,10 +42,14 @@
 <link rel="stylesheet" href="../css/style.css" />
 <script>
   (function () {
+    // Always resolve to an explicit light/dark choice — never fall through
+    // to the browser's prefers-color-scheme (see index.html for why).
     try {
       var saved = localStorage.getItem("theme");
-      if (saved === "light" || saved === "dark") document.documentElement.setAttribute("data-theme", saved);
-    } catch (e) {}
+      document.documentElement.setAttribute("data-theme", saved === "dark" ? "dark" : "light");
+    } catch (e) {
+      document.documentElement.setAttribute("data-theme", "light");
+    }
   })();
 </script>
 </head>

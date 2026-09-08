@@ -58,10 +58,20 @@
 <link rel="stylesheet" href="../css/style.css" />
 <script>
   (function () {
+    // Always resolve to an explicit light/dark choice — never fall through
+    // to the browser's prefers-color-scheme. A link opened from Google (or
+    // any in-app browser) can land in a separate storage partition with no
+    // saved preference, and if the phone's system theme is dark, the page
+    // would silently render dark there while a direct Chrome visit (with a
+    // saved "light" choice) stayed light — the exact inconsistency this
+    // guards against. Default is always light unless the visitor explicitly
+    // chose dark (saved right here, via the theme toggle).
     try {
       var saved = localStorage.getItem("theme");
-      if (saved === "light" || saved === "dark") document.documentElement.setAttribute("data-theme", saved);
-    } catch (e) {}
+      document.documentElement.setAttribute("data-theme", saved === "dark" ? "dark" : "light");
+    } catch (e) {
+      document.documentElement.setAttribute("data-theme", "light");
+    }
   })();
 </script>
 </head>
