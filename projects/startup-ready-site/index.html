@@ -1741,6 +1741,14 @@ footer{ border-top:1px solid var(--hair); padding:64px 0 32px; }
   // (via the existing meterIo scroll-into-view observer above) each cycle.
   var params = new URLSearchParams(location.search);
   if(params.get('showcase') !== '1') return;
+  // On narrow (mobile) viewports the outer page's card-scaling transform + the
+  // continuous repaints from this auto-scroll loop don't composite reliably —
+  // the iframe can render at its native unscaled size instead of the small,
+  // clipped thumbnail, breaking the whole page layout. A static first frame
+  // is safer there; only run the live auto-scroll on wider (desktop) screens.
+  // (window.innerWidth in here is the IFRAME's own forced-desktop-width viewport,
+  // not the real device width — check the top-level page's width instead, same-origin.)
+  try { if(window.top.innerWidth < 700) return; } catch(e) {}
   document.documentElement.classList.add('showcase-mode');
 
   var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;

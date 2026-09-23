@@ -783,6 +783,11 @@ main .section:nth-of-type(even) { background: var(--bg-alt); }
   border: 0;
   pointer-events: none;
   background: var(--bg-alt);
+  /* Forces its own stable compositing layer up front. Without this, mobile browsers can
+     paint the iframe at its native (unscaled) size instead of respecting the transform:scale()
+     set in JS — especially right as the card scrolls into view — leaving a huge, unclipped
+     card that breaks the whole page layout even though the actual DOM geometry is correct. */
+  will-change: transform;
 }
 
 .project-card .card-overlay {

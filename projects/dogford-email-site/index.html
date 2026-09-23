@@ -29,6 +29,11 @@
   // preview looks like it's genuinely being read.
   var params = new URLSearchParams(location.search);
   if(params.get('showcase') !== '1') return;
+  // Mobile viewports don't reliably composite the outer card's scaling transform while this
+  // loop keeps repainting the iframe — skip it there, show a static first frame instead.
+  // (window.innerWidth here is the iframe's own forced-desktop-width viewport, not the real
+  // device width — check the top-level page's width instead, same-origin.)
+  try { if(window.top.innerWidth < 700) return; } catch(e) {}
   document.documentElement.style.scrollbarWidth = 'none';
 
   var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
