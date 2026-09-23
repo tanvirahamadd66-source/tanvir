@@ -351,12 +351,24 @@
 
       function applyEmbedSize() {
         if (window.innerWidth >= DESKTOP_BP) {
+          frame.style.flex = "1";
           frame.style.width = "100%";
           frame.style.height = "100%";
           frame.style.transform = "none";
           return;
         }
         const scale = wrap.clientWidth / DESIGN_W;
+        // wrap can briefly report 0 width right as the page/fonts/images settle (seen on some
+        // mobile browsers) — a 0 or non-finite scale would set height to Infinity and collapse
+        // the iframe via transform:scale(0), leaving a big blank box. Skip and retry instead.
+        if (!scale || !isFinite(scale)) { requestAnimationFrame(applyEmbedSize); return; }
+        // .computer-mock-screen is a column flex container with the iframe set to `flex:1` in CSS
+        // (for the normal >=1024px case) — that flex-basis/stretch behavior silently overrides any
+        // inline width/height set here, which broke this exact scaling trick on phones (the iframe
+        // rendered at the container's own small size instead of the intended 1280px design width,
+        // then got scaled down AGAIN, collapsing to a tiny box with a big blank area around it).
+        // `flex: none` opts the iframe out of that so the inline width/height below actually apply.
+        frame.style.flex = "none";
         frame.style.width = DESIGN_W + "px";
         frame.style.height = (FIXED_HEIGHT / scale) + "px";
         frame.style.transformOrigin = "top left";
@@ -365,6 +377,8 @@
 
       applyEmbedSize();
       window.addEventListener("resize", applyEmbedSize);
+      window.addEventListener("load", applyEmbedSize);
+      if ("ResizeObserver" in window) new ResizeObserver(applyEmbedSize).observe(wrap);
     })();
   });
 </script>
