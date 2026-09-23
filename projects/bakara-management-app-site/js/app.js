@@ -77,7 +77,7 @@
       addFirstFarm: '+ প্রথম খামার যোগ করুন', startFamily: 'পারিবারিক হিসাব শুরু করুন',
       family: 'পরিবার', familyAccounting: 'পারিবারিক হিসাব', getStarted: 'শুরু করুন →', openFarm: 'খামার খুলুন →',
       addNewFarm: 'নতুন খামার যোগ করুন', whatFarmType: 'কী ধরনের খামার তৈরি করতে চান?',
-      farmName: 'খামারের নাম', farmNamePlaceholder: 'যেমন: আমার গরুর খামার', startingBudget: 'শুরুর বিনিয়োগ / বাজেট (৳)',
+      farmName: 'খামারের নাম', farmNamePlaceholder: 'যেমন: আমার গরুর খামার', startingBudget: 'শুরুর বিনিয়োগ / বাজেট ($)',
       createFarm: 'খামার তৈরি করুন', cancel: 'বাতিল', edit: 'এডিট', delete: 'মুছুন',
       familyRecords: 'পরিবারের হিসাবসমূহ', farmRecords: 'খামারের হিসাবসমূহ', budgetExceeded: 'বাজেট অতিক্রম হয়েছে',
       myBudget: 'আমার বাজেট', spent: 'খরচ হয়েছে', remainingBudget: 'অবশিষ্ট বাজেট', profitLoss: 'লাভ / ক্ষতি',
@@ -151,7 +151,7 @@
       addFirstFarm: '+ Add First Farm', startFamily: 'Start Family Management',
       family: 'Family', familyAccounting: 'Family Management', getStarted: 'Get started →', openFarm: 'Open Farm →',
       addNewFarm: 'Add New Farm', whatFarmType: 'What type of farm would you like to create?',
-      farmName: 'Farm Name', farmNamePlaceholder: 'e.g. My Cattle Farm', startingBudget: 'Starting Investment / Budget (৳)',
+      farmName: 'Farm Name', farmNamePlaceholder: 'e.g. My Cattle Farm', startingBudget: 'Starting Investment / Budget ($)',
       createFarm: 'Create Farm', cancel: 'Cancel', edit: 'Edit', delete: 'Delete',
       familyRecords: 'Family Records', farmRecords: 'Farm Records', budgetExceeded: 'Budget exceeded',
       myBudget: 'My Budget', spent: 'Spent', remainingBudget: 'Remaining Budget', profitLoss: 'Profit / Loss',
@@ -279,7 +279,7 @@
   }
   function fmtMoney(n) {
     n = Number(n) || 0;
-    return '৳' + n.toLocaleString('en-US', { maximumFractionDigits: 0 });
+    return '$' + n.toLocaleString('en-US', { maximumFractionDigits: 0 });
   }
   function fmtDate(iso) {
     try {
@@ -1104,8 +1104,8 @@
       '<div class="hero-image-wrap parallax">' +
       imageSlot('img/dashboard-banner.jpg', 'এখানে খামারের ছবি বসবে', { extraClass: 'hero-image-frame' }) +
       '<div class="float-badge glass b1"><span class="fb-ic">🐄</span><span class="fb-text"><span class="fb-label">' + t('farmManagement') + '</span></span></div>' +
-      '<div class="float-badge glass b2"><span class="fb-ic">💰</span><span class="fb-text"><span class="fb-label">' + t('totalIncome') + '</span><span class="fb-value">৳' + ft.income.toLocaleString('en-US') + '</span></span></div>' +
-      '<div class="float-badge glass b3"><span class="fb-ic">🧾</span><span class="fb-text"><span class="fb-label">' + t('totalExpense') + '</span><span class="fb-value">৳' + ft.expense.toLocaleString('en-US') + '</span></span></div>' +
+      '<div class="float-badge glass b2"><span class="fb-ic">💰</span><span class="fb-text"><span class="fb-label">' + t('totalIncome') + '</span><span class="fb-value">$' + ft.income.toLocaleString('en-US') + '</span></span></div>' +
+      '<div class="float-badge glass b3"><span class="fb-ic">🧾</span><span class="fb-text"><span class="fb-label">' + t('totalExpense') + '</span><span class="fb-value">$' + ft.expense.toLocaleString('en-US') + '</span></span></div>' +
       '<div class="float-badge glass b4"><span class="fb-ic">📋</span><span class="fb-text"><span class="fb-label">' + t('totalRecords') + '</span><span class="fb-value">' + farmCount + '</span></span></div>' +
       '</div>' +
       '</section>' +
@@ -1358,7 +1358,7 @@
       return '' +
         '<div class="cat-budget-row">' +
         '<div class="cat-budget-name">' + esc(catLabel(cat)) + '</div>' +
-        '<div class="cat-budget-input-wrap"><span class="cur">৳</span><input type="number" min="0" class="cat-budget-input" data-cat="' + esc(cat) + '" value="' + (catBudget || '') + '" placeholder="0"></div>' +
+        '<div class="cat-budget-input-wrap"><span class="cur">$</span><input type="number" min="0" class="cat-budget-input" data-cat="' + esc(cat) + '" value="' + (catBudget || '') + '" placeholder="0"></div>' +
         '<div class="cat-budget-meta">' + meta + '</div>' +
         '</div>';
     }).join('');
@@ -1429,7 +1429,7 @@
       '<div class="modal">' +
       '<h2>' + t('editFarmInfo') + '</h2>' +
       '<div class="field"><label for="ef-name">' + t('name') + '</label><input id="ef-name" type="text" value="' + esc(farm.name) + '"></div>' +
-      '<div class="field"><label for="ef-budget">' + t('budget') + ' (৳)</label><input id="ef-budget" type="number" min="0" value="' + farm.budget + '"></div>' +
+      '<div class="field"><label for="ef-budget">' + t('budget') + ' ($)</label><input id="ef-budget" type="number" min="0" value="' + farm.budget + '"></div>' +
       '<div class="row"><button class="btn" id="ef-save">' + t('save') + '</button><button class="btn secondary" id="ef-cancel">' + t('cancel') + '</button></div>' +
       '</div></div>' : '';
 
