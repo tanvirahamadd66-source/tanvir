@@ -1,0 +1,906 @@
+@import url('https://fonts.googleapis.com/css2?family=Tiro+Bangla:ital@0;1&family=Hind+Siliguri:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&family=Poppins:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap');
+
+:root{
+  --bg:#f7f2e7;
+  --surface:#fffdf8;
+  --surface-2:#f1e9d6;
+  --surface-3:#e8dcc0;
+  --border:#e2d5b8;
+  --ink:#25211a;
+  --ink-dim:#736b57;
+  --primary:#2e5b3e;
+  --primary-dark:#1e3f2a;
+  --primary-tint:#e6ede3;
+  --accent:#a9683c;
+  --accent-tint:#f3e4d3;
+  --accent-ink:#3a2405;
+  --income:#2e5b3e;
+  --income-bg:#e6ede3;
+  --expense:#a9542f;
+  --expense-bg:#f6e4d6;
+  --shadow-sm: 0 1px 2px rgba(40,30,10,.05);
+  --shadow: 0 1px 2px rgba(40,30,10,.05), 0 14px 30px -16px rgba(40,30,10,.22);
+  --shadow-lg: 0 20px 50px -20px rgba(30,25,10,.32);
+  --radius: 18px;
+  --radius-sm: 12px;
+  --radius-lg: 22px;
+
+  --sidebar-ink:#f1ede3;
+  --sidebar-ink-dim:#cdd9c6;
+  --sidebar-active:rgba(255,255,255,.22);
+  --sidebar-border:rgba(255,255,255,.16);
+
+  --glass-bg: rgba(255,253,248,.55);
+  --glass-bg-strong: rgba(255,253,248,.74);
+  --glass-border: rgba(255,255,255,.6);
+  --glass-shadow: 0 1px 1px rgba(255,255,255,.5) inset, 0 18px 40px -18px rgba(40,40,20,.24);
+  --glass-blur: 20px;
+  --glass-sidebar-bg: linear-gradient(190deg, rgba(46,91,62,.86), rgba(24,36,24,.92));
+  --blob-1: rgba(46,91,62,.35);
+  --blob-2: rgba(169,104,60,.28);
+  --blob-3: rgba(200,196,150,.4);
+
+  --cow-body:#f8f2e4;
+  --cow-patch:#3a3126;
+  --cow-outline:#2b2419;
+  --cow-muzzle:#e7c9a3;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#12140f;
+    --surface:#1c1f17;
+    --surface-2:#242819;
+    --surface-3:#2c301e;
+    --border:#3a3d29;
+    --ink:#eeeee0;
+    --ink-dim:#a2a086;
+    --primary:#4fb37d;
+    --primary-dark:#3a8f61;
+    --primary-tint:#1d3225;
+    --accent:#e6a850;
+    --accent-tint:#3a2b0f;
+    --accent-ink:#fce8c8;
+    --income:#63c391;
+    --income-bg:#1e3527;
+    --expense:#ef8a6c;
+    --expense-bg:#3a271f;
+    --shadow-sm: 0 1px 2px rgba(0,0,0,.4);
+    --shadow: 0 1px 2px rgba(0,0,0,.4), 0 16px 34px -16px rgba(0,0,0,.65);
+    --shadow-lg: 0 24px 54px -20px rgba(0,0,0,.7);
+    --glass-bg: rgba(28,36,26,.55);
+    --glass-bg-strong: rgba(28,36,26,.72);
+    --glass-border: rgba(255,255,255,.1);
+    --glass-shadow: 0 1px 1px rgba(255,255,255,.04) inset, 0 20px 44px -18px rgba(0,0,0,.6);
+    --glass-sidebar-bg: linear-gradient(190deg, rgba(58,143,97,.35), rgba(10,18,12,.75));
+    --blob-1: rgba(79,179,125,.28);
+    --blob-2: rgba(230,168,80,.2);
+    --blob-3: rgba(60,110,80,.28);
+    --cow-body:#e8e2d2;--cow-patch:#161310;--cow-outline:#0e0c09;--cow-muzzle:#c9a678;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#12140f;
+  --surface:#1c1f17;
+  --surface-2:#242819;
+  --surface-3:#2c301e;
+  --border:#3a3d29;
+  --ink:#eeeee0;
+  --ink-dim:#a2a086;
+  --primary:#4fb37d;
+  --primary-dark:#3a8f61;
+  --primary-tint:#1d3225;
+  --accent:#e6a850;
+  --accent-tint:#3a2b0f;
+  --accent-ink:#fce8c8;
+  --income:#63c391;
+  --income-bg:#1e3527;
+  --expense:#ef8a6c;
+  --expense-bg:#3a271f;
+  --shadow-sm: 0 1px 2px rgba(0,0,0,.4);
+  --shadow: 0 1px 2px rgba(0,0,0,.4), 0 16px 34px -16px rgba(0,0,0,.65);
+  --shadow-lg: 0 24px 54px -20px rgba(0,0,0,.7);
+  --glass-bg: rgba(28,36,26,.55);
+  --glass-bg-strong: rgba(28,36,26,.72);
+  --glass-border: rgba(255,255,255,.1);
+  --glass-shadow: 0 1px 1px rgba(255,255,255,.04) inset, 0 20px 44px -18px rgba(0,0,0,.6);
+  --glass-sidebar-bg: linear-gradient(190deg, rgba(58,143,97,.35), rgba(10,18,12,.75));
+  --blob-1: rgba(79,179,125,.28);
+  --blob-2: rgba(230,168,80,.2);
+  --blob-3: rgba(60,110,80,.28);
+}
+
+*{box-sizing:border-box;}
+html,body{height:100%;max-width:100%;overflow-x:hidden;}
+/* পোর্টফোলিও প্রিভিউ-only — শুধু এই কপিতেই, আসল লাইভ অ্যাপের styles.css অপরিবর্তিত। ডিভাইস মকআপের
+   ভেতরে ডিফল্ট browser scrollbar মোটা/কোণাকার দেখাচ্ছিল, ফোন/ডেস্কটপ স্ক্রিনের বাস্তবতা নষ্ট করছিল —
+   তাই একটা সরু, গোলাকার scrollbar ব্যবহার করা হলো। */
+*{scrollbar-width:thin;scrollbar-color:var(--border) transparent;}
+*::-webkit-scrollbar{width:1px;height:1px;}
+*::-webkit-scrollbar-track{background:transparent;}
+*::-webkit-scrollbar-thumb{background:var(--border);border-radius:999px;}
+*::-webkit-scrollbar-thumb:hover{background:var(--ink-dim);}
+*::-webkit-scrollbar-button{display:none;width:0;height:0;}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--ink);
+  font-family:"Hind Siliguri","Noto Sans Bengali",system-ui,sans-serif;
+  -webkit-font-smoothing:antialiased;
+  position:relative;
+}
+/* নরম, ঝাপসা রঙিন blob — পুরো অ্যাপের পেছনে, glass প্যানেলগুলো এর উপর transparent হয়ে বসে */
+body::before{
+  content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background-image:
+    radial-gradient(38% 32% at 12% 8%, var(--blob-1) 0%, transparent 70%),
+    radial-gradient(34% 30% at 92% 18%, var(--blob-2) 0%, transparent 70%),
+    radial-gradient(40% 34% at 25% 95%, var(--blob-3) 0%, transparent 70%),
+    radial-gradient(30% 28% at 85% 90%, var(--blob-1) 0%, transparent 70%);
+  filter:blur(60px);
+}
+.glass{
+  background:var(--glass-bg);
+  -webkit-backdrop-filter:blur(var(--glass-blur));
+  backdrop-filter:blur(var(--glass-blur));
+  border:1px solid var(--glass-border);
+  box-shadow:var(--glass-shadow);
+}
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))){
+  .glass{ background:var(--glass-bg-strong); }
+}
+.num{font-family:"JetBrains Mono",ui-monospace,monospace;font-variant-numeric:tabular-nums;}
+h1,h2,h3{font-family:"Tiro Bangla",Georgia,serif;font-weight:400;text-wrap:balance;margin:0;}
+/* English মোডে Tiro Bangla (বাংলা-কেন্দ্রিক ফন্ট) ইংরেজি হেডিংয়ে অপেশাদার দেখাচ্ছিল —
+   তাই English মোডে একটি clean, professional Latin typeface ব্যবহার করা হচ্ছে */
+html[lang="en"] h1,html[lang="en"] h2,html[lang="en"] h3{font-family:"Poppins","Segoe UI",sans-serif;font-weight:600;}
+html[lang="en"] body{font-family:"Inter",-apple-system,"Segoe UI",sans-serif;}
+html[lang="en"] .auth-tagline,html[lang="en"] .auth-card .kicker{font-family:"Inter",sans-serif;}
+button,input,select,textarea{font-family:inherit;}
+a{color:inherit;}
+[hidden]{display:none!important;}
+img{max-width:100%;}
+@media (prefers-reduced-motion: reduce){
+  *{transition-duration:0.001ms!important;animation-duration:0.001ms!important;}
+}
+
+/* ---------- ছবি বসানোর জায়গা (placeholder slot) ---------- */
+.image-slot{
+  position:relative;border-radius:var(--radius);overflow:hidden;background:var(--surface-2);
+  border:1.5px dashed var(--border);display:flex;align-items:center;justify-content:center;min-height:150px;
+}
+.image-slot img{width:100%;height:100%;object-fit:cover;display:block;position:absolute;inset:0;}
+.image-slot .slot-placeholder{
+  display:none;flex-direction:column;align-items:center;gap:7px;color:var(--ink-dim);
+  font-size:.82rem;text-align:center;padding:18px;position:relative;z-index:1;
+}
+.image-slot.slot-empty img{display:none;}
+.image-slot.slot-empty .slot-placeholder{display:flex;}
+.image-slot:not(.slot-empty){
+  border-style:solid;border-color:var(--glass-border);
+  -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);
+  box-shadow:var(--glass-shadow);
+}
+.slot-placeholder .ic{font-size:1.8rem;}
+.slot-placeholder code{background:var(--surface);padding:2px 7px;border-radius:6px;font-size:.72rem;border:1px solid var(--border);}
+.image-slot.on-dark{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.28);}
+.image-slot.on-dark .slot-placeholder{color:rgba(255,255,255,.75);}
+.image-slot.on-dark .slot-placeholder code{background:rgba(0,0,0,.25);border-color:rgba(255,255,255,.25);color:#fff;}
+
+/* ---------- লগইন / সাইন-আপ ---------- */
+.auth-shell{
+  min-height:100vh;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;padding:24px;
+  background:
+    radial-gradient(50% 40% at 50% 0%, rgba(46,91,62,.10) 0%, transparent 70%),
+    linear-gradient(180deg, var(--bg) 0%, var(--surface-2) 100%);
+}
+.auth-scene{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:0;}
+.auth-scene .ground{position:absolute;left:0;right:0;bottom:0;height:26%;background:linear-gradient(180deg, transparent, rgba(46,91,62,.14));}
+.auth-scene .grass-row{position:absolute;left:0;right:0;bottom:6%;display:flex;justify-content:space-between;opacity:.55;padding:0 4%;}
+.auth-scene .grass-row svg .grass-illust *{stroke:var(--primary);}
+.auth-scene .cow-track{position:absolute;left:-140px;right:-140px;}
+.auth-scene .cow-track.t1{bottom:16%;}
+.auth-scene .cow-track.t2{bottom:2%;}
+.auth-scene .cow-track.t3{top:12%;}
+.auth-brandmark{position:relative;z-index:3;margin-bottom:22px;text-align:center;font-family:"Tiro Bangla",serif;font-size:1.5rem;font-weight:600;color:var(--primary-dark);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;}
+html[lang="en"] .auth-brandmark{font-family:"Poppins","Segoe UI",sans-serif;font-weight:700;}
+.auth-brand-icon{display:block;line-height:0;margin-bottom:2px;}
+.auth-brand-icon .cow-illust{display:block;}
+.auth-brand-text{display:block;}
+.auth-tagline{font-family:"Hind Siliguri",sans-serif;font-size:.78rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-dim);}
+
+.auth-panel{ position:relative;z-index:3;display:flex;flex-direction:column;align-items:center; }
+.auth-card{
+  width:100%;max-width:480px;padding:32px 40px;border-radius:var(--radius-lg);
+  background:var(--glass-bg-strong);-webkit-backdrop-filter:blur(var(--glass-blur));backdrop-filter:blur(var(--glass-blur));
+  border:1px solid var(--glass-border);box-shadow:var(--glass-shadow);
+}
+.auth-card .kicker{color:var(--ink-dim);font-size:.85rem;letter-spacing:.03em;text-transform:uppercase;margin-bottom:6px;text-align:center;}
+.auth-card h1{font-size:1.7rem;margin-bottom:22px;text-align:center;color:var(--primary);}
+.field{margin-bottom:16px;}
+.field label{display:block;font-size:.85rem;color:var(--ink-dim);margin-bottom:6px;}
+.field input,.field select{
+  box-sizing:border-box;width:100%;height:46px;padding:0 13px;border:1px solid var(--border);border-radius:var(--radius-sm);
+  background:var(--surface-2);color:var(--ink);font-size:.98rem;font-family:inherit;line-height:normal;
+  -webkit-appearance:none;appearance:none;
+}
+.field select{
+  background-image:url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%236d6957'%3e%3cpath fill-rule='evenodd' d='M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.25a.75.75 0 01-1.06 0L5.23 8.29a.75.75 0 01 0-1.08z' clip-rule='evenodd'/%3e%3c/svg%3e");
+  background-repeat:no-repeat;background-position:right 12px center;background-size:16px;padding-right:36px;cursor:pointer;
+}
+.field input:focus-visible,button:focus-visible,.field select:focus-visible{outline:2px solid var(--primary);outline-offset:1px;}
+.pw-field{position:relative;}
+.pw-field input{padding-right:42px;}
+.pw-toggle{
+  position:absolute;top:50%;right:4px;transform:translateY(-50%);width:36px;height:36px;
+  background:none;border:none;color:var(--ink-dim);cursor:pointer;display:flex;align-items:center;justify-content:center;border-radius:8px;
+}
+.pw-toggle:hover{color:var(--primary-dark);background:var(--primary-tint);}
+.field-row-between{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
+.field-row-between label{margin-bottom:0;}
+.link-btn{background:none;border:none;color:var(--primary-dark);font:inherit;font-size:.82rem;font-weight:600;cursor:pointer;padding:0;}
+.link-btn:hover{text-decoration:underline;}
+
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  border:none;border-radius:var(--radius-sm);padding:11px 18px;font-weight:600;font-size:.98rem;
+  cursor:pointer;background:var(--primary);color:#fff;width:100%;transition:background .12s ease,transform .06s ease;
+}
+.btn:hover{background:var(--primary-dark);}
+.btn:active{transform:translateY(1px);}
+.btn.secondary{background:transparent;border:1px solid var(--border);color:var(--ink);}
+.btn.secondary:hover{border-color:var(--primary);color:var(--primary-dark);background:var(--primary-tint);}
+.btn.danger{background:var(--expense-bg);color:var(--expense);}
+.btn.small{padding:7px 12px;font-size:.85rem;width:auto;}
+.btn.block-auto{width:auto;}
+.btn[disabled]{opacity:.5;cursor:not-allowed;}
+
+.divider{display:flex;align-items:center;gap:10px;color:var(--ink-dim);font-size:.8rem;margin:16px 0;}
+.divider::before,.divider::after{content:"";flex:1;height:1px;background:var(--border);}
+
+.auth-switch{margin-top:18px;text-align:center;font-size:.92rem;color:var(--ink-dim);}
+.auth-switch button{background:none;border:none;color:var(--primary-dark);font-weight:600;cursor:pointer;padding:0;}
+.form-error{background:var(--expense-bg);color:var(--expense);border-radius:var(--radius-sm);padding:9px 12px;font-size:.88rem;margin-bottom:14px;}
+.form-notice{background:var(--income-bg);color:var(--income);border-radius:var(--radius-sm);padding:9px 12px;font-size:.88rem;margin-bottom:14px;}
+
+/* ---------- অ্যাপ শেল (ভাসমান গ্লাস সাইডবার) ---------- */
+.app-shell{min-height:100vh;display:flex;}
+
+.sidebar{
+  width:230px;flex-shrink:0;background:var(--glass-sidebar-bg);
+  -webkit-backdrop-filter:blur(var(--glass-blur));backdrop-filter:blur(var(--glass-blur));
+  border:1px solid var(--sidebar-border);box-shadow:var(--glass-shadow);border-radius:var(--radius-lg);
+  color:var(--sidebar-ink);display:flex;flex-direction:column;padding:20px 14px;
+  position:sticky;top:18px;height:calc(100vh - 36px);margin:18px 0 18px 18px;
+}
+.sidebar-brand{font-family:"Tiro Bangla",serif;font-size:1.08rem;font-weight:600;line-height:1.3;padding:6px 10px 26px;display:flex;align-items:center;gap:8px;letter-spacing:-.01em;}
+html[lang="en"] .sidebar-brand{font-family:"Poppins","Segoe UI",sans-serif;font-weight:700;font-size:.98rem;gap:7px;}
+.sidebar-nav{display:flex;flex-direction:column;gap:6px;flex:1;}
+.sidebar-nav button{
+  display:flex;align-items:center;gap:12px;background:none;border:none;color:var(--sidebar-ink-dim);
+  font:inherit;font-weight:600;padding:12px 14px;border-radius:var(--radius-sm);cursor:pointer;text-align:left;
+}
+.sidebar-nav button .ic{font-size:1.15rem;}
+.sidebar-nav button:hover{background:var(--sidebar-border);color:var(--sidebar-ink);}
+.sidebar-nav button.active{background:var(--sidebar-active);color:#fff;}
+.sidebar-user{
+  border-top:1px solid var(--sidebar-border);padding-top:14px;display:flex;align-items:center;gap:10px;
+}
+.sidebar-user .meta{flex:1;min-width:0;}
+.sidebar-user .meta .name{font-size:.88rem;font-weight:600;color:var(--sidebar-ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.sidebar-user .meta .email{font-size:.74rem;color:var(--sidebar-ink-dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.sidebar-user .logout-ic{
+  background:rgba(255,255,255,.08);border:1px solid var(--sidebar-border);color:var(--sidebar-ink);
+  cursor:pointer;font-size:1.05rem;line-height:1;width:32px;height:32px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.sidebar-user .logout-ic:hover{color:#fff;background:rgba(220,60,60,.35);border-color:rgba(220,60,60,.6);}
+
+.avatar{
+  width:32px;height:32px;border-radius:50%;background:var(--accent);color:var(--accent-ink);
+  display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.85rem;flex-shrink:0;
+}
+
+.main-col{flex:1;display:flex;flex-direction:column;min-width:0;}
+.topbar-mobile{
+  display:none;background:var(--glass-bg);-webkit-backdrop-filter:blur(var(--glass-blur));backdrop-filter:blur(var(--glass-blur));
+  border:1px solid var(--glass-border);box-shadow:var(--glass-shadow);border-radius:var(--radius-lg);
+  align-items:center;gap:12px;padding:12px 16px;position:sticky;top:12px;z-index:20;margin:12px 12px 0;
+}
+.topbar-mobile .brandmark{
+  font-family:"Tiro Bangla",serif;font-size:.95rem;font-weight:600;color:var(--primary-dark);
+  flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+html[lang="en"] .topbar-mobile .brandmark{font-family:"Poppins","Segoe UI",sans-serif;font-weight:700;font-size:.85rem;}
+.topbar-mobile .who{margin-left:auto;display:flex;align-items:center;gap:8px;flex-shrink:0;}
+.topbar-mobile .logout-ic{
+  background:rgba(0,0,0,.06);border:1px solid var(--glass-border);color:var(--ink);
+  cursor:pointer;font-size:1rem;line-height:1;width:30px;height:30px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.topbar-mobile .logout-ic:hover{color:#fff;background:rgba(220,60,60,.35);border-color:rgba(220,60,60,.6);}
+
+main.content{flex:1;max-width:1100px;width:100%;margin:0 auto;padding:40px 28px 60px;}
+
+.bottom-nav{
+  display:none;position:fixed;bottom:14px;left:14px;right:14px;background:var(--glass-bg);
+  -webkit-backdrop-filter:blur(var(--glass-blur));backdrop-filter:blur(var(--glass-blur));
+  border:1px solid var(--glass-border);box-shadow:var(--glass-shadow);border-radius:var(--radius-lg);
+  z-index:20;padding:6px 8px calc(6px + env(safe-area-inset-bottom));max-width:480px;margin:0 auto;
+}
+.bottom-nav .row{display:flex;gap:4px;}
+.bottom-nav button{
+  flex:1;background:none;border:none;display:flex;flex-direction:column;align-items:center;gap:3px;
+  color:var(--ink-dim);font:inherit;font-size:.72rem;padding:8px 4px;cursor:pointer;border-radius:10px;
+}
+.bottom-nav button .ic{font-size:1.25rem;}
+.bottom-nav button.active{color:var(--primary-dark);}
+
+/* ---------- ড্যাশবোর্ড হিরো (image center-left, text right — কোনো glass box ছাড়া) ---------- */
+.hero-split{display:flex;align-items:center;gap:36px;margin:0 0 32px;}
+.hero-text{flex:1;min-width:0;}
+/* eyebrow/kicker — ছোট, হালকা greeting লাইন, প্রধান heading-এর উপরে */
+.hero-kicker{
+  display:flex;align-items:center;gap:8px;font-size:.95rem;font-weight:700;color:var(--primary);
+  margin-bottom:8px;
+}
+.hero-kicker .cow-illust.cow-wave{display:inline-block;vertical-align:middle;}
+/* প্রধান heading — বড়, বোল্ড, premium gradient accent, hero-desc/tagline অপরিবর্তিত */
+.hero-title{
+  font-size:2.3rem;line-height:1.18;margin-bottom:14px;font-weight:800;letter-spacing:-.02em;
+  background:linear-gradient(100deg, var(--ink) 35%, var(--primary-dark) 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+html[lang="en"] .hero-title{font-weight:800;letter-spacing:-.03em;}
+.hero-desc{color:var(--ink-dim);font-size:.92rem;line-height:1.6;max-width:42ch;margin:10px 0 12px;}
+.hero-tagline-badge{
+  display:inline-flex;align-items:center;padding:8px 15px;border-radius:99px;font-weight:600;font-size:.78rem;color:var(--primary-dark);
+  background:var(--glass-bg-strong);-webkit-backdrop-filter:blur(var(--glass-blur));backdrop-filter:blur(var(--glass-blur));
+  border:1px solid var(--glass-border);box-shadow:var(--glass-shadow);
+}
+
+.hero-image-wrap{position:relative;flex:1;min-width:0;max-width:520px;}
+.hero-image-frame{
+  border-radius:var(--radius-lg);margin-bottom:0;aspect-ratio:4/5;padding:10px;
+}
+.hero-image-frame img{border-radius:calc(var(--radius-lg) - 6px);}
+/* ভাসমান floating dashboard card — চারটাই একদম identical width/height/padding/radius,
+   perfect 2x2 grid: b4=উপরে-বামে, b1=উপরে-ডানে, b3=নিচে-বামে, b2=নিচে-ডানে */
+.float-badge{
+  position:absolute;box-sizing:border-box;width:172px;height:60px;
+  display:flex;align-items:center;gap:9px;padding:0 14px;border-radius:14px;
+  background:var(--glass-bg-strong);-webkit-backdrop-filter:blur(var(--glass-blur));backdrop-filter:blur(var(--glass-blur));
+  border:1px solid var(--glass-border);box-shadow:var(--glass-shadow);font-size:.8rem;font-weight:600;
+  animation:float-badge 6s ease-in-out infinite;z-index:2;
+}
+.float-badge .fb-ic{font-size:1.2rem;flex-shrink:0;line-height:1;}
+.float-badge .fb-text{display:flex;flex-direction:column;gap:1px;min-width:0;line-height:1.3;}
+.float-badge .fb-label{font-size:.72rem;font-weight:600;color:var(--ink-dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.float-badge .fb-value{font-size:.94rem;font-weight:700;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+/* দুই পাশে vertical stack — বাম পাশে b1 উপরে, b3 তার নিচে; ডান পাশে b2 উপরে, b4 তার নিচে */
+/* Staircase/cascade — user-marked positions: 1st উপরে-বামে, 2nd ডানে (একটু নিচে),
+   3rd বামে (আরও নিচে), 4th ডানে-নিচে — বাম-ডান alternate করে ধাপে ধাপে নিচে নামে */
+.float-badge.b1{top:11%;left:-6%;animation-delay:0s;}
+.float-badge.b2{top:33%;right:-6%;animation-delay:.9s;}
+.float-badge.b3{top:55%;left:-6%;animation-delay:1.8s;}
+.float-badge.b4{top:77%;right:-6%;animation-delay:2.7s;}
+@keyframes float-badge{0%,100%{transform:translateY(0);}50%{transform:translateY(-6px);}}
+@media (max-width:900px){
+  .hero-split{flex-direction:column;gap:26px;}
+  .hero-text{text-align:center;}
+  .hero-kicker{justify-content:center;}
+  .hero-desc{margin:0 auto 14px;}
+  .hero-image-wrap{max-width:420px;width:100%;margin:0 auto;}
+}
+@media (max-width:480px){
+  .float-badge{width:142px;height:54px;font-size:.68rem;padding:0 10px;gap:6px;border-radius:12px;}
+  .float-badge .fb-ic{font-size:1rem;}
+  .float-badge .fb-label{font-size:.6rem;}
+  .float-badge .fb-value{font-size:.78rem;}
+  .float-badge.b1,.float-badge.b3{left:3%;}
+  .float-badge.b2,.float-badge.b4{right:3%;}
+}
+@media (max-width:720px){
+  .hero-title{font-size:1.7rem;}
+  .hero-desc{font-size:.88rem;}
+}
+
+/* ---------- আর্থিক ticker (marquee) — সব card একই width/height/padding ---------- */
+.fin-ticker{overflow:hidden;margin:0 0 40px;padding-top:4px;-webkit-mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);}
+.fin-track{display:flex;gap:18px;width:max-content;animation:fin-scroll 30s linear infinite;}
+.fin-ticker:hover .fin-track{animation-play-state:paused;}
+.fin-card{
+  flex:0 0 190px;width:190px;height:92px;padding:16px 20px;border-radius:var(--radius);box-sizing:border-box;
+  display:flex;flex-direction:column;justify-content:center;
+  background:var(--glass-bg);-webkit-backdrop-filter:blur(var(--glass-blur));backdrop-filter:blur(var(--glass-blur));
+  border:1px solid var(--glass-border);box-shadow:var(--glass-shadow);
+}
+.fin-label{font-size:.76rem;color:var(--ink-dim);text-transform:uppercase;letter-spacing:.04em;margin-bottom:6px;white-space:nowrap;}
+.fin-value{font-size:1.3rem;font-weight:700;white-space:nowrap;}
+.fin-value.income{color:var(--income);}
+.fin-value.expense{color:var(--expense);}
+@keyframes fin-scroll{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+@media (prefers-reduced-motion: reduce){.fin-track{animation:none;}}
+@media (max-width:720px){.fin-card{flex:0 0 155px;width:155px;height:82px;padding:13px 16px;}.fin-value{font-size:1.1rem;}}
+
+/* ---------- ওয়েবসাইট সার্বিক সারসংক্ষেপ — 2-column grid, প্রতিটি প্রায় square, icon+title+amount ---------- */
+.site-summary-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;margin-bottom:40px;}
+.summary-box{
+  background:var(--glass-bg-strong);-webkit-backdrop-filter:blur(var(--glass-blur));backdrop-filter:blur(var(--glass-blur));
+  border:1.5px solid var(--glass-border);border-radius:var(--radius-lg);box-shadow:var(--glass-shadow);
+  padding:30px 22px;min-height:150px;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
+  transition:transform .14s ease,border-color .14s ease;
+}
+.summary-box:hover{transform:translateY(-2px);border-color:var(--glass-border);}
+.summary-box .summary-ic{font-size:1.7rem;margin-bottom:6px;}
+.summary-box .label{font-size:.9rem;color:var(--ink-dim);font-weight:600;margin-bottom:8px;}
+.summary-box .value{font-size:2rem;font-weight:700;color:var(--ink);word-break:break-word;}
+.summary-box.income .value{color:var(--income);}
+.summary-box.expense .value{color:var(--expense);}
+@media (max-width:720px){
+  .site-summary-grid{grid-template-columns:repeat(2,1fr);gap:10px;}
+  .summary-box{padding:20px 12px;min-height:118px;}
+  .summary-box .summary-ic{font-size:1.4rem;}
+  .summary-box .value{font-size:1.3rem;}
+  .summary-box .label{font-size:.76rem;margin-bottom:4px;}
+}
+
+/* ---------- পাদদেশ — illustrated closing scene ---------- */
+.footer-scene{
+  position:relative;margin-top:46px;padding:54px 24px 30px;border-radius:var(--radius-lg);overflow:hidden;
+  background:linear-gradient(180deg, var(--primary-tint) 0%, var(--surface-2) 100%);text-align:center;
+}
+.footer-hill{position:absolute;left:-10%;right:-10%;border-radius:50%;background:var(--primary-tint);opacity:.7;}
+.footer-hill.h1{bottom:-60%;height:140%;background:rgba(46,91,62,.14);}
+.footer-hill.h2{bottom:-75%;height:140%;background:rgba(46,91,62,.22);}
+.footer-grass{position:relative;display:flex;justify-content:space-around;margin-bottom:6px;z-index:1;}
+.footer-cows{position:relative;display:flex;justify-content:center;align-items:flex-end;gap:28px;margin-bottom:14px;z-index:1;}
+.footer-line{position:relative;z-index:1;color:var(--primary-dark);font-weight:700;font-size:.95rem;margin:0;}
+.footer-scene .cow-track{position:absolute;left:-120px;right:-120px;bottom:10px;z-index:1;}
+
+/* ---------- স্ক্রল রিভিল ---------- */
+.reveal{opacity:0;transform:translateY(22px);transition:opacity .6s ease, transform .6s ease;}
+.reveal.in-view{opacity:1;transform:translateY(0);}
+@media (prefers-reduced-motion: reduce){
+  .reveal{opacity:1;transform:none;transition:none;}
+}
+
+.section-title{display:flex;align-items:center;justify-content:space-between;margin:30px 0 14px;}
+.section-title h2{font-size:1.25rem;}
+
+.farm-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px;}
+.farm-card{
+  background:var(--glass-bg);-webkit-backdrop-filter:blur(var(--glass-blur));backdrop-filter:blur(var(--glass-blur));
+  border:1px solid var(--glass-border);border-radius:var(--radius);
+  padding:20px;box-shadow:var(--glass-shadow);cursor:pointer;text-align:left;font:inherit;color:inherit;
+  display:flex;flex-direction:column;gap:10px;transition:transform .14s ease,border-color .14s ease,box-shadow .14s ease;
+}
+.farm-card:hover{transform:translateY(-3px);border-color:var(--primary);}
+.farm-card .icon-badge{
+  width:46px;height:46px;border-radius:13px;background:var(--primary-tint);display:flex;align-items:center;
+  justify-content:center;font-size:1.5rem;
+}
+.farm-card .name{font-weight:700;font-size:1.05rem;}
+.farm-card .type{color:var(--ink-dim);font-size:.82rem;}
+.farm-card .open-hint{margin-top:4px;color:var(--primary-dark);font-size:.8rem;font-weight:700;}
+.farm-card.family-card .icon-badge{background:var(--accent-tint);}
+.farm-card.family-card .open-hint{color:var(--accent);}
+
+.add-farm-card{
+  border:1.5px dashed var(--glass-border);border-radius:var(--radius);background:var(--glass-bg);
+  -webkit-backdrop-filter:blur(var(--glass-blur));backdrop-filter:blur(var(--glass-blur));
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;
+  min-height:128px;cursor:pointer;color:var(--primary-dark);font:inherit;font-weight:600;
+}
+.add-farm-card:hover{border-color:var(--primary);background:var(--primary-tint);}
+.add-farm-card .plus{font-size:1.7rem;}
+
+.empty-state{
+  background:var(--glass-bg);-webkit-backdrop-filter:blur(var(--glass-blur));backdrop-filter:blur(var(--glass-blur));
+  border:1.5px dashed var(--glass-border);border-radius:var(--radius);
+  padding:48px 22px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:10px;
+}
+.empty-state .icon{font-size:2.4rem;}
+.empty-state p{color:var(--ink-dim);max-width:40ch;}
+
+.activity-list{
+  background:var(--glass-bg);-webkit-backdrop-filter:blur(var(--glass-blur));backdrop-filter:blur(var(--glass-blur));
+  border:1px solid var(--glass-border);border-radius:var(--radius);box-shadow:var(--glass-shadow);overflow:hidden;
+}
+.activity-row{display:flex;align-items:center;gap:12px;padding:14px 18px;border-bottom:1px solid var(--border);}
+.activity-row:last-child{border-bottom:none;}
+.activity-row .ic{width:38px;height:38px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;background:var(--surface-2);flex-shrink:0;}
+.activity-row .meta{flex:1;min-width:0;}
+.activity-row .meta .t1{font-weight:600;font-size:.94rem;}
+.activity-row .meta .t2{color:var(--ink-dim);font-size:.8rem;}
+.activity-row .amt{font-weight:700;}
+.activity-row .amt.income{color:var(--income);}
+.activity-row .amt.expense{color:var(--expense);}
+
+/* ---------- খামারের ধরন বাছাই ---------- */
+.type-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px;margin-top:16px;}
+.type-card{
+  background:var(--glass-bg);-webkit-backdrop-filter:blur(var(--glass-blur));backdrop-filter:blur(var(--glass-blur));
+  border:1px solid var(--glass-border);border-radius:var(--radius);padding:22px 14px;
+  text-align:center;cursor:pointer;font:inherit;color:inherit;display:flex;flex-direction:column;align-items:center;gap:9px;
+  transition:transform .12s ease,border-color .12s ease;box-shadow:var(--glass-shadow);
+}
+.type-card:hover{border-color:var(--primary);transform:translateY(-2px);}
+.type-card.sel{border-color:var(--primary);background:var(--primary-tint);}
+.type-card .icon{font-size:2.3rem;}
+
+.modal-backdrop{position:fixed;inset:0;background:rgba(15,20,12,.4);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;z-index:50;padding:16px;}
+.modal{
+  background:var(--glass-bg-strong);-webkit-backdrop-filter:blur(var(--glass-blur));backdrop-filter:blur(var(--glass-blur));
+  border:1px solid var(--glass-border);border-radius:var(--radius);padding:26px;max-width:420px;width:100%;
+  box-shadow:var(--glass-shadow);max-height:90vh;overflow-y:auto;
+}
+.modal h2{font-size:1.25rem;margin-bottom:16px;}
+
+/* ---------- খামারের ভিতরের পেজ ---------- */
+.back-icon-btn{
+  width:38px;height:38px;border-radius:50%;background:var(--glass-bg);-webkit-backdrop-filter:blur(var(--glass-blur));backdrop-filter:blur(var(--glass-blur));
+  border:1px solid var(--glass-border);box-shadow:var(--glass-shadow);color:var(--ink);font-size:1.1rem;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;margin-bottom:16px;
+}
+.back-icon-btn:hover{color:var(--primary-dark);border-color:var(--primary);}
+
+/* ---------- পরিবারের মাসিক ইতিহাস নেভিগেটর ---------- */
+.month-nav{
+  display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:22px;padding:14px 18px;
+  background:var(--glass-bg);-webkit-backdrop-filter:blur(var(--glass-blur));backdrop-filter:blur(var(--glass-blur));
+  border:1px solid var(--glass-border);border-radius:var(--radius);box-shadow:var(--glass-shadow);
+}
+.month-nav-title{font-weight:700;font-size:.92rem;color:var(--primary-dark);}
+.month-nav-controls{display:flex;align-items:center;gap:8px;margin-left:auto;}
+.month-nav-btn{
+  width:32px;height:32px;border-radius:50%;border:1px solid var(--border);background:var(--surface);
+  color:var(--ink);font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.month-nav-btn:hover:not(:disabled){border-color:var(--primary);color:var(--primary-dark);}
+.month-nav-btn:disabled{opacity:.35;cursor:not-allowed;}
+.month-nav-select{
+  height:36px;padding:0 30px 0 12px;border:1px solid var(--border);border-radius:var(--radius-sm);
+  background:var(--surface-2);color:var(--ink);font:inherit;font-size:.88rem;font-weight:600;cursor:pointer;
+  background-image:url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%236d6957'%3e%3cpath fill-rule='evenodd' d='M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.25a.75.75 0 01-1.06 0L5.23 8.29a.75.75 0 010-1.08z' clip-rule='evenodd'/%3e%3c/svg%3e");
+  background-repeat:no-repeat;background-position:right 8px center;background-size:14px;-webkit-appearance:none;appearance:none;
+}
+.month-nav-badge{background:var(--primary-tint);color:var(--primary-dark);font-size:.74rem;font-weight:700;padding:4px 10px;border-radius:99px;white-space:nowrap;}
+@media (max-width:560px){
+  .month-nav{gap:8px;padding:12px 14px;}
+  .month-nav-controls{margin-left:0;width:100%;}
+  .month-nav-select{flex:1;}
+}
+
+.farm-head{display:flex;align-items:center;gap:14px;margin-bottom:22px;flex-wrap:wrap;}
+.farm-head .icon-badge{
+  width:52px;height:52px;border-radius:15px;background:var(--primary-tint);display:flex;align-items:center;
+  justify-content:center;font-size:1.8rem;flex-shrink:0;
+}
+.farm-head h1{font-size:1.6rem;}
+.farm-head .type-label{color:var(--ink-dim);font-size:.88rem;}
+.farm-head .actions{margin-left:auto;display:flex;gap:8px;}
+.farm-bottom-actions{display:flex;gap:10px;justify-content:center;margin-top:24px;padding-top:20px;border-top:1px solid var(--border);}
+
+.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px;min-width:0;}
+.stat-grid-3{grid-template-columns:repeat(3,1fr);}
+.stat{min-width:0;}
+.stat .value{word-break:break-word;}
+@media (max-width:640px){
+  .stat-grid-3{grid-template-columns:repeat(2,1fr);}
+}
+@media (max-width:380px){
+  .stat-grid-3{grid-template-columns:1fr;}
+}
+.stat{
+  background:var(--glass-bg);-webkit-backdrop-filter:blur(var(--glass-blur));backdrop-filter:blur(var(--glass-blur));
+  border:1px solid var(--glass-border);border-radius:var(--radius);padding:16px 18px;box-shadow:var(--glass-shadow);
+}
+.stat .label{font-size:.8rem;color:var(--ink-dim);font-weight:600;}
+.stat .value{font-size:1.4rem;margin-top:5px;}
+.stat.income .value{color:var(--income);}
+.stat.expense .value{color:var(--expense);}
+.stat.net .value.pos{color:var(--income);}
+.stat.net .value.neg{color:var(--expense);}
+
+.card{
+  background:var(--glass-bg);-webkit-backdrop-filter:blur(var(--glass-blur));backdrop-filter:blur(var(--glass-blur));
+  border:1px solid var(--glass-border);border-radius:var(--radius);padding:22px;box-shadow:var(--glass-shadow);
+}
+.card + .card{margin-top:20px;}
+.card-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;gap:10px;flex-wrap:wrap;}
+.card-head-col{margin-bottom:16px;}
+.card-subtitle{margin:4px 0 0;font-size:.85rem;color:var(--ink-dim);}
+.card-head h2{font-size:1.15rem;}
+
+.avatar-swatches{display:flex;gap:10px;flex-wrap:wrap;}
+.avatar-swatch{width:34px;height:34px;border-radius:50%;border:2px solid transparent;cursor:pointer;padding:0;}
+.avatar-swatch.sel{border-color:var(--ink);box-shadow:0 0 0 2px var(--surface);}
+.lang-switch{display:flex;border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden;width:fit-content;}
+.lang-opt{padding:10px 22px;border:none;background:var(--surface-2);color:var(--ink-dim);font:inherit;font-weight:600;cursor:pointer;}
+.lang-opt.active{background:var(--primary);color:#fff;}
+
+.type-toggle{display:flex;border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden;margin-bottom:14px;}
+.type-toggle button{flex:1;padding:10px;border:none;background:var(--surface-2);color:var(--ink-dim);font:inherit;font-weight:600;cursor:pointer;}
+.type-toggle button.active.income{background:var(--income-bg);color:var(--income);}
+.type-toggle button.active.expense{background:var(--expense-bg);color:var(--expense);}
+
+.row{display:flex;gap:12px;flex-wrap:wrap;}
+.row > .field{flex:1;min-width:140px;}
+/* সরু মোবাইল স্ক্রিনে দুইটা field পাশাপাশি রাখলে (বিশেষত ইংরেজি তারিখ/মাসের নাম লম্বা হওয়ায়)
+   টেক্সট ভেঙে দুই লাইন হয়ে "ঘিচিবিচি" দেখাচ্ছিল — তাই এই সাইজে field-গুলো পুরো width নিয়ে নিচে নিচে বসবে */
+@media (max-width:420px){
+  .row > .field{flex-basis:100%;min-width:100%;}
+}
+
+.pill{display:inline-block;padding:3px 11px;border-radius:99px;font-size:.76rem;font-weight:700;}
+.pill.income{background:var(--income-bg);color:var(--income);}
+.pill.expense{background:var(--expense-bg);color:var(--expense);}
+.icon-btn{background:none;border:none;color:var(--ink-dim);cursor:pointer;font-size:.95rem;padding:4px 6px;}
+.icon-btn:hover{color:var(--primary-dark);}
+.icon-btn.del:hover{color:var(--expense);}
+.empty-row{color:var(--ink-dim);text-align:center;padding:24px 0;}
+
+/* ---------- হিসাবের তালিকা — Excel/spreadsheet-স্টাইল টেবিল (Farm ও Family-তে একই) ---------- */
+.table-wrap{overflow-x:auto;border-radius:var(--radius-sm);border:1px solid var(--border);-webkit-overflow-scrolling:touch;}
+.data-table{width:100%;min-width:640px;border-collapse:collapse;background:var(--surface);}
+.data-table thead th{
+  position:sticky;top:0;z-index:1;background:var(--surface-2);color:var(--ink-dim);
+  font-size:.76rem;text-transform:uppercase;letter-spacing:.04em;font-weight:700;
+  text-align:left;padding:12px 14px;border-bottom:1px solid var(--border);white-space:nowrap;
+}
+.data-table tbody td{padding:13px 14px;border-bottom:1px solid var(--border);font-size:.92rem;vertical-align:middle;}
+.data-table tbody tr:last-child td{border-bottom:none;}
+.data-table tbody tr:nth-child(even){background:rgba(0,0,0,.012);}
+.data-table tbody tr:hover{background:var(--primary-tint);}
+.data-table .date-col{color:var(--ink-dim);white-space:nowrap;font-size:.86rem;}
+.data-table .cat-col{font-weight:600;white-space:nowrap;}
+.data-table .desc-col{color:var(--ink-dim);max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.data-table .desc-col .muted{color:var(--ink-dim);opacity:.5;}
+.data-table .num-col{text-align:right;white-space:nowrap;font-weight:700;}
+.data-table .num-col.income{color:var(--income);}
+.data-table .num-col.expense{color:var(--expense);}
+.data-table .actions-col{text-align:right;white-space:nowrap;width:1%;}
+.data-table .actions-col .icon-btn{padding:6px 8px;}
+.data-table .table-farm{display:inline-flex;align-items:center;gap:7px;font-weight:600;white-space:nowrap;}
+.data-table .table-farm .ic{font-size:1.05rem;}
+@media (max-width:720px){
+  .data-table{min-width:560px;}
+  .data-table thead th,.data-table tbody td{padding:10px 10px;font-size:.85rem;}
+  .data-table .desc-col{max-width:120px;}
+}
+
+/* ---------- হিস্টোরি — day-by-day গ্রুপ ---------- */
+.history-day{margin-bottom:26px;}
+.history-day-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:8px;}
+.history-day-head h3{font-size:1.02rem;color:var(--ink);}
+.history-day-sum{display:flex;gap:12px;font-size:.88rem;font-weight:700;}
+.history-day-sum .income{color:var(--income);}
+.history-day-sum .expense{color:var(--expense);}
+
+/* ---------- হিসাবের তালিকা — মাসভিত্তিক শিট ---------- */
+.month-sheet{
+  margin-bottom:18px;padding:18px 18px 6px;
+  background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius);
+}
+.data-table-compact{min-width:0;}
+.data-table-compact .date-col{font-weight:600;color:var(--ink);}
+.month-sheet-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px;}
+.month-sheet-head h3{font-size:1.08rem;color:var(--primary-dark);font-weight:600;}
+.month-sheet-sum{display:flex;gap:14px;font-size:.9rem;font-weight:700;}
+.month-sheet-sum .income{color:var(--income);}
+.month-sheet-sum .expense{color:var(--expense);}
+
+.chart-legend{display:flex;gap:16px;margin-top:10px;font-size:.82rem;color:var(--ink-dim);flex-wrap:wrap;}
+.chart-legend .dot{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;}
+svg text{fill:var(--ink-dim);font-family:"Hind Siliguri",sans-serif;font-size:11px;}
+
+/* ---------- বাজেট কার্ড ---------- */
+.budget-exceeded-badge{background:var(--expense-bg);color:var(--expense);font-size:.78rem;font-weight:700;padding:4px 12px;border-radius:99px;}
+
+/* ---------- খামার/পরিবারের হিসাবসমূহ — সবসময় 2-column, square-ish, icon+title+amount ---------- */
+.totals-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-bottom:16px;}
+.total-box{
+  background:var(--glass-bg);-webkit-backdrop-filter:blur(var(--glass-blur));backdrop-filter:blur(var(--glass-blur));
+  border:1px solid var(--glass-border);border-radius:var(--radius);box-shadow:var(--glass-shadow);
+  padding:24px;min-height:132px;display:flex;flex-direction:column;justify-content:center;
+}
+.total-box .total-ic{font-size:1.5rem;margin-bottom:8px;}
+.total-box .label{font-size:.85rem;color:var(--ink-dim);font-weight:600;}
+.total-box .value{font-size:1.5rem;font-weight:700;margin-top:6px;word-break:break-word;}
+.total-box.income .value{color:var(--income);}
+.total-box.expense .value{color:var(--expense);}
+@media (max-width:560px){
+  .totals-grid{gap:10px;}
+  .total-box{padding:16px;min-height:108px;}
+  .total-box .total-ic{font-size:1.25rem;margin-bottom:6px;}
+  .total-box .value{font-size:1.15rem;}
+  .total-box .label{font-size:.7rem;}
+}
+
+.budget-progress-track{background:var(--surface-2);border-radius:8px;height:12px;overflow:hidden;}
+.budget-progress-fill{height:100%;border-radius:8px;background:var(--primary);transition:width .3s ease;}
+.budget-progress-fill.over{background:var(--expense);}
+.budget-progress-label{margin:8px 0 22px;font-size:.84rem;color:var(--ink-dim);}
+.budget-exceeded-note{margin:8px 0 22px;color:var(--expense);font-weight:700;font-size:.9rem;}
+
+.quick-add-card{border:1.5px solid var(--primary);}
+
+/* ---------- বাজেট মোডাল — প্রতি ক্যাটাগরি ---------- */
+.my-budget-display{text-align:center;padding:18px;background:var(--primary-tint);border-radius:var(--radius);margin-bottom:6px;}
+.my-budget-display .label{font-size:.82rem;color:var(--ink-dim);margin-bottom:6px;}
+.my-budget-display .value{font-size:1.8rem;font-weight:700;color:var(--primary-dark);}
+.cat-budget-list{display:flex;flex-direction:column;gap:14px;max-height:340px;overflow-y:auto;padding-right:4px;}
+.cat-budget-row{padding:12px 0;border-bottom:1px solid var(--border);}
+.cat-budget-row:last-child{border-bottom:none;}
+.cat-budget-name{font-weight:600;margin-bottom:8px;}
+.cat-budget-input-wrap{display:flex;align-items:center;gap:6px;background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:0 12px;height:42px;}
+.cat-budget-input-wrap .cur{color:var(--ink-dim);}
+.cat-budget-input{border:none;background:none;flex:1;height:100%;font:inherit;font-size:.95rem;color:var(--ink);}
+.cat-budget-meta{font-size:.8rem;color:var(--ink-dim);margin-top:8px;}
+.cat-budget-exceeded{color:var(--expense);font-weight:700;}
+
+.quick-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:22px;}
+.quick-card{
+  background:var(--glass-bg);-webkit-backdrop-filter:blur(var(--glass-blur));backdrop-filter:blur(var(--glass-blur));
+  border:1px solid var(--glass-border);border-radius:var(--radius);padding:18px 14px;box-shadow:var(--glass-shadow);
+  display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;cursor:pointer;font:inherit;color:inherit;
+  transition:transform .12s ease,border-color .12s ease;
+}
+.quick-card:hover{transform:translateY(-3px);border-color:var(--primary);}
+.quick-card .ic{width:42px;height:42px;border-radius:12px;background:var(--primary-tint);display:flex;align-items:center;justify-content:center;font-size:1.3rem;}
+.quick-card .lbl{font-weight:600;font-size:.86rem;}
+.quick-card.active{
+  border-color:var(--primary);outline:2.5px solid var(--primary);outline-offset:2px;
+}
+.filter-pills{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap;}
+.filter-pill{
+  background:var(--glass-bg);-webkit-backdrop-filter:blur(var(--glass-blur));backdrop-filter:blur(var(--glass-blur));
+  border:1px solid var(--glass-border);border-radius:99px;padding:8px 16px;font:inherit;font-size:.85rem;font-weight:600;
+  color:var(--ink-dim);cursor:pointer;
+}
+.filter-pill.active{background:var(--primary);color:#fff;border-color:var(--primary);}
+.filter-pill.custom-inputs{display:flex;align-items:center;gap:6px;background:var(--glass-bg);border:1px solid var(--glass-border);border-radius:99px;padding:4px 10px;}
+
+/* ---------- কাস্টম ক্যালেন্ডার ---------- */
+.date-input-btn{
+  display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;height:46px;padding:0 13px;
+  border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--surface-2);color:var(--ink);
+  font:inherit;font-size:.95rem;cursor:pointer;text-align:left;
+}
+.date-input-btn:hover{border-color:var(--primary);}
+.date-input-text{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.date-input-ic{font-size:1rem;flex-shrink:0;}
+.date-input-btn.compact{height:auto;padding:2px 4px;border:none;background:none;font-size:.82rem;width:auto;min-width:100px;}
+.date-input-btn.compact:hover{color:var(--primary-dark);}
+
+.date-popover{
+  position:absolute;z-index:80;width:280px;padding:16px;border-radius:var(--radius);
+  background:var(--glass-bg-strong);-webkit-backdrop-filter:blur(var(--glass-blur));backdrop-filter:blur(var(--glass-blur));
+  border:1px solid var(--glass-border);box-shadow:var(--glass-shadow);
+}
+.cal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+.cal-month-label{font-weight:700;font-size:.95rem;color:var(--ink);}
+.cal-nav{width:30px;height:30px;border-radius:50%;border:1px solid var(--border);background:var(--surface);color:var(--ink);cursor:pointer;font-size:1.1rem;line-height:1;}
+.cal-nav:hover{border-color:var(--primary);color:var(--primary-dark);}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;}
+.cal-dow-row{margin-bottom:4px;}
+.cal-dow{text-align:center;font-size:.7rem;color:var(--ink-dim);font-weight:600;padding:4px 0;}
+.cal-cell{
+  aspect-ratio:1;display:flex;align-items:center;justify-content:center;border:none;background:none;
+  border-radius:8px;font-size:.85rem;color:var(--ink);cursor:pointer;font-family:inherit;
+}
+.cal-cell.empty{cursor:default;}
+.cal-cell:not(.empty):hover{background:var(--primary-tint);}
+.cal-cell.today{font-weight:700;color:var(--primary-dark);box-shadow:inset 0 0 0 1.5px var(--primary);}
+.cal-cell.sel{background:var(--primary);color:#fff;font-weight:700;}
+.cal-today-btn{
+  display:block;width:100%;margin-top:10px;padding:8px;border-radius:var(--radius-sm);border:1px solid var(--border);
+  background:var(--surface-2);color:var(--primary-dark);font:inherit;font-size:.82rem;font-weight:600;cursor:pointer;
+}
+.cal-today-btn:hover{border-color:var(--primary);}
+
+/* ---------- খরচের বিভাগ — premium financial-analytics card ---------- */
+.donut-wrap{display:flex;align-items:flex-start;gap:30px;flex-wrap:wrap;}
+.donut-ring-wrap{display:flex;flex-direction:column;align-items:center;flex-shrink:0;}
+.donut-single-note{margin-top:10px;max-width:160px;font-size:.76rem;color:var(--ink-dim);line-height:1.5;text-align:center;}
+.cat-rows{display:flex;flex-direction:column;gap:14px;flex:1;min-width:220px;}
+.cat-row-top{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:6px;}
+.cat-row-name{display:flex;align-items:center;gap:8px;font-weight:600;font-size:.92rem;min-width:0;}
+.cat-row-name .dot{width:10px;height:10px;border-radius:3px;flex-shrink:0;}
+.cat-row-amt{font-weight:700;font-size:.92rem;white-space:nowrap;}
+.cat-row-bar-track{background:var(--surface-2);border-radius:8px;height:7px;overflow:hidden;}
+.cat-row-bar-fill{height:100%;border-radius:8px;transition:width .3s ease;}
+.cat-row-pct{margin-top:5px;font-size:.76rem;color:var(--ink-dim);}
+.dot{display:inline-block;}
+
+.cat-bars{display:flex;flex-direction:column;gap:12px;}
+.cat-bar-row .top{display:flex;justify-content:space-between;font-size:.88rem;margin-bottom:5px;}
+.cat-bar-row .top .amt{color:var(--ink-dim);}
+.cat-bar-track{background:var(--surface-2);border-radius:8px;height:9px;overflow:hidden;}
+.cat-bar-fill{height:100%;border-radius:8px;}
+
+.loading{padding:60px 0;text-align:center;color:var(--ink-dim);}
+
+/* ---------- রেসপন্সিভ ---------- */
+@media (max-width: 960px){
+  .sidebar{display:none;}
+  .topbar-mobile{display:flex;}
+  .bottom-nav{display:block;}
+  main.content{padding:28px 16px 100px;}
+  .hero-title{font-size:1.7rem;}
+}
+@media (max-width: 860px){
+  .auth-scene .cow-track.t3{display:none;}
+}
+@media (max-width: 560px){
+  .auth-card{padding:26px 20px;}
+  .auth-scene .cow-track{transform:scale(.8);}
+}
+@media (max-width: 720px){
+  .stat-grid{grid-template-columns:repeat(2,1fr);}
+  .quick-grid{grid-template-columns:repeat(2,1fr);}
+}
+
+/* ---------- অ্যাপ খোলার greeting splash (একবারই, প্রথম লোডে) ---------- */
+.app-splash{
+  position:fixed;inset:0;z-index:999;display:flex;align-items:center;justify-content:center;
+  background:var(--bg);opacity:1;transition:opacity .45s ease;
+}
+.app-splash.fade-out{opacity:0;}
+.app-splash-cow{animation:splash-cow-pop 1.5s cubic-bezier(.34,1.56,.64,1) both;}
+@keyframes splash-cow-pop{
+  0%{transform:scale(.5);opacity:0;}
+  22%{transform:scale(1.12);opacity:1;}
+  35%{transform:scale(1);}
+  82%{transform:scale(1);opacity:1;}
+  100%{transform:scale(.82);opacity:0;}
+}
+
+/* ---------- গরুর illustration (সাইট জুড়ে decorative) ---------- */
+.cow-illust{overflow:visible;}
+.cow-illust .cow-body{fill:var(--cow-body);stroke:var(--cow-outline);stroke-width:2;}
+.cow-illust .cow-patch{fill:var(--cow-patch);}
+.cow-illust .cow-ear{fill:var(--cow-muzzle);stroke:var(--cow-outline);stroke-width:1.5;}
+.cow-illust .cow-muzzle{fill:var(--cow-muzzle);stroke:var(--cow-outline);stroke-width:1.5;}
+.cow-illust .cow-nostril{fill:var(--cow-outline);}
+.cow-illust .cow-eye{fill:var(--cow-outline);}
+.cow-illust .cow-tail{stroke:var(--cow-outline);}
+.cow-illust .cow-shadow{fill:rgba(30,25,10,.1);}
+.cow-illust .leg rect{fill:var(--cow-body);stroke:var(--cow-outline);stroke-width:2;}
+.cow-illust .leg{transform-box:fill-box;transform-origin:top center;}
+.cow-illust.walking .leg-fl,.cow-illust.walking .leg-br{animation:cow-legswing 0.9s ease-in-out infinite;}
+.cow-illust.walking .leg-fr,.cow-illust.walking .leg-bl{animation:cow-legswing 0.9s ease-in-out infinite reverse;}
+@keyframes cow-legswing{0%{transform:rotate(-9deg);}50%{transform:rotate(9deg);}100%{transform:rotate(-9deg);}}
+.cow-illust.cow-wave .cow-wave-arm{transform-box:fill-box;transform-origin:85% 95%;animation:cow-wave-swing 1.3s ease-in-out infinite;}
+@keyframes cow-wave-swing{0%,100%{transform:rotate(-6deg);}50%{transform:rotate(20deg);}}
+
+/* ---------- পোর্টফোলিও প্রিভিউ-only spacing — শুধু এই কপিতেই, আসল লাইভ অ্যাপের styles.css অপরিবর্তিত।
+   ডেস্কটপ মকআপে content-টা compressed/cramped লাগছিল বলে ৯০০px+ width-এ বাড়তি breathing room
+   যোগ করা হলো — nav↔greeting gap, hero text/image gap, hero-এর নিচে section gap। ৯০০px-এর নিচে
+   (মোবাইল/ট্যাবলেট) আগের spacing-ই অপরিবর্তিত থাকছে। ---------- */
+@media (min-width: 901px){
+  main.content{padding:64px 48px 90px;}
+  .sidebar{margin:28px 0 28px 28px;height:calc(100vh - 56px);top:28px;}
+  .hero-split{gap:56px;margin:0 0 56px;}
+  .hero-title{font-size:2.55rem;margin-bottom:18px;}
+  .hero-desc{margin:12px 0 18px;}
+  .fin-ticker{margin:0 0 56px;}
+  .site-summary-grid{margin-bottom:56px;}
+  .section-title{margin:44px 0 20px;}
+}
+
+.grass-illust *{stroke:var(--primary);opacity:.7;}
+
+.cow-track{position:relative;height:0;}
+.cow-track .cow-mover{position:absolute;bottom:0;animation:cow-walk-rl linear infinite;}
+.cow-track.rev .cow-mover{animation-name:cow-walk-lr;}
+.cow-track .cow-mover .cow-illust{display:block;}
+.cow-track.rev .cow-mover .cow-illust{transform:scaleX(-1);}
+@keyframes cow-walk-rl{from{left:100%;}to{left:-140px;}}
+@keyframes cow-walk-lr{from{left:-140px;}to{left:100%;}}
+@media (prefers-reduced-motion: reduce){
+  .cow-illust.walking .leg{animation:none!important;}
+  .cow-illust.cow-wave .cow-wave-arm{animation:none!important;}
+  .cow-track .cow-mover{animation:none!important;left:40%!important;}
+}
+

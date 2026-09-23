@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>বাকারা ম্যানেজমেন্ট — Portfolio Preview</title>
+<link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32.png">
+<link rel="icon" type="image/png" sizes="512x512" href="img/favicon-512.png">
+<link rel="apple-touch-icon" sizes="180x180" href="img/favicon-180.png">
+<meta name="theme-color" content="#2e5b3e">
+<meta name="color-scheme" content="light dark">
+<meta name="robots" content="noindex, nofollow">
+<link rel="stylesheet" href="css/styles.css">
+<style>
+  /* Auto-play mode for the portfolio's Work-section thumbnail card, activated only via
+     ?showcase=1 (see script below) — never affects a normal visit to this preview. */
+  html.showcase-mode { scrollbar-width: none; }
+  html.showcase-mode::-webkit-scrollbar { display: none; }
+  html.showcase-mode body { pointer-events: none; }
+</style>
+</head>
+<body>
+<div id="root"><div class="loading">লোড হচ্ছে…</div></div>
+<!--
+  mock-server.js MUST load before app.js — it overrides window.fetch so every /api/* call
+  app.js makes is answered from an in-browser, in-memory demo dataset instead of a real
+  server. app.js itself below is byte-for-byte the real production file, completely
+  unmodified — this is a portfolio preview only, it never talks to the live Baraka
+  Management backend, domain, or database.
+-->
+<script src="js/mock-server.js"></script>
+<script src="js/app.js"></script>
+<script>
+(function () {
+  // Same technique as startup-ready-site/index.html's card thumbnail: only runs when
+  // embedded as the Work-section card (?showcase=1), looping a short scripted scroll
+  // through the dashboard so the thumbnail looks genuinely alive instead of a static
+  // screenshot. A normal visit to this preview (no query param) is completely unaffected.
+  var params = new URLSearchParams(location.search);
+  if (params.get('showcase') !== '1') return;
+  document.documentElement.classList.add('showcase-mode');
+
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduce) return;
+
+  // This app's own layout (html,body { overflow-x:hidden } — see styles.css) makes the CSS
+  // spec's overflow-x/y coupling turn body into the actual scrolling box, NOT window/html
+  // (confirmed: window.scrollTo does nothing here, document.body.scrollTop is what moves).
+  function smoothScrollTo(y, duration) {
+    return new Promise(function (resolve) {
+      var startY = document.body.scrollTop, distance = y - startY, startTime = null;
+      function step(ts) {
+        if (!startTime) startTime = ts;
+        var t = Math.min(1, (ts - startTime) / duration);
+        var eased = t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+        document.body.scrollTop = startY + distance * eased;
+        if (t < 1) requestAnimationFrame(step); else resolve();
+      }
+      requestAnimationFrame(step);
+    });
+  }
+  function wait(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
+
+  function loop() {
+    var target = Math.max(0, Math.min(document.body.scrollHeight - document.body.clientHeight, 1600));
+    wait(500)
+      .then(function () { return smoothScrollTo(target, 1800); })
+      .then(function () { return wait(1200); })
+      .then(function () { return smoothScrollTo(0, 1800); })
+      .then(function () { return wait(700); })
+      .then(loop);
+  }
+  window.addEventListener('load', function () { setTimeout(loop, 800); });
+})();
+</script>
+</body>
+</html>

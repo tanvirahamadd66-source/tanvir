@@ -1417,6 +1417,69 @@ main .section:nth-of-type(even) { background: var(--bg-alt); }
   padding: var(--space-4);
 }
 
+/* ---------- Email-design live preview, shown inside a phone mockup ----------
+   For email-design case studies (narrow, mobile-reflowing HTML), the live embed
+   is wrapped in a realistic phone shell instead of floating on a plain
+   background — same phone-shell language used for the Bakara Management case
+   study's mobile mockups, so a scrollable inbox-style preview looks premium
+   instead of empty background on either side of a narrow email. */
+.email-phone-frame {
+  /* Top padding only — no bottom padding, so the gap down to the action-row
+     below comes solely from that row's own top padding (same as every other
+     project page, e.g. Bakara Management/Startup.Ready), not doubled up. */
+  display: flex; justify-content: center; padding: var(--space-5) 0 0;
+}
+.email-phone-mock {
+  width: 390px; max-width: 88vw; height: 780px;
+  background: linear-gradient(155deg, #333, #0a0a0a);
+  border-radius: 44px; padding: 12px;
+  box-shadow: 0 30px 60px -25px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.08);
+  position: relative; display: flex; flex-direction: column;
+}
+.email-phone-mock::before, .email-phone-mock::after { content: ""; position: absolute; background: #050505; border-radius: 2px; }
+.email-phone-mock::before { left: -3px; top: 130px; width: 3px; height: 46px; }
+.email-phone-mock::after { right: -3px; top: 160px; width: 3px; height: 70px; }
+.email-phone-mock-notch {
+  position: absolute; top: 22px; left: 50%; transform: translateX(-50%);
+  width: 84px; height: 22px; background: #000; border-radius: 999px; z-index: 3;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.05);
+}
+.email-phone-mock-screen {
+  flex: 1; display: flex; flex-direction: column; overflow: hidden;
+  border-radius: 32px; background: var(--bg-elevated, var(--surface));
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,0.5);
+}
+.email-phone-mock-screen iframe { display: block; width: 100%; flex: 1; border: 0; }
+@media (max-width: 480px) {
+  .email-phone-mock { height: 76vh; max-height: 720px; }
+}
+
+/* ---------- Email-design live preview, shown inside a tablet mockup ----------
+   Same idea as the phone mockup above (dark bezel shell instead of a plain
+   background) but wider/tablet-proportioned — a small centered camera dot at
+   the top instead of a notch, thicker uniform bezel, no side buttons. */
+.email-tablet-mock {
+  width: 820px; max-width: 94vw; height: 980px;
+  background: linear-gradient(155deg, #333, #0a0a0a);
+  border-radius: 32px; padding: 22px;
+  box-shadow: 0 30px 60px -25px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.08);
+  position: relative; display: flex; flex-direction: column;
+}
+.email-tablet-mock-cam {
+  position: absolute; top: 10px; left: 50%; transform: translateX(-50%);
+  width: 6px; height: 6px; border-radius: 50%; background: #000;
+  box-shadow: 0 0 0 2px rgba(255,255,255,0.05), inset 0 0 2px rgba(80,140,255,0.4);
+}
+.email-tablet-mock-screen {
+  flex: 1; display: flex; flex-direction: column; overflow: hidden;
+  border-radius: 12px; background: #fff;
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,0.5);
+}
+.email-tablet-mock-screen iframe { display: block; width: 100%; height: 100%; flex: 1; border: 0; }
+@media (max-width: 480px) {
+  .email-tablet-mock { height: 76vh; max-height: 760px; }
+}
+
 /* ---------- Post-preview action row (Appreciate / Save / Get in Touch) ----------
    The appreciate count is a personal tally for this visitor (like Medium's
    claps), never a fabricated global count — there's no backend, so showing

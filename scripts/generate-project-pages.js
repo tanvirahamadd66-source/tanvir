@@ -251,7 +251,29 @@ function page(p) {
       </div>
       ${
         p.liveEmbedSite
-          ? `<div class="project-live-embed">
+          ? p.emailTabletMock
+            ? `<div class="email-phone-frame">
+        <div class="email-tablet-mock">
+          <div class="email-tablet-mock-cam"></div>
+          <div class="email-tablet-mock-screen">
+            <iframe id="siteEmbedFrame" src="${p.liveEmbedSite}" title="${title} — live preview">
+              <div class="project-live-embed-fallback">Your browser can't display this embedded preview — <a href="${p.liveEmbedSite}">open the live design directly</a> instead.</div>
+            </iframe>
+          </div>
+        </div>
+      </div>`
+            : p.emailPhoneMock
+              ? `<div class="email-phone-frame">
+        <div class="email-phone-mock">
+          <div class="email-phone-mock-notch"></div>
+          <div class="email-phone-mock-screen">
+            <iframe id="siteEmbedFrame" src="${p.liveEmbedSite}" title="${title} — live preview">
+              <div class="project-live-embed-fallback">Your browser can't display this embedded preview — <a href="${p.liveEmbedSite}">open the live design directly</a> instead.</div>
+            </iframe>
+          </div>
+        </div>
+      </div>`
+              : `<div class="project-live-embed">
         <iframe id="siteEmbedFrame" src="${p.liveEmbedSite}" title="${title} — live preview">
           <div class="project-live-embed-fallback">Your browser can't display this embedded preview — <a href="${p.liveEmbedSite}">open the live design directly</a> instead.</div>
         </iframe>
@@ -331,6 +353,9 @@ ${
       try {
         const doc = frame.contentWindow.document;
         if (doc.getElementById("__scrollbarStyle")) return;
+        // Some embeds (e.g. D2 Logistics, now on a white background) define their
+        // own scrollbar colors tuned to their own design — don't override those.
+        if (doc.documentElement.hasAttribute("data-scrollbar-custom")) return;
         const style = doc.createElement("style");
         style.id = "__scrollbarStyle";
         style.textContent = "html{scrollbar-width:thin; scrollbar-color:rgba(255,255,255,0.35) transparent;} html::-webkit-scrollbar{width:9px;} html::-webkit-scrollbar-track{background:transparent;} html::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.35); border-radius:8px;} html::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,0.55);}";

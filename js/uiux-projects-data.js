@@ -13,6 +13,18 @@
 
 const UIUX_PROJECTS = [
   {
+    slug: "bakara-management-app-design",
+    name: "Bakara Management",
+    category: "App Design (UI/UX)",
+    image: "assets/img/projects/bakara-management-cover.png",
+    // Same technique as Startup.Ready's card below: a live, auto-scrolling iframe
+    // of the real (self-contained, mock-backed) preview instead of a static image
+    // — the ?showcase=1 flag runs its own short scroll-loop script.
+    livePreview: "projects/bakara-management-app-site/index.html?showcase=1",
+    description: "Full product design and build for Bakara Management — a bilingual farm & family finance platform shipped as both a responsive website and a native Android app sharing one live backend. Multi-farm budgeting, category-based income/expense tracking, monthly family accounting, automated email reports, and secure Google Sign-In.",
+    link: "projects/bakara-management-app-design.html"
+  },
+  {
     slug: "startup-ready-website-design",
     name: "Startup.Ready",
     category: "Website Design (UI/UX)",

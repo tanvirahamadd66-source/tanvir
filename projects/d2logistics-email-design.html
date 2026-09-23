@@ -151,10 +151,15 @@
       <div class="project-gallery-head">
         <span class="eyebrow">Live Email Preview</span>
       </div>
-      <div class="project-live-embed">
-        <iframe id="siteEmbedFrame" src="d2logistics-email-site/index.html" title="D2 Logistics — Email Design — live preview">
-          <div class="project-live-embed-fallback">Your browser can't display this embedded preview — <a href="d2logistics-email-site/index.html">open the live design directly</a> instead.</div>
-        </iframe>
+      <div class="email-phone-frame">
+        <div class="email-tablet-mock">
+          <div class="email-tablet-mock-cam"></div>
+          <div class="email-tablet-mock-screen">
+            <iframe id="siteEmbedFrame" src="d2logistics-email-site/index.html" title="D2 Logistics — Email Design — live preview">
+              <div class="project-live-embed-fallback">Your browser can't display this embedded preview — <a href="d2logistics-email-site/index.html">open the live design directly</a> instead.</div>
+            </iframe>
+          </div>
+        </div>
       </div>
 
       <div class="action-row" data-slug="d2logistics-email-design">
@@ -224,6 +229,9 @@
       try {
         const doc = frame.contentWindow.document;
         if (doc.getElementById("__scrollbarStyle")) return;
+        // Some embeds (e.g. D2 Logistics, now on a white background) define their
+        // own scrollbar colors tuned to their own design — don't override those.
+        if (doc.documentElement.hasAttribute("data-scrollbar-custom")) return;
         const style = doc.createElement("style");
         style.id = "__scrollbarStyle";
         style.textContent = "html{scrollbar-width:thin; scrollbar-color:rgba(255,255,255,0.35) transparent;} html::-webkit-scrollbar{width:9px;} html::-webkit-scrollbar-track{background:transparent;} html::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.35); border-radius:8px;} html::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,0.55);}";

@@ -18,6 +18,31 @@
 const BEHANCE_PROJECTS = [
   {
     // Cross-listed from UIUX_PROJECTS (js/uiux-projects-data.js) so it also
+    // appears here in "Projects" — links to that hand-authored device-showcase
+    // page, which generate-project-pages.js must never overwrite.
+    noGeneratedPage: true,
+    slug: "bakara-management-app-design",
+    title: "Bakara Management — App Design (UI/UX)",
+    category: "App Design (UI/UX)",
+    shortDescription: "Full product design and build for Bakara Management, a bilingual farm & family finance platform available as a website and a native Android app.",
+    description: "Full product design and build for Bakara Management — a bilingual (Bangla/English) farm and family finance platform shipped as both a responsive website and a native Android app sharing one live backend. The scope covered multi-farm budget tracking, category-based income/expense entry, monthly family accounting with historical browsing, automated financial email reports, and secure authentication including Google Sign-In — all wrapped in a warm, illustrated visual identity.",
+    tags: ["UI/UX Design", "App Design", "Dashboard Design", "Full-Stack Development", "Bilingual UI"],
+    coverImage: "assets/img/projects/bakara-management-cover.png",
+    livePreview: "projects/bakara-management-app-site/index.html?showcase=1",
+    // Full desktop-width site, not a narrow email — needs its real layout
+    // width so it doesn't reflow to the mobile breakpoint (see main.js).
+    // Same card-fill ratio as Startup.Ready's live-preview card (1280 * 3.4/4 = 1088).
+    livePreviewW: 1280,
+    livePreviewH: 1088,
+    gallery: [
+      "assets/img/projects/bakara-management-desktop.png",
+      "assets/img/projects/bakara-management-mobile-app.png",
+      "assets/img/projects/bakara-management-mobile-website.png",
+      "assets/img/projects/bakara-management-farm-detail.png"
+    ]
+  },
+  {
+    // Cross-listed from UIUX_PROJECTS (js/uiux-projects-data.js) so it also
     // appears here in "Projects" — links to that hand-authored live-embed
     // showcase page, which generate-project-pages.js must never overwrite.
     noGeneratedPage: true,
@@ -62,6 +87,9 @@ const BEHANCE_PROJECTS = [
     // The project detail page embeds this same file live (scrollable) instead
     // of static gallery screenshots — see generate-project-pages.js.
     liveEmbedSite: "d2logistics-email-site/index.html",
+    // Show the live email preview inside a realistic tablet mockup (wider
+    // bezel, small centered camera dot instead of a notch).
+    emailTabletMock: true,
     gallery: [
       { src: "assets/img/projects/behance/d2logistics-email-design/03.jpg", maxWidth: 460 },
       { src: "assets/img/projects/behance/d2logistics-email-design/02.jpg", maxWidth: 460 }
@@ -264,6 +292,8 @@ const BEHANCE_PROJECTS = [
     livePreviewW: 640,
     livePreviewH: 544,
     liveEmbedSite: "dogford-email-site/index.html",
+    // Same tablet-mockup, full-image, white-background treatment as D2 Logistics.
+    emailTabletMock: true,
     gallery: [
       "assets/img/projects/behance/dogford-email-design/02.jpg"
     ]
