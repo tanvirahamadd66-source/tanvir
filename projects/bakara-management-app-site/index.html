@@ -38,13 +38,6 @@
   // screenshot. A normal visit to this preview (no query param) is completely unaffected.
   var params = new URLSearchParams(location.search);
   if (params.get('showcase') !== '1') return;
-  // On narrow (mobile) viewports the outer page's card-scaling transform + the continuous
-  // repaints from this auto-scroll loop don't composite reliably on some mobile browsers —
-  // the iframe can render at its native unscaled size instead of the small, clipped
-  // thumbnail, breaking the whole page layout. Only run this on wider (desktop) screens.
-  // (window.innerWidth in here is the IFRAME's own forced-desktop-width viewport, not the
-  // real device width — check the top-level page's width instead, same-origin.)
-  try { if (window.top.innerWidth < 700) return; } catch (e) {}
   document.documentElement.classList.add('showcase-mode');
 
   var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
