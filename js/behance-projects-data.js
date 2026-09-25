@@ -28,7 +28,13 @@ const BEHANCE_PROJECTS = [
     description: "Full product design and build for Bakara Management — a bilingual (Bangla/English) farm and family finance platform shipped as both a responsive website and a native Android app sharing one live backend. The scope covered multi-farm budget tracking, category-based income/expense entry, monthly family accounting with historical browsing, automated financial email reports, and secure authentication including Google Sign-In — all wrapped in a warm, illustrated visual identity.",
     tags: ["UI/UX Design", "App Design", "Dashboard Design", "Full-Stack Development", "Bilingual UI"],
     coverImage: "assets/img/projects/bakara-management-cover.png",
-    livePreview: "projects/bakara-management-app-site/index.html?showcase=1",
+    // showcase.html is a static, script-free snapshot of the dashboard (no app
+    // code) — index.html stays the interactive demo on the project page.
+    livePreview: "projects/bakara-management-app-site/showcase.html",
+    // The home-page card shows this lightweight panning screenshot instead of
+    // the live iframe (see renderLivePoster in main.js) — running several full
+    // sites in iframes at once crashed phones and lagged PCs.
+    livePoster: "assets/img/projects/live-posters/bakara-management.webp",
     // Full desktop-width site, not a narrow email — needs its real layout
     // width so it doesn't reflow to the mobile breakpoint (see main.js).
     // Same card-fill ratio as Startup.Ready's live-preview card (1280 * 3.4/4 = 1088).
@@ -54,6 +60,10 @@ const BEHANCE_PROJECTS = [
     tags: ["UI/UX Design", "Website Design", "Interaction Design", "Custom Illustration"],
     coverImage: "assets/img/projects/startup-ready-cover.jpg",
     livePreview: "projects/startup-ready-site/index.html?showcase=1",
+    // The home-page card shows this lightweight panning screenshot instead of
+    // the live iframe (see renderLivePoster in main.js) — running several full
+    // sites in iframes at once crashed phones and lagged PCs.
+    livePoster: "assets/img/projects/live-posters/startup-ready.webp",
     // Full desktop-width site, not a narrow email — needs its real layout
     // width so it doesn't reflow to the mobile breakpoint (see main.js).
     // Height matches the card's own 4/3.4 ratio (1280 * 3.4/4 = 1088) so the
@@ -80,6 +90,10 @@ const BEHANCE_PROJECTS = [
     // projects/d2logistics-email-site/index.html), matching the treatment
     // used for the Startup.Ready UI/UX card.
     livePreview: "projects/d2logistics-email-site/index.html?showcase=1",
+    // The home-page card shows this lightweight panning screenshot instead of
+    // the live iframe (see renderLivePoster in main.js) — running several full
+    // sites in iframes at once crashed phones and lagged PCs.
+    livePoster: "assets/img/projects/behance/d2logistics-email-design/full-design-preview.jpg",
     // Matches the card's own 4/3.4 ratio (640 * 3.4/4 = 544) so the
     // thumbnail fills the card exactly — no crop, no gap.
     livePreviewW: 640,
@@ -287,6 +301,10 @@ const BEHANCE_PROJECTS = [
     // Same live-embed treatment as the D2 Logistics email design — see that
     // entry's comment for details.
     livePreview: "projects/dogford-email-site/index.html?showcase=1",
+    // The home-page card shows this lightweight panning screenshot instead of
+    // the live iframe (see renderLivePoster in main.js) — running several full
+    // sites in iframes at once crashed phones and lagged PCs.
+    livePoster: "assets/img/projects/behance/dogford-email-design/full-design-preview.jpg",
     // Matches the card's own 4/3.4 ratio (640 * 3.4/4 = 544) so the
     // thumbnail fills the card exactly — no crop, no gap.
     livePreviewW: 640,

@@ -790,6 +790,23 @@ main .section:nth-of-type(even) { background: var(--bg-alt); }
   will-change: transform;
 }
 
+/* Stand-in for a live-preview iframe on every device (see renderLivePoster in main.js):
+   one screenshot that pans top-to-bottom and back via transform only, and only
+   while on screen (.is-playing) — far lighter than running whole sites in iframes. */
+.project-card .card-live-poster { position: absolute; inset: 0; overflow: hidden; background: var(--bg-alt); }
+.project-card .card-live-poster img {
+  position: absolute; top: 0; left: 0; right: auto; bottom: auto;
+  width: 100%; height: auto; object-fit: initial;
+  transform: translateY(0); transition: none;
+}
+.project-card.has-image:hover .card-live-poster img { transform: translateY(0); }
+.project-card .card-live-poster.is-playing img { animation: livePosterPan 16s ease-in-out infinite; }
+@keyframes livePosterPan {
+  0%, 8% { transform: translateY(0); }
+  46%, 58% { transform: translateY(calc(-100% + var(--card-h, 0px))); }
+  92%, 100% { transform: translateY(0); }
+}
+
 .project-card .card-overlay {
   position: relative;
   z-index: 1;

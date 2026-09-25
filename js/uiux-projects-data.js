@@ -20,7 +20,8 @@ const UIUX_PROJECTS = [
     // Same technique as Startup.Ready's card below: a live, auto-scrolling iframe
     // of the real (self-contained, mock-backed) preview instead of a static image
     // — the ?showcase=1 flag runs its own short scroll-loop script.
-    livePreview: "projects/bakara-management-app-site/index.html?showcase=1",
+    livePreview: "projects/bakara-management-app-site/showcase.html",
+    livePoster: "assets/img/projects/live-posters/bakara-management.webp",
     description: "Full product design and build for Bakara Management — a bilingual farm & family finance platform shipped as both a responsive website and a native Android app sharing one live backend. Multi-farm budgeting, category-based income/expense tracking, monthly family accounting, automated email reports, and secure Google Sign-In.",
     link: "projects/bakara-management-app-design.html"
   },
@@ -33,6 +34,7 @@ const UIUX_PROJECTS = [
     // the real site instead of a static image (the ?showcase=1 flag runs the
     // site's own short scroll-loop script — see startup-ready-site/index.html).
     livePreview: "projects/startup-ready-site/index.html?showcase=1",
+    livePoster: "assets/img/projects/live-posters/startup-ready.webp",
     description: "Full website design and build for Startup.Ready — a startup-readiness assessment platform. Complete multi-section site with custom illustrations, animated scoring rings, and interaction design.",
     link: "projects/startup-ready-website-design.html"
   }
