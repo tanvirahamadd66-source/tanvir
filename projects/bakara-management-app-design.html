@@ -133,6 +133,24 @@
   }
   .computer-mock-screen iframe { flex: 1; width: 100%; border: 0; background: var(--bg-alt); }
 
+  /* Each device starts as a screenshot; the real interactive app only loads when the visitor
+     clicks "Launch" (see the script at the bottom). Running all three full app instances at page
+     load — each with dozens of blur effects and looping animations — lagged PCs and crashed phones. */
+  .embed-poster { position: relative; flex: 1; min-height: 0; overflow: hidden; background: var(--bg-alt); cursor: pointer; }
+  .embed-poster img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: top center; }
+  .embed-poster::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.35), rgba(0,0,0,0) 45%); pointer-events: none; }
+  .embed-poster .embed-launch {
+    position: absolute; left: 50%; bottom: 1.5rem; transform: translateX(-50%); z-index: 1;
+    white-space: nowrap; box-shadow: 0 12px 30px -10px rgba(0,0,0,0.5);
+  }
+  /* Below the desktop breakpoint the Desktop Website preview never embeds (it opens in a new
+     tab), so let the frame take the screenshot's own height and show the whole desktop layout
+     scaled to fit, uncropped — as the old scaled-down iframe did. */
+  @media (max-width: 1023px) {
+    .computer-mock-screen { height: auto; }
+    .embed-poster[data-embed-desktop] img { height: auto; }
+  }
+
   .stat-strip {
     display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
     gap: 1px; background: var(--border); border: 1px solid var(--border);
@@ -239,7 +257,7 @@
       <div class="project-gallery-head">
         <span class="eyebrow">Interactive Preview — Scroll &amp; Click Around</span>
       </div>
-      <p style="color:var(--text-muted);margin:-0.5rem 0 3.25rem;max-width:640px;">This is a fully interactive preview of the real interface — not screenshots — pre-loaded with realistic sample data so you can explore the design without signing in. Scroll, open a farm, switch language, click around freely.</p>
+      <p style="color:var(--text-muted);margin:-0.5rem 0 3.25rem;max-width:640px;">Launch any device below for a fully interactive preview of the real interface, pre-loaded with realistic sample data so you can explore the design without signing in. Scroll, open a farm, switch language, click around freely.</p>
 
       <div class="device-showcase">
         <div class="device-row">
@@ -247,9 +265,10 @@
             <span class="device-label eyebrow">Mobile Website <span class="device-label-sub">— browser</span></span>
             <div class="phone-mock mock-frame-mobile">
               <div class="phone-mock-screen">
-                <iframe src="bakara-management-app-site/index.html" title="Bakara Management — mobile website preview" loading="lazy">
-                  <div class="project-live-embed-fallback">Your browser can't display this embedded preview — <a href="bakara-management-app-site/index.html" target="_blank" rel="noopener noreferrer">open the preview directly</a> instead.</div>
-                </iframe>
+                <div class="embed-poster" data-embed-src="bakara-management-app-site/index.html" data-embed-title="Bakara Management — mobile website preview">
+                  <img src="../assets/img/projects/bakara-embeds/mobile-website.webp" alt="Bakara Management mobile website — dashboard" loading="lazy" decoding="async" />
+                  <button type="button" class="btn btn-primary embed-launch">&#9654; Launch interactive preview</button>
+                </div>
               </div>
             </div>
           </div>
@@ -257,7 +276,10 @@
             <span class="device-label eyebrow">Mobile App <span class="device-label-sub">— native Android</span></span>
             <div class="phone-mock mock-frame-mobile">
               <div class="phone-mock-screen">
-                <iframe src="bakara-management-app-site/index.html?embed=app" title="Bakara Management — mobile app preview"></iframe>
+                <div class="embed-poster" data-embed-src="bakara-management-app-site/index.html?embed=app" data-embed-title="Bakara Management — mobile app preview">
+                  <img src="../assets/img/projects/bakara-embeds/mobile-app.webp" alt="Bakara Management Android app — dashboard" loading="lazy" decoding="async" />
+                  <button type="button" class="btn btn-primary embed-launch">&#9654; Launch interactive preview</button>
+                </div>
               </div>
             </div>
           </div>
@@ -269,9 +291,10 @@
             <div class="computer-mock-monitor">
               <div class="computer-mock-cam"></div>
               <div class="computer-mock-screen">
-                <iframe id="desktopEmbedFrame" src="bakara-management-app-site/index.html" title="Bakara Management — desktop website preview">
-                  <div class="project-live-embed-fallback">Your browser can't display this embedded preview — <a href="bakara-management-app-site/index.html" target="_blank" rel="noopener noreferrer">open the preview directly</a> instead.</div>
-                </iframe>
+                <div class="embed-poster" data-embed-src="bakara-management-app-site/index.html" data-embed-title="Bakara Management — desktop website preview" data-embed-desktop>
+                  <img src="../assets/img/projects/bakara-embeds/desktop.webp" alt="Bakara Management desktop website — dashboard" loading="lazy" decoding="async" />
+                  <button type="button" class="btn btn-primary embed-launch">&#9654; Launch interactive preview</button>
+                </div>
               </div>
             </div>
           </div>
@@ -338,47 +361,44 @@
     window.addEventListener("scroll", () => backToTop.classList.toggle("visible", window.scrollY > 600));
     backToTop.addEventListener("click", () => window.scrollTo({ top: 0, behavior: "smooth" }));
 
-    // Always embed the real desktop layout in the "Desktop Website" frame, even on a phone visiting
-    // this page — same technique as the Startup.Ready embed (see that page for the full explanation):
-    // below the desktop breakpoint, force the iframe to a real desktop width and scale the whole
-    // thing down to fit, instead of letting a narrow container reflow the app to its own mobile view.
+    // Click-to-launch previews. Each device frame starts as a screenshot (.embed-poster); the real
+    // app (a full instance of app.js with dozens of blur effects and looping animations) only loads
+    // when the visitor asks for it, and only one runs at a time — launching another puts the
+    // previous one back to its screenshot. Loading all three at page load lagged PCs and made
+    // phones reload the page (out of memory).
+    //
+    // On narrow screens the Desktop Website preview opens in a new tab instead: fitting the real
+    // 1280px desktop layout into a ~310px phone-width frame meant rendering a ~1280x3100px page
+    // inside the phone, which by itself was enough to exhaust mobile memory.
     (function () {
       const DESKTOP_BP = 1024;
-      const DESIGN_W = 1280;
-      const frame = document.getElementById("desktopEmbedFrame");
-      const wrap = frame.closest(".computer-mock-screen");
-      const FIXED_HEIGHT = 760; // matches .computer-mock-screen height in the <style> above
+      let active = null; // { poster, frame }
 
-      function applyEmbedSize() {
-        if (window.innerWidth >= DESKTOP_BP) {
-          frame.style.flex = "1";
-          frame.style.width = "100%";
-          frame.style.height = "100%";
-          frame.style.transform = "none";
-          return;
-        }
-        const scale = wrap.clientWidth / DESIGN_W;
-        // wrap can briefly report 0 width right as the page/fonts/images settle (seen on some
-        // mobile browsers) — a 0 or non-finite scale would set height to Infinity and collapse
-        // the iframe via transform:scale(0), leaving a big blank box. Skip and retry instead.
-        if (!scale || !isFinite(scale)) { requestAnimationFrame(applyEmbedSize); return; }
-        // .computer-mock-screen is a column flex container with the iframe set to `flex:1` in CSS
-        // (for the normal >=1024px case) — that flex-basis/stretch behavior silently overrides any
-        // inline width/height set here, which broke this exact scaling trick on phones (the iframe
-        // rendered at the container's own small size instead of the intended 1280px design width,
-        // then got scaled down AGAIN, collapsing to a tiny box with a big blank area around it).
-        // `flex: none` opts the iframe out of that so the inline width/height below actually apply.
-        frame.style.flex = "none";
-        frame.style.width = DESIGN_W + "px";
-        frame.style.height = (FIXED_HEIGHT / scale) + "px";
-        frame.style.transformOrigin = "top left";
-        frame.style.transform = `scale(${scale})`;
+      function restore() {
+        if (!active) return;
+        active.frame.remove();
+        active.poster.hidden = false;
+        active = null;
       }
 
-      applyEmbedSize();
-      window.addEventListener("resize", applyEmbedSize);
-      window.addEventListener("load", applyEmbedSize);
-      if ("ResizeObserver" in window) new ResizeObserver(applyEmbedSize).observe(wrap);
+      function launch(poster) {
+        const src = poster.dataset.embedSrc;
+        if (poster.hasAttribute("data-embed-desktop") && window.innerWidth < DESKTOP_BP) {
+          window.open(src, "_blank", "noopener");
+          return;
+        }
+        restore();
+        const frame = document.createElement("iframe");
+        frame.src = src;
+        frame.title = poster.dataset.embedTitle || "";
+        poster.hidden = true;
+        poster.after(frame);
+        active = { poster, frame };
+      }
+
+      document.querySelectorAll(".embed-poster").forEach((poster) => {
+        poster.addEventListener("click", () => launch(poster));
+      });
     })();
   });
 </script>
