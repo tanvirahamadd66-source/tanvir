@@ -2,6 +2,7 @@
   'use strict';
 
   var state = {
+    theme: 'light', // পোর্টফোলিও প্রিভিউ-only Light/Dark mode toggle (init()-এ loadTheme() দিয়ে ওভাররাইট হয়)
     user: null,
     googleEnabled: false,
     authMode: 'login', // 'login' | 'signup' | 'forgot' | 'verify-code' | 'reset'
@@ -37,6 +38,8 @@
     editProfileOpen: false,
     profileFields: { name: '', avatarColor: '' },
     profileBusy: false,
+    upgradeModalOpen: false, // পোর্টফোলিও প্রিভিউ-only "Upgrade Plan" প্রোমো কার্ড + মোডাল
+    upgradePlan: 'yearly',
   };
 
   var root = document.getElementById('root');
@@ -77,7 +80,7 @@
       addFirstFarm: '+ প্রথম খামার যোগ করুন', startFamily: 'পারিবারিক হিসাব শুরু করুন',
       family: 'পরিবার', familyAccounting: 'পারিবারিক হিসাব', getStarted: 'শুরু করুন →', openFarm: 'খামার খুলুন →',
       addNewFarm: 'নতুন খামার যোগ করুন', whatFarmType: 'কী ধরনের খামার তৈরি করতে চান?',
-      farmName: 'খামারের নাম', farmNamePlaceholder: 'যেমন: আমার গরুর খামার', startingBudget: 'শুরুর বিনিয়োগ / বাজেট ($)',
+      farmName: 'খামারের নাম', farmNamePlaceholder: 'যেমন: আমার গরুর খামার', startingBudget: 'শুরুর বিনিয়োগ / বাজেট (৳)',
       createFarm: 'খামার তৈরি করুন', cancel: 'বাতিল', edit: 'এডিট', delete: 'মুছুন',
       familyRecords: 'পরিবারের হিসাবসমূহ', farmRecords: 'খামারের হিসাবসমূহ', budgetExceeded: 'বাজেট অতিক্রম হয়েছে',
       myBudget: 'আমার বাজেট', spent: 'খরচ হয়েছে', remainingBudget: 'অবশিষ্ট বাজেট', profitLoss: 'লাভ / ক্ষতি',
@@ -103,6 +106,10 @@
       noRecordsThisPeriod: 'এই সময়ে কোনো হিসাব পাওয়া যায়নি', tryDifferentPeriod: 'ভিন্ন সময়কাল বেছে নিন বা কোনো খামারে নতুন হিসাব যোগ করুন।',
       settingsHeading: 'সেটিংস', profile: 'প্রোফাইল', logoutButton: 'লগআউট করুন',
       language: 'ভাষা', languageDesc: 'অ্যাপের ভাষা পরিবর্তন করুন — পুরো অ্যাপ সেই ভাষাতেই দেখাবে।',
+      appearance: 'থিম', appearanceDesc: 'অ্যাপের রঙের মোড বেছে নিন।', lightMode: 'লাইট মোড', darkMode: 'ডার্ক মোড',
+      upgradePlan: 'প্ল্যান আপগ্রেড করুন', upgradeCardTitle: 'সম্পূর্ণ নিয়ন্ত্রণ নিন আপনার হিসাবের', upgradeCardDesc: 'স্মার্টভাবে পরিকল্পনা করুন। দ্রুত সঞ্চয় করুন। আরও ভালোভাবে বাঁচুন।',
+      upgradeModalTitle: 'প্রিমিয়াম প্ল্যানে আপগ্রেড করুন', upgradeModalDesc: 'আনলিমিটেড ফার্ম, বিস্তারিত রিপোর্ট আর প্রায়োরিটি সাপোর্ট পান।',
+      planMonthly: 'মাসিক', planYearly: 'বার্ষিক', perMonth: '/ মাস', perYear: '/ বছর', bestValue: 'সাশ্রয়ী', continueBtn: 'কন্টিনিউ করুন',
       monthlyReportEmail: 'মাসিক রিপোর্ট ইমেইল',
       monthlyReportDesc: 'প্রতি মাসের ১ তারিখে আগের মাসের সম্পূর্ণ হিসাব (আয়, খরচ, লাভ-ক্ষতি, বাজেট) স্বয়ংক্রিয়ভাবে আপনার ইমেইলে পাঠানো হবে। এখনই একটি টেস্ট রিপোর্ট পাঠিয়ে দেখে নিতে পারেন।',
       sendTestReport: '📧 টেস্ট রিপোর্ট এখনই পাঠান', sending: 'পাঠানো হচ্ছে…',
@@ -151,7 +158,7 @@
       addFirstFarm: '+ Add First Farm', startFamily: 'Start Family Management',
       family: 'Family', familyAccounting: 'Family Management', getStarted: 'Get started →', openFarm: 'Open Farm →',
       addNewFarm: 'Add New Farm', whatFarmType: 'What type of farm would you like to create?',
-      farmName: 'Farm Name', farmNamePlaceholder: 'e.g. My Cattle Farm', startingBudget: 'Starting Investment / Budget ($)',
+      farmName: 'Farm Name', farmNamePlaceholder: 'e.g. My Cattle Farm', startingBudget: 'Starting Investment / Budget (৳)',
       createFarm: 'Create Farm', cancel: 'Cancel', edit: 'Edit', delete: 'Delete',
       familyRecords: 'Family Records', farmRecords: 'Farm Records', budgetExceeded: 'Budget exceeded',
       myBudget: 'My Budget', spent: 'Spent', remainingBudget: 'Remaining Budget', profitLoss: 'Profit / Loss',
@@ -177,6 +184,10 @@
       noRecordsThisPeriod: 'No records found for this period', tryDifferentPeriod: 'Choose a different period or add a new record to a farm.',
       settingsHeading: 'Settings', profile: 'Profile', logoutButton: 'Log Out',
       language: 'Language', languageDesc: 'Change the app language — the whole app will switch to that language.',
+      appearance: 'Appearance', appearanceDesc: 'Choose the app\'s color mode.', lightMode: 'Light Mode', darkMode: 'Dark Mode',
+      upgradePlan: 'Upgrade Plan', upgradeCardTitle: 'Take Control of Your Finances', upgradeCardDesc: 'Plan smarter. Save faster. Live better.',
+      upgradeModalTitle: 'Upgrade to Premium', upgradeModalDesc: 'Get unlimited farms, detailed reports, and priority support.',
+      planMonthly: 'Monthly', planYearly: 'Yearly', perMonth: '/ month', perYear: '/ year', bestValue: 'Best Value', continueBtn: 'Continue',
       monthlyReportEmail: 'Monthly Report Email',
       monthlyReportDesc: 'On the 1st of every month, a complete report of the previous month (income, expense, profit-loss, budget) is automatically emailed to you. You can send a test report right now.',
       sendTestReport: '📧 Send Test Report Now', sending: 'Sending…',
@@ -200,6 +211,21 @@
   }
   function saveLang(lang) {
     try { localStorage.setItem('baraka_lang', lang); } catch (e) {}
+  }
+  // পোর্টফোলিও প্রিভিউ-only addition: Settings-এ Light/Dark মোড টগল। styles.css-এ
+  // [data-theme="dark"]/[data-theme="light"] আগে থেকেই সংজ্ঞায়িত ছিল, শুধু UI/JS wiring ছিল না —
+  // এই preview কপিতে সেটা যোগ করা হলো, আসল লাইভ অ্যাপের app.js অপরিবর্তিত।
+  function loadTheme() {
+    try { return localStorage.getItem('baraka_theme') || 'light'; } catch (e) { return 'light'; }
+  }
+  function saveTheme(theme) {
+    try { localStorage.setItem('baraka_theme', theme); } catch (e) {}
+  }
+  function setTheme(theme) {
+    state.theme = (theme === 'dark') ? 'dark' : 'light';
+    saveTheme(state.theme);
+    if (document.documentElement) document.documentElement.setAttribute('data-theme', state.theme);
+    render();
   }
   function t(key) {
     var dict = I18N[state.lang] || I18N.bn;
@@ -279,7 +305,7 @@
   }
   function fmtMoney(n) {
     n = Number(n) || 0;
-    return '$' + n.toLocaleString('en-US', { maximumFractionDigits: 0 });
+    return '৳' + n.toLocaleString('en-US', { maximumFractionDigits: 0 });
   }
   function fmtDate(iso) {
     try {
@@ -972,6 +998,12 @@
       '<aside class="sidebar">' +
       '<div class="sidebar-brand">🐄 ' + t('appName') + '</div>' +
       '<nav class="sidebar-nav">' + sideNav + '</nav>' +
+      '<div class="upgrade-card" id="btn-open-upgrade">' +
+      '<div class="upgrade-card-ic">✨</div>' +
+      '<div class="upgrade-card-title">' + t('upgradeCardTitle') + '</div>' +
+      '<div class="upgrade-card-desc">' + t('upgradeCardDesc') + '</div>' +
+      '<button class="upgrade-card-btn" type="button">' + t('upgradePlan') + ' →</button>' +
+      '</div>' +
       '<div class="sidebar-user">' +
       '<div class="avatar"' + (state.user.avatarColor ? ' style="background:' + esc(state.user.avatarColor) + '"' : '') + '>' + esc(initials(state.user.name)) + '</div>' +
       '<div class="meta"><div class="name">' + esc(state.user.name) + '</div><div class="email">' + esc(state.user.email) + '</div></div>' +
@@ -987,7 +1019,47 @@
       '<main class="content">' + body + '</main>' +
       '<nav class="bottom-nav"><div class="row">' + bottomNav + '</div></nav>' +
       '</div>' +
-      '</div>';
+      '</div>' +
+      renderUpgradeModal();
+  }
+
+  // পোর্টফোলিও প্রিভিউ-only "Upgrade Plan" প্রোমো মোডাল — Monthly $10 / Yearly $100
+  function renderUpgradeModal() {
+    if (!state.upgradeModalOpen) return '';
+    var plans = [
+      { key: 'monthly', price: '$10', per: t('perMonth') },
+      { key: 'yearly', price: '$100', per: t('perYear'), tag: t('bestValue') },
+    ];
+    var plansHtml = plans.map(function (p) {
+      var active = state.upgradePlan === p.key;
+      return '<button type="button" class="plan-opt' + (active ? ' active' : '') + '" data-plan="' + p.key + '">' +
+        (p.tag ? '<span class="plan-opt-tag">' + esc(p.tag) + '</span>' : '') +
+        '<span class="plan-opt-name">' + t('plan' + p.key.charAt(0).toUpperCase() + p.key.slice(1)) + '</span>' +
+        '<span class="plan-opt-price">' + p.price + '<span class="plan-opt-per">' + p.per + '</span></span>' +
+        '</button>';
+    }).join('');
+    return '' +
+      '<div class="modal-backdrop" id="upgrade-backdrop">' +
+      '<div class="modal upgrade-modal">' +
+      '<div class="card-head"><h2>' + t('upgradeModalTitle') + '</h2><button class="icon-btn" id="upgrade-close" title="' + esc(t('cancel')) + '">✕</button></div>' +
+      '<p style="color:var(--ink-dim);font-size:.9rem;margin:-8px 0 16px;">' + t('upgradeModalDesc') + '</p>' +
+      '<div class="plan-grid">' + plansHtml + '</div>' +
+      '<button class="btn" id="upgrade-continue" style="width:100%;margin-top:18px;">' + t('continueBtn') + '</button>' +
+      '</div></div>';
+  }
+
+  function wireUpgradeModal() {
+    var backdrop = document.getElementById('upgrade-backdrop');
+    if (!backdrop) return;
+    function close() { state.upgradeModalOpen = false; render(); }
+    backdrop.addEventListener('click', function (e) { if (e.target === backdrop) close(); });
+    var closeBtn = document.getElementById('upgrade-close');
+    if (closeBtn) closeBtn.onclick = close;
+    document.querySelectorAll('.plan-opt').forEach(function (btn) {
+      btn.onclick = function () { state.upgradePlan = btn.dataset.plan; render(); };
+    });
+    var continueBtn = document.getElementById('upgrade-continue');
+    if (continueBtn) continueBtn.onclick = close;
   }
 
   function wireApp() {
@@ -1005,6 +1077,9 @@
     if (logoutBtn) logoutBtn.onclick = doLogout;
     var logoutBtnMobile = document.getElementById('btn-logout-mobile');
     if (logoutBtnMobile) logoutBtnMobile.onclick = doLogout;
+    var upgradeBtn = document.getElementById('btn-open-upgrade');
+    if (upgradeBtn) upgradeBtn.onclick = function () { state.upgradeModalOpen = true; render(); };
+    wireUpgradeModal();
 
     if (state.view === 'farm') wireFarmDetail();
     else if (state.view === 'reports') wireReports();
@@ -1077,18 +1152,15 @@
         '</div>';
     }
 
+    // পোর্টফোলিও প্রিভিউ-only: Recent Activity-কে আলাদা card-list markup না রেখে History পেজের
+    // সেই একই entryTableHtml() spreadsheet-স্টাইল টেবিল দিয়ে দেখানো হচ্ছে (Date/Farm/Amount কলাম) —
+    // আলাদা CSS reskin না, আসল টেবিল কম্পোনেন্টই reuse করা হলো। আসল লাইভ অ্যাপে এটা এখনো activity-list।
     var activityHtml;
     if (state.recentActivity.length === 0) {
       activityHtml = '';
     } else {
       activityHtml = '<div class="section-title"><h2>' + t('recentActivity') + '</h2></div>' +
-        '<div class="activity-list">' + state.recentActivity.map(function (e) {
-          return '<div class="activity-row">' +
-            '<div class="ic">' + esc(entryFarmIcon(e)) + '</div>' +
-            '<div class="meta"><div class="t1">' + esc(catLabel(e.category)) + '</div><div class="t2">' + esc(e.farmName) + ' · ' + fmtDate(e.date) + '</div></div>' +
-            '<div class="amt num ' + e.type + '">' + (e.type === 'income' ? '+' : '-') + fmtMoney(e.amount) + '</div>' +
-            '</div>';
-        }).join('') + '</div>';
+        entryTableHtml(state.recentActivity, { showFarm: true, compact: true });
     }
 
     var ft = aggregateTotals();
@@ -1104,8 +1176,8 @@
       '<div class="hero-image-wrap parallax">' +
       imageSlot('img/dashboard-banner.jpg', 'এখানে খামারের ছবি বসবে', { extraClass: 'hero-image-frame' }) +
       '<div class="float-badge glass b1"><span class="fb-ic">🐄</span><span class="fb-text"><span class="fb-label">' + t('farmManagement') + '</span></span></div>' +
-      '<div class="float-badge glass b2"><span class="fb-ic">💰</span><span class="fb-text"><span class="fb-label">' + t('totalIncome') + '</span><span class="fb-value">$' + ft.income.toLocaleString('en-US') + '</span></span></div>' +
-      '<div class="float-badge glass b3"><span class="fb-ic">🧾</span><span class="fb-text"><span class="fb-label">' + t('totalExpense') + '</span><span class="fb-value">$' + ft.expense.toLocaleString('en-US') + '</span></span></div>' +
+      '<div class="float-badge glass b2"><span class="fb-ic">💰</span><span class="fb-text"><span class="fb-label">' + t('totalIncome') + '</span><span class="fb-value">৳' + ft.income.toLocaleString('en-US') + '</span></span></div>' +
+      '<div class="float-badge glass b3"><span class="fb-ic">🧾</span><span class="fb-text"><span class="fb-label">' + t('totalExpense') + '</span><span class="fb-value">৳' + ft.expense.toLocaleString('en-US') + '</span></span></div>' +
       '<div class="float-badge glass b4"><span class="fb-ic">📋</span><span class="fb-text"><span class="fb-label">' + t('totalRecords') + '</span><span class="fb-value">' + farmCount + '</span></span></div>' +
       '</div>' +
       '</section>' +
@@ -1247,6 +1319,13 @@
       state.familyMonth = currentYM(); // family খামার খুললে সবসময় চলতি মাস দিয়ে শুরু হয়
       if (push !== false) pushHash('#farm/' + id);
       render();
+      // পোর্টফোলিও প্রিভিউ-only: ফার্ম/ফ্যামিলি কার্ডে ক্লিক করলে পেজ একদম উপরের hero/farm-image
+      // অংশ থেকে না দেখিয়ে সরাসরি Farm/Family Records কার্ডগুলোতে (budget-card) স্ক্রল করে নিয়ে
+      // যায় — যাতে প্রথম যে ইন্টারফেসটা visitor দেখে সেটাই হয় রেকর্ড কার্ডগুলো।
+      setTimeout(function () {
+        var el = document.getElementById('budget-card');
+        if (el) el.scrollIntoView({ behavior: 'auto', block: 'start' });
+      }, 0);
     });
   }
 
@@ -1358,7 +1437,7 @@
       return '' +
         '<div class="cat-budget-row">' +
         '<div class="cat-budget-name">' + esc(catLabel(cat)) + '</div>' +
-        '<div class="cat-budget-input-wrap"><span class="cur">$</span><input type="number" min="0" class="cat-budget-input" data-cat="' + esc(cat) + '" value="' + (catBudget || '') + '" placeholder="0"></div>' +
+        '<div class="cat-budget-input-wrap"><span class="cur">৳</span><input type="number" min="0" class="cat-budget-input" data-cat="' + esc(cat) + '" value="' + (catBudget || '') + '" placeholder="0"></div>' +
         '<div class="cat-budget-meta">' + meta + '</div>' +
         '</div>';
     }).join('');
@@ -1429,7 +1508,7 @@
       '<div class="modal">' +
       '<h2>' + t('editFarmInfo') + '</h2>' +
       '<div class="field"><label for="ef-name">' + t('name') + '</label><input id="ef-name" type="text" value="' + esc(farm.name) + '"></div>' +
-      '<div class="field"><label for="ef-budget">' + t('budget') + ' ($)</label><input id="ef-budget" type="number" min="0" value="' + farm.budget + '"></div>' +
+      '<div class="field"><label for="ef-budget">' + t('budget') + ' (৳)</label><input id="ef-budget" type="number" min="0" value="' + farm.budget + '"></div>' +
       '<div class="row"><button class="btn" id="ef-save">' + t('save') + '</button><button class="btn secondary" id="ef-cancel">' + t('cancel') + '</button></div>' +
       '</div></div>' : '';
 
@@ -1521,6 +1600,22 @@
       editFarmModal;
   }
 
+  // পোর্টফোলিও প্রিভিউ-only redesign: bar chart-এর বদলে smooth gradient-area লাইন চার্ট
+  // (যেমনটা রেফারেন্স ডিজাইনে দেখানো হয়েছিল) — ডেটা/লজিক (byMonth aggregation) অপরিবর্তিত,
+  // শুধু রেন্ডারিং smooth curve + gradient fill + শেষ পয়েন্টে value tooltip-এ বদলানো হলো।
+  // আসল লাইভ অ্যাপের bar-chart ভার্সন এই কপিতে touch করা হয়নি বলে বলা হচ্ছে না — এই ফাংশনটাই
+  // এই preview কপির নিজস্ব সংস্করণ।
+  function smoothLinePath(pts) {
+    if (pts.length < 2) return '';
+    var d = 'M' + pts[0].x.toFixed(1) + ',' + pts[0].y.toFixed(1);
+    for (var i = 0; i < pts.length - 1; i++) {
+      var p0 = pts[i === 0 ? 0 : i - 1], p1 = pts[i], p2 = pts[i + 1], p3 = pts[i + 2] || p2;
+      var c1x = p1.x + (p2.x - p0.x) / 6, c1y = p1.y + (p2.y - p0.y) / 6;
+      var c2x = p2.x - (p3.x - p1.x) / 6, c2y = p2.y - (p3.y - p1.y) / 6;
+      d += ' C' + c1x.toFixed(1) + ',' + c1y.toFixed(1) + ' ' + c2x.toFixed(1) + ',' + c2y.toFixed(1) + ' ' + p2.x.toFixed(1) + ',' + p2.y.toFixed(1);
+    }
+    return d;
+  }
   function chartSvg(list) {
     var byMonth = {};
     (list || []).forEach(function (e) {
@@ -1533,29 +1628,55 @@
     if (keys.length === 0) return '<div class="empty-row">' + t('noChartData') + '</div>';
     var max = 1;
     keys.forEach(function (k) { max = Math.max(max, byMonth[k].income, byMonth[k].expense); });
-    var w = 600, h = 210, padL = 50, padB = 28, padT = 10, padR = 10;
+    var w = 600, h = 230, padL = 50, padB = 28, padT = 16, padR = 16;
     var plotW = w - padL - padR, plotH = h - padT - padB;
-    var groupW = plotW / keys.length;
-    var barW = Math.min(24, groupW / 2 - 6);
-    var svg = '<svg viewBox="0 0 ' + w + ' ' + h + '" width="100%" style="max-width:' + w + 'px" role="img" aria-label="' + esc(t('monthlyIncomeVsExpense')) + '">';
+    var stepX = keys.length > 1 ? plotW / (keys.length - 1) : 0;
+    var incomePts = [], expensePts = [];
+    keys.forEach(function (k, i) {
+      var cx = keys.length > 1 ? padL + stepX * i : padL + plotW / 2;
+      incomePts.push({ x: cx, y: padT + plotH * (1 - byMonth[k].income / max) });
+      expensePts.push({ x: cx, y: padT + plotH * (1 - byMonth[k].expense / max) });
+    });
+    var incomeLine = smoothLinePath(incomePts);
+    var expenseLine = smoothLinePath(expensePts);
+    var lastIncome = incomePts[incomePts.length - 1];
+    var uid = 'g' + Math.random().toString(36).slice(2, 8);
+    var svg = '<svg viewBox="0 0 ' + w + ' ' + h + '" width="100%" style="max-width:' + w + 'px;overflow:visible" role="img" aria-label="' + esc(t('monthlyIncomeVsExpense')) + '">';
+    svg += '<defs>' +
+      '<linearGradient id="' + uid + 'i" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="var(--income)" stop-opacity="0.35"/><stop offset="100%" stop-color="var(--income)" stop-opacity="0"/></linearGradient>' +
+      '<linearGradient id="' + uid + 'e" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="var(--expense)" stop-opacity="0.28"/><stop offset="100%" stop-color="var(--expense)" stop-opacity="0"/></linearGradient>' +
+      '</defs>';
     [0, 0.5, 1].forEach(function (f) {
       var y = padT + plotH * (1 - f);
-      svg += '<line x1="' + padL + '" y1="' + y + '" x2="' + (w - padR) + '" y2="' + y + '" stroke="var(--border)" stroke-width="1"/>';
+      svg += '<line x1="' + padL + '" y1="' + y + '" x2="' + (w - padR) + '" y2="' + y + '" stroke="var(--border)" stroke-width="1" stroke-dasharray="3 4"/>';
       svg += '<text x="' + (padL - 8) + '" y="' + (y + 3) + '" text-anchor="end">' + fmtMoney(Math.round(max * f)) + '</text>';
     });
+    if (incomeLine) {
+      svg += '<path d="' + incomeLine + ' L' + lastIncome.x.toFixed(1) + ',' + (padT + plotH) + ' L' + incomePts[0].x.toFixed(1) + ',' + (padT + plotH) + ' Z" fill="url(#' + uid + 'i)"/>';
+      svg += '<path d="' + expenseLine + '" fill="none" stroke="var(--expense)" stroke-width="2.5" stroke-linecap="round" opacity="0.85"/>';
+      svg += '<path d="' + incomeLine + '" fill="none" stroke="var(--income)" stroke-width="3" stroke-linecap="round"/>';
+    }
     keys.forEach(function (k, i) {
-      var cx = padL + groupW * i + groupW / 2;
-      var vi = byMonth[k].income, ve = byMonth[k].expense;
-      var hi = plotH * (vi / max), he = plotH * (ve / max);
-      svg += '<rect x="' + (cx - barW - 3) + '" y="' + (padT + plotH - hi) + '" width="' + barW + '" height="' + hi + '" rx="3" fill="var(--income)"/>';
-      svg += '<rect x="' + (cx + 3) + '" y="' + (padT + plotH - he) + '" width="' + barW + '" height="' + he + '" rx="3" fill="var(--expense)"/>';
-      svg += '<text x="' + cx + '" y="' + (h - 8) + '" text-anchor="middle">' + monthLabel(k) + '</text>';
+      svg += '<text x="' + incomePts[i].x.toFixed(1) + '" y="' + (h - 8) + '" text-anchor="middle">' + monthLabel(k) + '</text>';
+      svg += '<circle cx="' + expensePts[i].x.toFixed(1) + '" cy="' + expensePts[i].y.toFixed(1) + '" r="3" fill="var(--expense)"/>';
+      svg += '<circle cx="' + incomePts[i].x.toFixed(1) + '" cy="' + incomePts[i].y.toFixed(1) + '" r="3.5" fill="var(--income)"/>';
     });
+    // শেষ (সর্বশেষ মাসের) income পয়েন্টে হাইলাইট করা dot + ছোট value tooltip — রেফারেন্স ডিজাইনের মতো।
+    var lastKey = keys[keys.length - 1];
+    svg += '<circle cx="' + lastIncome.x.toFixed(1) + '" cy="' + lastIncome.y.toFixed(1) + '" r="6" fill="var(--surface)" stroke="var(--income)" stroke-width="3"/>';
+    var tipW = 86, tipX = Math.min(Math.max(lastIncome.x - tipW / 2, padL), w - padR - tipW), tipY = Math.max(lastIncome.y - 46, padT);
+    svg += '<g>' +
+      '<rect x="' + tipX.toFixed(1) + '" y="' + tipY.toFixed(1) + '" width="' + tipW + '" height="34" rx="9" fill="var(--surface-2)" stroke="var(--border)"/>' +
+      '<text x="' + (tipX + tipW / 2).toFixed(1) + '" y="' + (tipY + 14).toFixed(1) + '" text-anchor="middle" font-weight="700" fill="var(--ink)" font-size="12">' + fmtMoney(byMonth[lastKey].income) + '</text>' +
+      '<text x="' + (tipX + tipW / 2).toFixed(1) + '" y="' + (tipY + 27).toFixed(1) + '" text-anchor="middle" font-size="10">' + monthLabel(lastKey) + '</text>' +
+      '</g>';
     svg += '</svg>';
     svg += '<div class="chart-legend"><span><span class="dot" style="background:var(--income);"></span>' + t('income') + '</span><span><span class="dot" style="background:var(--expense);"></span>' + t('expense') + '</span></div>';
     return svg;
   }
 
+  // পোর্টফোলিও প্রিভিউ-only: "Monthly Income vs Expense"-এর মতো smooth gradient-area লাইন —
+  // ডেটা/লজিক অপরিবর্তিত, শুধু রেন্ডারিং (smoothLinePath পুনঃব্যবহার করে) আরও প্রিমিয়াম করা হলো।
   function trendSvg(list) {
     var byMonth = {};
     (list || []).forEach(function (e) {
@@ -1568,19 +1689,29 @@
     if (keys.length === 0) return '<div class="empty-row">' + t('noTrendData') + '</div>';
     var nets = keys.map(function (k) { return byMonth[k].income - byMonth[k].expense; });
     var maxAbs = Math.max(1, Math.max.apply(null, nets.map(Math.abs)));
-    var w = 600, h = 210, padL = 50, padB = 28, padT = 14, padR = 14;
+    var w = 600, h = 230, padL = 50, padB = 28, padT = 16, padR = 16;
     var plotW = w - padL - padR, plotH = h - padT - padB;
     var midY = padT + plotH / 2;
     var stepX = keys.length > 1 ? plotW / (keys.length - 1) : 0;
     var pts = nets.map(function (n, i) {
-      var x = padL + stepX * i;
+      var x = keys.length > 1 ? padL + stepX * i : padL + plotW / 2;
       var y = midY - (n / maxAbs) * (plotH / 2);
       return { x: x, y: y };
     });
-    var svg = '<svg viewBox="0 0 ' + w + ' ' + h + '" width="100%" style="max-width:' + w + 'px" role="img" aria-label="' + esc(t('profitLossTrend')) + '">';
-    svg += '<line x1="' + padL + '" y1="' + midY + '" x2="' + (w - padR) + '" y2="' + midY + '" stroke="var(--border)" stroke-width="1"/>';
-    var path = pts.map(function (p, i) { return (i === 0 ? 'M' : 'L') + p.x + ',' + p.y; }).join(' ');
-    svg += '<path d="' + path + '" fill="none" stroke="var(--primary)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>';
+    var overall = nets[nets.length - 1] >= 0 ? 'income' : 'expense';
+    var lineColor = 'var(--' + overall + ')';
+    var uid = 'tg' + Math.random().toString(36).slice(2, 8);
+    var svg = '<svg viewBox="0 0 ' + w + ' ' + h + '" width="100%" style="max-width:' + w + 'px;overflow:visible" role="img" aria-label="' + esc(t('profitLossTrend')) + '">';
+    svg += '<defs><linearGradient id="' + uid + '" x1="0" y1="0" x2="0" y2="1">' +
+      '<stop offset="0%" stop-color="' + lineColor + '" stop-opacity="0.3"/><stop offset="100%" stop-color="' + lineColor + '" stop-opacity="0"/>' +
+      '</linearGradient></defs>';
+    svg += '<line x1="' + padL + '" y1="' + midY + '" x2="' + (w - padR) + '" y2="' + midY + '" stroke="var(--border)" stroke-width="1" stroke-dasharray="3 4"/>';
+    var linePath = smoothLinePath(pts);
+    if (linePath) {
+      var last = pts[pts.length - 1], first = pts[0];
+      svg += '<path d="' + linePath + ' L' + last.x.toFixed(1) + ',' + (padT + plotH) + ' L' + first.x.toFixed(1) + ',' + (padT + plotH) + ' Z" fill="url(#' + uid + ')"/>';
+      svg += '<path d="' + linePath + '" fill="none" stroke="' + lineColor + '" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>';
+    }
     pts.forEach(function (p, i) {
       var col = nets[i] >= 0 ? 'var(--income)' : 'var(--expense)';
       svg += '<circle cx="' + p.x + '" cy="' + p.y + '" r="4.5" fill="' + col + '" stroke="var(--surface)" stroke-width="1.5"/>';
@@ -1614,19 +1745,24 @@
     if (rows.length === 0) return '<div class="empty-row">' + t('noCategoryData') + '</div>';
     var total = rows.reduce(function (s, r) { return s + r.amt; }, 0) || 1;
     var pcts = percentagesSumTo100(rows.map(function (r) { return r.amt; }), total);
+    // পোর্টফোলিও প্রিভিউ-only পলিশ: প্রতিটা সেগমেন্টের মাঝে ছোট gap + rounded end-cap
+    // (আধুনিক "notched" ডোনাট লুক), আর কেন্দ্রে মোট খরচের অংক — আসল লাইভ অ্যাপের এই ফাংশন
+    // অপরিবর্তিত, এটা শুধু এই preview কপিতে।
     var palette = ['#c65a3a', '#d98a2b', '#2f8f5b', '#4fb37d', '#b0793f', '#8f6a3a', '#9c6b3f', '#e6a850'];
-    var r = 54, cx = 64, cy = 64, circumf = 2 * Math.PI * r;
+    var r = 56, cx = 64, cy = 64, circumf = 2 * Math.PI * r;
+    var gap = rows.length > 1 ? circumf * 0.012 : 0;
     var offset = 0;
     var segs = rows.map(function (row, i) {
       var frac = row.amt / total;
-      var len = frac * circumf;
+      var len = Math.max(frac * circumf - gap, 1);
       var seg = '<circle cx="' + cx + '" cy="' + cy + '" r="' + r + '" fill="none" stroke="' + palette[i % palette.length] + '" ' +
-        'stroke-width="20" stroke-dasharray="' + len + ' ' + (circumf - len) + '" stroke-dashoffset="' + (-offset) + '" transform="rotate(-90 ' + cx + ' ' + cy + ')"/>';
-      offset += len;
+        'stroke-linecap="round" stroke-width="16" stroke-dasharray="' + len + ' ' + (circumf - len) + '" stroke-dashoffset="' + (-offset) + '" transform="rotate(-90 ' + cx + ' ' + cy + ')"/>';
+      offset += frac * circumf;
       return seg;
     }).join('');
-    var svg = '<svg viewBox="0 0 128 128" width="150" height="150" role="img" aria-label="' + esc(t('categoryBreakdown')) + '">' + segs +
-      '<circle cx="' + cx + '" cy="' + cy + '" r="' + (r - 22) + '" fill="var(--surface)"/>' +
+    var svg = '<svg viewBox="0 0 128 128" width="164" height="164" role="img" aria-label="' + esc(t('categoryBreakdown')) + '">' + segs +
+      '<text x="' + cx + '" y="' + (cy - 4) + '" text-anchor="middle" font-size="15" font-weight="800" fill="var(--ink)">' + fmtMoney(total) + '</text>' +
+      '<text x="' + cx + '" y="' + (cy + 13) + '" text-anchor="middle" font-size="8" fill="var(--ink-dim)">' + t('totalExpense') + '</text>' +
       '</svg>';
     var rows2 = rows.map(function (row, i) {
       var color = palette[i % palette.length];
@@ -1671,6 +1807,16 @@
     if (qaBudget) qaBudget.onclick = function () { state.categoryBudgetModalOpen = true; state.activeQuickAction = 'budget'; render(); };
     var qaList = document.getElementById('qa-list');
     if (qaList) qaList.onclick = function () { state.activeQuickAction = 'list'; render(); scrollTo('entry-list-card'); };
+
+    // পোর্টফোলিও প্রিভিউ-only addition: My Budget/Spent/Remaining/Income/Expense/Profit-Loss —
+    // এই summary কার্ডগুলো এখন ক্লিকযোগ্য, ক্লিক করলে সরাসরি নিচের হিসাবের তালিকায় (entry-list-card)
+    // নিয়ে যায় — আসল লাইভ অ্যাপে এই কার্ডগুলো ক্লিকযোগ্য নয়, শুধু এই preview কপিতে যোগ করা হলো।
+    var budgetCard = document.getElementById('budget-card');
+    if (budgetCard) {
+      budgetCard.querySelectorAll('.total-box').forEach(function (box) {
+        box.onclick = function () { scrollTo('entry-list-card'); };
+      });
+    }
 
     var qaTodayIncome = document.getElementById('qa-today-income');
     if (qaTodayIncome) qaTodayIncome.onclick = function () {
@@ -1952,6 +2098,14 @@
       '</div>' +
       '</div>' +
       '<div class="card" style="max-width:440px;">' +
+      '<div class="card-head"><h2>' + t('appearance') + '</h2></div>' +
+      '<p style="color:var(--ink-dim);font-size:.9rem;line-height:1.6;margin-bottom:14px;">' + t('appearanceDesc') + '</p>' +
+      '<div class="lang-switch">' +
+      '<button class="lang-opt' + (state.theme !== 'dark' ? ' active' : '') + '" id="theme-light" type="button">☀️ ' + t('lightMode') + '</button>' +
+      '<button class="lang-opt' + (state.theme === 'dark' ? ' active' : '') + '" id="theme-dark" type="button">🌙 ' + t('darkMode') + '</button>' +
+      '</div>' +
+      '</div>' +
+      '<div class="card" style="max-width:440px;">' +
       '<div class="card-head"><h2>' + t('profile') + '</h2></div>' +
       '<div class="field"><label>' + t('name') + '</label><input value="' + esc(state.user.name) + '" disabled></div>' +
       '<div class="field"><label>' + t('email') + '</label><input value="' + esc(state.user.email) + '" disabled></div>' +
@@ -1991,6 +2145,11 @@
     if (langBn) langBn.onclick = function () { setLang('bn'); };
     var langEn = document.getElementById('lang-en');
     if (langEn) langEn.onclick = function () { setLang('en'); };
+
+    var themeLight = document.getElementById('theme-light');
+    if (themeLight) themeLight.onclick = function () { setTheme('light'); };
+    var themeDark = document.getElementById('theme-dark');
+    if (themeDark) themeDark.onclick = function () { setTheme('dark'); };
 
     var editProfileBtn = document.getElementById('btn-edit-profile');
     if (editProfileBtn) editProfileBtn.onclick = function () {
@@ -2107,6 +2266,8 @@
     showSplash();
     state.lang = loadLang();
     if (document.documentElement) document.documentElement.setAttribute('lang', state.lang);
+    state.theme = loadTheme();
+    if (document.documentElement) document.documentElement.setAttribute('data-theme', state.theme);
     var params = new URLSearchParams(window.location.search);
     var tokenFromUrl = params.get('resetToken');
     if (tokenFromUrl) {

@@ -1,0 +1,303 @@
+/* ============================================================================
+   Portfolio-preview-only redesign pass — NOT part of the real Baraka Agro app.
+   Colors are intentionally NOT overridden here — this keeps the app's own
+   live color palette (warm cream/green light theme, its own dark theme)
+   completely untouched, per feedback. Only shape/spacing/layout/icon-badge
+   treatment is restyled, using the app's own --primary/--accent/--income/
+   --expense tokens throughout so every color here already matches the real
+   site automatically. Loaded AFTER css/styles.css so these rules win via
+   normal cascade — nothing in styles.css itself is touched, and this file
+   is never linked from the real bagara-agro app.
+   ============================================================================ */
+
+/* "My Budget/Spent/Remaining/Income/Expense/Profit-Loss" summary cards are now
+   clickable (see wireFarmDetail in app.js) — a clear hover affordance so that's
+   obvious, without changing the cards' own look otherwise. */
+#budget-card .total-box { cursor: pointer; transition: transform .15s ease, border-color .15s ease; }
+#budget-card .total-box:hover { transform: translateY(-2px); border-color: var(--primary); }
+
+/* iPhone-style "glassy" cards (frosted, translucent, blurred) instead of a flat
+   opaque panel — reuses the app's own --glass-* tokens (already defined in
+   styles.css's .glass utility), just applied consistently to every card. No
+   gradient hairline/rim-light on top anymore (removed per feedback).
+   NOTE: .sidebar is deliberately NOT in this list — it always uses its own
+   dedicated dark --glass-sidebar-bg + light --sidebar-ink text regardless of
+   theme (by original design). Overriding it to the theme-dependent --glass-bg
+   made the sidebar go near-white in light mode while its text stayed light-
+   colored, making "Bakara Management" and the nav labels unreadable. */
+.summary-box, .total-box, .card, .float-badge, .hero-tagline-badge,
+.stat-strip-item, .farm-card, .add-farm-card, .empty-state, .activity-list, .cat-budget-item,
+.activity-row {
+  background: var(--glass-bg) !important;
+  -webkit-backdrop-filter: blur(var(--glass-blur)) !important;
+  backdrop-filter: blur(var(--glass-blur)) !important;
+  border: 1px solid var(--glass-border) !important;
+  box-shadow: var(--glass-shadow) !important;
+}
+.summary-box, .total-box, .farm-card, .stat-strip-item {
+  position: relative; overflow: hidden;
+}
+
+/* Light mode only: a soft green tint on every card (My Farms, Farm/Family
+   Records, Quick Actions, Monthly Income vs Expense, Profit/Loss Trend,
+   Expense Breakdown, Recent Activity …) instead of the plain cream glass —
+   per feedback. Uses the app's own light-theme --primary-tint token (a soft
+   green), so it's consistent with the rest of the palette; dark mode is
+   untouched. */
+:root[data-theme="light"] .summary-box,
+:root[data-theme="light"] .total-box,
+:root[data-theme="light"] .card,
+:root[data-theme="light"] .farm-card,
+:root[data-theme="light"] .add-farm-card,
+:root[data-theme="light"] .empty-state,
+:root[data-theme="light"] .activity-list,
+:root[data-theme="light"] .activity-row,
+:root[data-theme="light"] .cat-budget-item,
+:root[data-theme="light"] .quick-card,
+:root[data-theme="light"] .donut-ring-wrap,
+:root[data-theme="light"] .cat-rows,
+:root[data-theme="light"] .cat-row {
+  background: var(--primary-tint) !important;
+}
+
+/* Bigger, bolder numbers — dashboard bento summary only. */
+.summary-box .value { font-weight: 800; letter-spacing: -0.02em; font-size: 2.2rem !important; }
+
+/* Gradient-filled rounded-square icon badge — dashboard bento summary only. */
+.summary-box .summary-ic {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 46px; height: 46px; border-radius: 14px;
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  margin-bottom: 12px; font-size: 1.25rem !important;
+  box-shadow: 0 10px 24px -10px var(--primary);
+}
+.summary-box.income .summary-ic {
+  background: linear-gradient(135deg, var(--primary-dark), var(--income)); box-shadow: 0 10px 24px -10px var(--income);
+}
+.summary-box.expense .summary-ic {
+  background: linear-gradient(135deg, var(--expense), var(--expense)); box-shadow: 0 10px 24px -10px var(--expense);
+}
+/* Gradient hero heading — signature "2026 SaaS" touch. */
+.hero-title {
+  background: linear-gradient(100deg, var(--ink) 20%, var(--primary) 60%, var(--accent) 100%) !important;
+  -webkit-background-clip: text !important; background-clip: text !important; color: transparent !important;
+}
+
+/* ---------- "Recent Activity" list — redesigned ---------- */
+.activity-list {
+  background: none !important; border: none !important; box-shadow: none !important;
+  display: flex !important; flex-direction: column; gap: 10px;
+}
+.activity-row {
+  padding: 16px 20px !important; border-bottom: none !important;
+  border-radius: var(--radius-sm) !important;
+  transition: transform .15s ease, border-color .15s ease;
+}
+.activity-row:hover { transform: translateX(4px); border-color: var(--primary) !important; }
+.activity-row .ic {
+  width: 44px; height: 44px; border-radius: 13px; background: var(--surface-2);
+  box-shadow: inset 0 0 0 1px var(--border);
+}
+.activity-row:has(.amt.income) .ic { background: var(--income-bg); }
+.activity-row:has(.amt.expense) .ic { background: var(--expense-bg); }
+.activity-row .meta .t1 { font-size: .96rem; }
+.activity-row .meta .t2 { margin-top: 2px; }
+.activity-row .amt {
+  padding: 5px 12px; border-radius: 999px; font-size: .88rem;
+}
+.activity-row .amt.income { background: var(--income-bg); }
+
+/* Hide the farm-detail page's overall budget-usage bar ("X% spent") — per feedback. */
+.budget-progress-track, .budget-progress-label { display: none !important; }
+.activity-row .amt.expense { background: var(--expense-bg); }
+
+.activity-list, .card, .empty-state { border-radius: var(--radius-lg); }
+
+.section-title { margin: 44px 0 18px; }
+
+/* ---------- Genuine layout restructuring, not just re-skinning ---------- */
+
+/* Stat summary: an asymmetric "bento" grid instead of a uniform row/2x2 —
+   Total Budget becomes a tall featured tile, Income/Expense sit side by side
+   at top-right, Profit/Loss spans the bottom — a distinctly different shape
+   from the original identical-box row, while showing the exact same 4 numbers. */
+.site-summary-grid {
+  display: grid !important;
+  grid-template-columns: 1.3fr 1fr 1fr !important;
+  grid-template-rows: auto auto !important;
+  gap: 18px !important;
+}
+.site-summary-grid > :nth-child(1) { grid-column: 1; grid-row: 1 / 3; display: flex; flex-direction: column; justify-content: center; }
+.site-summary-grid > :nth-child(1) .value { font-size: 2.6rem !important; color: var(--income) !important; }
+.site-summary-grid > :nth-child(2) { grid-column: 2; grid-row: 1; }
+.site-summary-grid > :nth-child(3) { grid-column: 3; grid-row: 1; }
+.site-summary-grid > :nth-child(4) { grid-column: 2 / 4; grid-row: 2; display: flex; align-items: center; text-align: left; }
+/* Force the exact same icon→label→value rhythm in all four cards (gap alone
+   decides the spacing now, no leftover margins fighting it) — fixes the
+   Total Budget/Profit cards showing a visibly bigger gap than Income/Expense. */
+.site-summary-grid .summary-box { gap: 10px !important; }
+.site-summary-grid .summary-box .summary-ic { margin-bottom: 0 !important; }
+.site-summary-grid .summary-box .label { margin-bottom: 0 !important; }
+@media (max-width: 720px) {
+  .site-summary-grid { grid-template-columns: 1fr 1fr !important; }
+  .site-summary-grid > :nth-child(1) { grid-column: 1 / 3; grid-row: 1; }
+  .site-summary-grid > :nth-child(2) { grid-column: 1; grid-row: 2; }
+  .site-summary-grid > :nth-child(3) { grid-column: 2; grid-row: 2; }
+  .site-summary-grid > :nth-child(4) { grid-column: 1 / 3; grid-row: 3; }
+}
+
+.sidebar-nav button { padding: 13px 16px; border-radius: var(--radius-sm); gap: 13px; }
+.sidebar-nav button.active {
+  background: var(--primary); color: var(--sidebar-ink);
+  box-shadow: 0 12px 26px -10px var(--primary);
+}
+.sidebar-brand { padding-bottom: 30px; }
+
+.btn:not(.secondary):not(.danger) {
+  background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+  border-radius: var(--radius-sm); border: none; font-weight: 700;
+}
+.btn:not(.secondary):not(.danger):hover { filter: brightness(1.08); }
+.hero-tagline-badge, .field input, .field select, .cat-budget-input-wrap { border-radius: var(--radius-sm) !important; }
+
+/* ---------- "Monthly Income vs Expense" bar chart card — redesigned ---------- */
+.card { padding: 26px 24px !important; }
+.card-head h2 { font-size: 1.05rem; font-weight: 700; letter-spacing: -0.01em; }
+.card-head { margin-bottom: 22px !important; }
+
+/* Glow + slightly brighter bars — the SVG already reads fill="var(--income/expense)"
+   so it inherits the new palette automatically; this adds the "2026 dashboard"
+   soft-glow finish on top without touching the chart-generating JS. */
+/* Smooth line/area chart (see chartSvg in app.js) — soft glow on the lines
+   and the highlighted end-point, matching the "2026 dashboard" finish. */
+.card svg path[stroke="var(--income)"] { filter: drop-shadow(0 0 6px var(--income)); }
+.card svg path[stroke="var(--expense)"] { filter: drop-shadow(0 0 5px var(--expense)); }
+.card svg circle { filter: drop-shadow(0 2px 4px rgba(0,0,0,.4)); }
+.card svg line { stroke: var(--border) !important; stroke-dasharray: 3 4; }
+.card svg text { fill: var(--ink-dim) !important; font-family: "Poppins", "Hind Siliguri", sans-serif !important; }
+
+/* Legend as small rounded pills instead of a bare dot + label. */
+.chart-legend { gap: 10px !important; margin-top: 16px !important; }
+.chart-legend span:not(.dot) {
+  display: inline-flex !important; align-items: center;
+  background: var(--surface-2); border: 1px solid var(--border);
+  padding: 6px 12px 6px 8px; border-radius: 999px; font-weight: 600;
+}
+.chart-legend .dot { width: 8px; height: 8px; border-radius: 50%; box-shadow: 0 0 8px currentColor; }
+
+/* ---------- "Expense Breakdown" — split into two side-by-side cards ---------- */
+/* donut-wrap is the single flex row already holding donut-ring-wrap (left) and
+   cat-rows (right) — give each side its own card surface/border/shadow so they
+   visually read as two separate panels, not one shared block. */
+.donut-wrap {
+  gap: 20px !important; align-items: stretch !important;
+  background: none !important; border: none !important; box-shadow: none !important; padding: 0 !important;
+}
+.donut-ring-wrap {
+  background: var(--glass-bg); -webkit-backdrop-filter: blur(var(--glass-blur)); backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border); box-shadow: var(--glass-shadow); border-radius: var(--radius-lg);
+  padding: 28px 24px; justify-content: center; flex: 0 0 auto;
+}
+.donut-ring-wrap svg { filter: drop-shadow(0 8px 24px rgba(0,0,0,.45)); }
+
+/* Category list as a "chat"-style column: each category is its own rounded
+   bubble/row instead of bare text stacked with a progress bar underneath. */
+.cat-rows {
+  background: var(--glass-bg); -webkit-backdrop-filter: blur(var(--glass-blur)); backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border); box-shadow: var(--glass-shadow); border-radius: var(--radius-lg);
+  padding: 18px !important; gap: 10px !important;
+}
+.cat-row {
+  background: var(--surface-2); border-radius: var(--radius-sm); padding: 14px 18px;
+  border: 1px solid transparent; transition: transform .15s ease, border-color .15s ease, background .15s ease;
+}
+.cat-row:hover { transform: translateX(3px); border-color: var(--border); background: var(--surface-3); }
+.cat-row-name { font-size: .95rem !important; font-weight: 700 !important; }
+.cat-row-name .dot { width: 11px !important; height: 11px !important; border-radius: 50% !important; box-shadow: 0 0 8px currentColor; }
+.cat-row-amt { font-size: 1.02rem !important; font-weight: 700 !important; }
+.cat-row-bar-track { height: 7px !important; border-radius: 999px !important; background: var(--surface-3) !important; margin-top: 8px; }
+.cat-row-bar-fill { border-radius: 999px !important; box-shadow: 0 0 10px rgba(0,0,0,.25); }
+.cat-row-pct {
+  display: inline-block; margin-top: 6px !important;
+  background: var(--surface-3); padding: 2px 9px; border-radius: 999px; font-weight: 600;
+}
+/* Highlight the single biggest expense category with a small "Highest" tag. */
+.cat-row:first-child { border-color: var(--expense); }
+.cat-row:first-child .cat-row-top::after {
+  content: "Highest"; margin-left: 8px; font-size: .68rem; font-weight: 700;
+  color: var(--expense); background: var(--expense-bg); padding: 2px 8px; border-radius: 999px;
+  vertical-align: middle;
+}
+.cat-row-pct { font-size: .78rem !important; margin-top: 5px !important; }
+@media (max-width: 680px) {
+  .donut-wrap { flex-direction: column !important; }
+}
+
+/* ============================================================================
+   Sidebar "Upgrade Plan" promo card (portfolio-preview only) — sits right below
+   the nav links, styled like the reference image but with the app's own sidebar
+   palette (--primary/--sidebar-ink tokens) instead of a foreign purple. Clicking
+   it opens a small plan-picker modal (Monthly $10 / Yearly $100) reusing the
+   app's existing .modal-backdrop/.modal pattern.
+   ============================================================================ */
+.upgrade-card {
+  margin: 6px 4px 18px;
+  padding: 20px 18px 18px;
+  border-radius: var(--radius-lg);
+  background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 55%, var(--accent) 130%);
+  box-shadow: 0 14px 30px -14px rgba(0,0,0,.55);
+  cursor: pointer;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  transition: transform .18s ease, box-shadow .18s ease;
+}
+.upgrade-card::after {
+  content: "";
+  position: absolute; inset: 0;
+  background: radial-gradient(120px 80px at 85% -10%, rgba(255,255,255,.25), transparent 70%);
+  pointer-events: none;
+}
+.upgrade-card:hover { transform: translateY(-2px); box-shadow: 0 18px 36px -14px rgba(0,0,0,.6); }
+.upgrade-card-ic {
+  width: 52px; height: 52px; margin: 0 auto 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.6rem; border-radius: 16px;
+  background: rgba(255,255,255,.18);
+  border: 1px solid rgba(255,255,255,.3);
+}
+.upgrade-card-title { color: #fff; font-weight: 700; font-size: .95rem; line-height: 1.35; margin-bottom: 4px; }
+.upgrade-card-desc { color: rgba(255,255,255,.82); font-size: .76rem; line-height: 1.5; margin-bottom: 14px; }
+.upgrade-card-btn {
+  width: 100%; border: none; cursor: pointer;
+  background: #fff; color: var(--primary-dark);
+  font-weight: 700; font-size: .85rem;
+  padding: 10px 14px; border-radius: 999px;
+  transition: filter .15s ease;
+}
+.upgrade-card-btn:hover { filter: brightness(.96); }
+
+/* Upgrade plan-picker modal */
+.upgrade-modal { max-width: 380px; }
+.plan-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.plan-opt {
+  position: relative;
+  border: 2px solid var(--border);
+  background: var(--surface-2);
+  border-radius: var(--radius);
+  padding: 16px 14px 14px;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color .15s ease, background .15s ease, transform .15s ease;
+}
+.plan-opt:hover { transform: translateY(-2px); }
+.plan-opt.active { border-color: var(--primary); background: var(--primary-tint); }
+.plan-opt-tag {
+  position: absolute; top: -10px; right: 10px;
+  background: var(--accent); color: var(--accent-ink);
+  font-size: .65rem; font-weight: 700;
+  padding: 2px 9px; border-radius: 999px;
+}
+.plan-opt-name { display: block; font-size: .82rem; font-weight: 600; color: var(--ink-dim); margin-bottom: 6px; }
+.plan-opt-price { display: block; font-size: 1.3rem; font-weight: 800; color: var(--ink); letter-spacing: -0.02em; }
+.plan-opt-per { font-size: .72rem; font-weight: 500; color: var(--ink-dim); margin-left: 3px; }
