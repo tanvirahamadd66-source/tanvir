@@ -230,19 +230,8 @@ function initWorkTabs() {
       tab.classList.add("active");
       const target = tab.dataset.worktab;
       panels.forEach((p) => p.classList.toggle("active", p.dataset.workpanel === target));
-
-      // Live-preview iframes (see renderUiuxProjects) only start loading once
-      // their panel is actually visible — while hidden (display:none) the
-      // browser pauses requestAnimationFrame, which would stall the embedded
-      // page's auto-scroll animation before it ever gets going.
-      const activePanel = document.querySelector('.work-panel[data-workpanel="' + target + '"]');
-      if (activePanel) {
-        activePanel.querySelectorAll("iframe[data-src]").forEach((frame) => {
-          frame.src = frame.dataset.src;
-          frame.removeAttribute("data-src");
-          initLivePreviewScale(frame);
-        });
-      }
+      // Live-preview iframes in the newly shown panel load/play on their own
+      // once visible — see initLivePreviewLifecycle.
     });
   });
 }
@@ -293,6 +282,36 @@ function initLivePreviewScale(frame, designW, designH) {
   }
 }
 
+/* Each live preview is a whole website rendered at desktop size and scrolling
+   on a loop. Running all of them at once from page load (plus the huge email
+   images inside them) exhausted phone memory and crashed the tab. So a frame
+   only loads (from data-src) once its card is near the viewport — which also
+   covers cards in a hidden tab panel, since display:none never intersects —
+   and its showcase loop is paused via postMessage whenever the card is off
+   screen (see the showcase script in each projects/*-site/index.html). */
+function initLivePreviewLifecycle(frame) {
+  const card = frame.closest(".project-card") || frame;
+  const targetOrigin = location.origin === "null" ? "*" : location.origin;
+  const post = (state) => {
+    try { if (frame.contentWindow) frame.contentWindow.postMessage({ showcase: state }, targetOrigin); } catch (e) {}
+  };
+  const load = () => {
+    if (!frame.dataset.src) return;
+    frame.src = frame.dataset.src;
+    frame.removeAttribute("data-src");
+  };
+  if (!("IntersectionObserver" in window)) { load(); return; }
+
+  let visible = false;
+  new IntersectionObserver((entries) => {
+    visible = entries[entries.length - 1].isIntersecting;
+    if (visible) load();
+    post(visible ? "play" : "pause");
+  }, { rootMargin: "200px 0px" }).observe(card);
+  // A frame can finish loading after its card has already scrolled away.
+  frame.addEventListener("load", () => { if (!visible) post("pause"); });
+}
+
 /* ---------- Behance project rendering (real published work) ---------- */
 function renderBehanceProjects() {
   const grid = document.getElementById("behanceGrid");
@@ -317,16 +336,14 @@ function renderBehanceProjects() {
     </a>`;
   }).join("");
 
-  // Behance's "Projects" panel is visible by default (unlike the UI/UX tab,
-  // which starts hidden), so its live-preview iframes can start loading and
-  // scaling immediately — no need to defer via data-src + tab click. Each
-  // frame carries its own design width/height (a full website like
+  // Each live-preview frame carries its own design width/height (a full website like
   // Startup.Ready needs its real desktop width; a narrow email design fits
   // a much smaller frame) via data-design-w/h, set in renderCardThumb.
   grid.querySelectorAll(".card-live-preview").forEach((frame) => {
     const w = Number(frame.dataset.designW) || 640;
     const h = Number(frame.dataset.designH) || 480;
     initLivePreviewScale(frame, w, h);
+    initLivePreviewLifecycle(frame);
   });
 
   // Multi-image projects (Dog Jacks, Orange Drink, NeuraHire, Water Supply
@@ -336,7 +353,7 @@ function renderBehanceProjects() {
   // top-to-bottom while active instead of just crossfading in.
   grid.querySelectorAll(".project-card").forEach((card) => {
     const slides = card.querySelectorAll(".card-slide");
-    if (slides.length > 1) initCardSlideshow(slides);
+    if (slides.length > 1) initCardSlideshow(slides, card);
   });
 
   initCategoryFilters(grid);
@@ -350,7 +367,7 @@ function renderBehanceProjects() {
 // multi-image gallery) so it can be scoped to specific cards.
 function renderCardThumb(p) {
   if (p.livePreview) {
-    return `<iframe class="card-live-preview" src="${p.livePreview}" data-design-w="${p.livePreviewW || 640}" data-design-h="${p.livePreviewH || 480}" tabindex="-1" aria-hidden="true"></iframe>`;
+    return `<iframe class="card-live-preview" data-src="${p.livePreview}" data-design-w="${p.livePreviewW || 640}" data-design-h="${p.livePreviewH || 480}" tabindex="-1" aria-hidden="true"></iframe>`;
   }
   if (p.cardSlides && p.cardSlides.length > 1) {
     const slideTag = (src, i, scroll) =>
@@ -365,12 +382,15 @@ function renderCardThumb(p) {
 // Cycles through a card's `.card-slide` elements on a timer, looping forever.
 // Plain slides crossfade in for a short dwell; a `.card-slide-scroll` slide
 // dwells longer and restarts its pan animation each time it becomes active.
-// Respects reduced-motion by leaving the first slide showing statically.
-function initCardSlideshow(slides) {
+// Respects reduced-motion by leaving the first slide showing statically, and
+// only ticks while its card is on screen (no timers churning off-screen cards).
+function initCardSlideshow(slides, card) {
   if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
   const DWELL_PLAIN = 2200;
   const DWELL_SCROLL = 6000;
   let idx = 0;
+  let timer = null;
+  let visible = !("IntersectionObserver" in window);
 
   function dwellFor(slide) {
     return slide.classList.contains("card-slide-scroll") ? DWELL_SCROLL : DWELL_PLAIN;
@@ -389,9 +409,20 @@ function initCardSlideshow(slides) {
     const next = slides[idx];
     next.classList.add("active");
     if (next.classList.contains("card-slide-scroll")) restartScrollAnim(next);
-    setTimeout(step, dwellFor(next));
+    schedule();
   }
-  setTimeout(step, dwellFor(slides[0]));
+  function schedule() {
+    clearTimeout(timer);
+    timer = visible ? setTimeout(step, dwellFor(slides[idx])) : null;
+  }
+
+  if (visible) { schedule(); return; }
+  new IntersectionObserver((entries) => {
+    const nowVisible = entries[entries.length - 1].isIntersecting;
+    if (nowVisible === visible) return;
+    visible = nowVisible;
+    schedule();
+  }, { rootMargin: "100px 0px" }).observe(card);
 }
 
 function initCategoryFilters(grid) {
@@ -435,6 +466,11 @@ function renderUiuxProjects() {
         </div>
       </a>`;
   }).join("");
+
+  grid.querySelectorAll(".card-live-preview").forEach((frame) => {
+    initLivePreviewScale(frame);
+    initLivePreviewLifecycle(frame);
+  });
 }
 
 /* ---------- Project rendering ---------- */

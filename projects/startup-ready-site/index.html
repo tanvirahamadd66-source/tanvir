@@ -1761,6 +1761,17 @@ footer{ border-top:1px solid var(--hair); padding:64px 0 32px; }
   }
   function wait(ms){ return new Promise(function(r){ setTimeout(r, ms); }); }
 
+  // The portfolio page pauses/resumes this loop via postMessage whenever the card
+  // leaves/enters the viewport (see initLivePreviewLifecycle in js/main.js), so
+  // off-screen previews stop scrolling/repainting instead of running forever.
+  var paused = false, resumeWaiters = [];
+  window.addEventListener('message', function (e) {
+    if (e.source !== window.parent || !e.data || typeof e.data.showcase !== 'string') return;
+    paused = e.data.showcase === 'pause';
+    if (!paused) resumeWaiters.splice(0).forEach(function (r) { r(); });
+  });
+  function whenPlaying() { return paused ? new Promise(function (r) { resumeWaiters.push(r); }) : Promise.resolve(); }
+
   function loop(){
     var pillars = document.querySelector('#pillars');
     var y = pillars ? Math.min(pillars.getBoundingClientRect().top + window.scrollY - 40, 1500) : 1200;
@@ -1769,6 +1780,7 @@ footer{ border-top:1px solid var(--hair); padding:64px 0 32px; }
       .then(function(){ return wait(1200); })
       .then(function(){ return smoothScrollTo(0, 1400); })
       .then(function(){ return wait(600); })
+      .then(whenPlaying)
       .then(loop);
   }
   window.addEventListener('load', function(){ setTimeout(loop, 300); });

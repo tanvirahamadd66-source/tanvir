@@ -30,6 +30,11 @@
   var params = new URLSearchParams(location.search);
   if(params.get('showcase') !== '1') return;
   document.documentElement.style.scrollbarWidth = 'none';
+  // Card-sized version of the design: the full-res file is 1600px wide and ~10,000px
+  // tall (~16MP, ~65MB once decoded) — far more than a ~400px thumbnail needs, and
+  // enough on its own to push phones into out-of-memory tab crashes.
+  var previewImg = document.querySelector('.frame img');
+  if (previewImg) previewImg.src = previewImg.getAttribute('src').replace('full-design.jpg', 'full-design-preview.jpg');
 
   var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   if(reduce) return;
@@ -49,6 +54,17 @@
   }
   function wait(ms){ return new Promise(function(r){ setTimeout(r, ms); }); }
 
+  // The portfolio page pauses/resumes this loop via postMessage whenever the card
+  // leaves/enters the viewport (see initLivePreviewLifecycle in js/main.js), so
+  // off-screen previews stop scrolling/repainting instead of running forever.
+  var paused = false, resumeWaiters = [];
+  window.addEventListener('message', function (e) {
+    if (e.source !== window.parent || !e.data || typeof e.data.showcase !== 'string') return;
+    paused = e.data.showcase === 'pause';
+    if (!paused) resumeWaiters.splice(0).forEach(function (r) { r(); });
+  });
+  function whenPlaying() { return paused ? new Promise(function (r) { resumeWaiters.push(r); }) : Promise.resolve(); }
+
   function loop(){
     var maxY = document.documentElement.scrollHeight - window.innerHeight;
     wait(500)
@@ -56,6 +72,7 @@
       .then(function(){ return wait(1000); })
       .then(function(){ return smoothScrollTo(0, 3000); })
       .then(function(){ return wait(700); })
+      .then(whenPlaying)
       .then(loop);
   }
   window.addEventListener('load', function(){ setTimeout(loop, 300); });
